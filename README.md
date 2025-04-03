@@ -6,4 +6,4 @@
 | <img src="https://avatars.githubusercontent.com/dlekgus1q?v=4" width="100"> | [이다현](https://github.com/dlekgus1q) | <img src="https://avatars.githubusercontent.com/0woy?v=4" width="100"> | [박윤아](https://github.com/0woy) |
 
 
-히히
+# 절대 main branch에서 작업하지 말것
