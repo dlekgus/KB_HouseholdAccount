@@ -11,7 +11,8 @@
         <slot name="calendar" />
       </div>
       <div class="history-area">
-        <slot name="history" />
+        <slot name="recent-history" />
+        <slot name="this-month-history"></slot>
       </div>
     </main>
 
@@ -69,6 +70,8 @@ header {
   border-left: 1px solid #eee;
   background: #ffffff;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 /* footer 고정 */

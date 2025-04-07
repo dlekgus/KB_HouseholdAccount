@@ -11,6 +11,7 @@ import Calendar from '@/components/Calendar.vue';
 import HomeLayout from '@/components/layouts/HomeLayout.vue';
 import RecentHistory from '@/components/RecentHistory.vue';
 import Footer from '@/components/Footer.vue';
+import ThisMonthHistory from '@/components/ThisMonthHistory.vue';
 </script>
 
 <template>
@@ -20,8 +21,11 @@ import Footer from '@/components/Footer.vue';
         <Calendar />
       </template>
 
-      <template v-slot:history>
+      <template v-slot:recent-history>
         <RecentHistory></RecentHistory>
+      </template>
+      <template v-slot:this-month-history>
+        <ThisMonthHistory></ThisMonthHistory>
       </template>
 
       <template v-slot:footer>
