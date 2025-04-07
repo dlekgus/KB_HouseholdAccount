@@ -1,4 +1,5 @@
 // File: pages/Transactions.vue
+// File: pages/Transactions.vue
 <template>
   <div class="container py-4">
     <h2 class="fw-bold fs-4 mb-4">거래내역</h2>
