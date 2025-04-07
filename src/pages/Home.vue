@@ -3,6 +3,10 @@
 <!-- 최근 거래 -->
 
 <script setup>
+import { ref } from 'vue';
+import TransactionModal from '@/components/modal/TransactionModal.vue';
+
+const showTransactionModal = ref(false);
 import Calendar from '@/components/Calendar.vue';
 import HomeLayout from '@/components/layouts/HomeLayout.vue';
 import RecentHistory from '@/components/RecentHistory.vue';
@@ -25,10 +29,14 @@ import Footer from '@/components/Footer.vue';
       </template>
 
       <template v-slot:fab>
-        <button class="btn btn-outline">
+        <button class="btn btn-outline" @click="showTransactionModal = true">
           +
           <!-- <font-awesome-icon :icon="['fas', 'circle-plus']" /> -->
         </button>
+        <TransactionModal
+          v-if="showTransactionModal"
+          @close="showTransactionModal = false"
+        ></TransactionModal>
       </template>
     </HomeLayout>
   </div>
