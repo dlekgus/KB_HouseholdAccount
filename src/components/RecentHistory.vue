@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div>최근내역</div>
+    <h5>최근내역</h5>
     <div>
       <div class="card">
         <h6>⭐ 편의점 -2000원</h6>
@@ -24,5 +24,8 @@
   justify-content: center;
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
   border: 0px;
+}
+.container {
+  margin-bottom: 3rem;
 }
 </style>
