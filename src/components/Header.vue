@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  <nav class="navbar navbar-expand-sm bg-light navbar-light">
     <span class="navbar-brand ps-2">Household Account</span>
     <button
       class="navbar-toggler"
@@ -34,3 +34,9 @@
 import { ref } from 'vue';
 const isNavShow = ref(false);
 </script>
+
+<style scoped>
+nav {
+  /* background-color: #4318d1; */
+}
+</style>

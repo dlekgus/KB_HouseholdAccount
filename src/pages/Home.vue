@@ -26,10 +26,19 @@ import Footer from '@/components/Footer.vue';
 
       <template v-slot:fab>
         <button class="btn btn-outline">
-          ➕
+          +
           <!-- <font-awesome-icon :icon="['fas', 'circle-plus']" /> -->
         </button>
       </template>
     </HomeLayout>
   </div>
 </template>
+
+<style scoped>
+button {
+  background-color: #4318d1;
+  color: white;
+  font-weight: bolder;
+  font-size: large;
+}
+</style>
