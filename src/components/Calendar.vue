@@ -19,3 +19,5 @@ const calendarOptions = {
   },
 };
 </script>
+
+<style scoped></style>
