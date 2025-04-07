@@ -40,6 +40,27 @@ const calendarOptions = {
 </script>
 
 <style>
+/* 헤더 고정 (2025년 4월, 버튼 등) */
+.fc .fc-toolbar {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 10;
+}
+
+/* 요일 행 고정 (일~토) */
+.fc .fc-scrollgrid thead {
+  position: sticky;
+  top: 48px; /* 필요시 값 조정 */
+  background-color: white;
+  z-index: 9;
+}
+
+.calendar-wrapper {
+  height: 100%;
+  overflow-y: auto; /* 💡 필요 시 추가 */
+}
+
 /* 일요일 헤더: 빨간색 */
 .fc .fc-col-header-cell:nth-child(1) .fc-col-header-cell-cushion {
   color: red !important;
