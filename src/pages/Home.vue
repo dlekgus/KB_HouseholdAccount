@@ -4,7 +4,7 @@
 
 <script setup>
 import Calendar from '@/components/Calendar.vue';
-import HomeLayout from '@/components/HomeLayout.vue';
+import HomeLayout from '@/components/layouts/HomeLayout.vue';
 import RecentHistory from '@/components/RecentHistory.vue';
 import Footer from '@/components/Footer.vue';
 </script>
