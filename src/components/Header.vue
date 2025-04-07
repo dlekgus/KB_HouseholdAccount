@@ -35,8 +35,4 @@ import { ref } from 'vue';
 const isNavShow = ref(false);
 </script>
 
-<style scoped>
-nav {
-  /* background-color: #4318d1; */
-}
-</style>
+<style scoped></style>

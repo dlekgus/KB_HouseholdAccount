@@ -52,6 +52,14 @@ header {
   padding: 1rem;
   overflow-y: auto;
   z-index: 0;
+
+  /* 스크롤바 숨기기 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.calendar-area::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
 
 /* history */
