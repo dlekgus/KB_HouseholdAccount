@@ -1,5 +1,5 @@
 <template>
-  <FullCalendar :options="calendarOptions" />
+  <FullCalendar :options="calendarOptions" style="z-index: 0" />
 </template>
 
 <script setup>

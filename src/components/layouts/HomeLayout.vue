@@ -51,6 +51,7 @@ header {
   flex: 2;
   padding: 1rem;
   overflow-y: auto;
+  z-index: 0;
 }
 
 /* history */
