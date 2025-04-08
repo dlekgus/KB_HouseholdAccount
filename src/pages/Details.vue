@@ -52,16 +52,18 @@
 
     <!-- 플로팅 액션 버튼 -->
     <button
-      class="btn btn-primary rounded-circle position-fixed"
-      style="bottom: 2rem; right: 2rem; width: 56px; height: 56px"
-      data-bs-toggle="modal"
-      data-bs-target="#transactionFormModal"
+      class="fab btn btn-primary rounded-circle position-fixed"
+      @click="showTransactionModal = true"
     >
-      <i class="fas fa-plus"></i>
+      +
+      <!-- <font-awesome-icon :icon="['fas', 'circle-plus']" /> -->
     </button>
 
     <!-- 거래 추가 모달 -->
-    <TransactionFormModal />
+    <TransactionModal
+      v-if="showTransactionModal"
+      @close="showTransactionModal = false"
+    />
   </div>
 </template>
 
@@ -69,9 +71,11 @@
 import TransactionSummary from "@/components/transaction/TransactionSummary.vue";
 import TransactionChart from "@/components/transaction/TransactionChart.vue";
 import TransactionList from "@/components/transaction/TransactionList.vue";
-import TransactionFormModal from "@/components/transaction/TransactionFormModal.vue";
+import TransactionModal from "@/components/modal/TransactionModal.vue";
 
 import { ref } from "vue";
+
+const showTransactionModal = ref(false);
 
 const viewMode = ref("일간");
 const currentDate = ref(new Date());
@@ -123,3 +127,11 @@ const nextDate = () => {
   currentDate.value = date;
 };
 </script>
+
+<style scoped>
+/* 플로팅 버튼 */
+.fab {
+  bottom: 80px;
+  right: 20px;
+}
+</style>
