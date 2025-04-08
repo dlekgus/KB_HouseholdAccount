@@ -1,7 +1,3 @@
-<!-- 소비 캘린더 -->
-<!-- 이번달 수입/지출 -->
-<!-- 최근 거래 -->
-
 <script setup>
 import { ref } from 'vue';
 import TransactionModal from '@/components/modal/TransactionModal.vue';
