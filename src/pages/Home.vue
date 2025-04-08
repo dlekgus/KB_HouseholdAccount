@@ -30,16 +30,10 @@ const showModal = ref(false);
       </template>
 
       <template v-slot:fab>
-
-        <button class="btn btn-outline" @click="showModal = true">
-          +
-          <!-- <font-awesome-icon :icon="['fas', 'circle-plus']" /> -->
-        </button>
+        <button class="btn btn-outline" @click="showModal = true">+</button>
         <TransactionModal
-
           v-if="showModal"
           @close="showModal = false"
-
         ></TransactionModal>
       </template>
     </HomeLayout>
