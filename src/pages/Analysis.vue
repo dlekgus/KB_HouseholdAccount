@@ -47,10 +47,20 @@
         class="col-12 col-md-4 d-flex justify-content-center align-items-center"
       >
         <div class="score-circle text-center">
-          <div class="circle">
-            <span class="score">85</span>
+          <div
+            class="circle"
+            :style="{
+              borderColor: borderColor,
+              borderWidth: '10px',
+              borderStyle: 'solid',
+            }"
+          >
+            <span class="score" :class="gradeInfo.color">{{ rate }}</span>
           </div>
-          <div class="mt-2 text-muted">당신의 소비 분석</div>
+          <div class="mt-2" :class="gradeInfo.color">
+            <div class="fw-bold">{{ gradeInfo.grade }} 등급</div>
+            <div class="text-muted">{{ gradeInfo.message }}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -111,6 +121,11 @@ const currentData = ref([]);
 const previousData = ref([]);
 const changeRate = ref(0);
 
+const userId = 2;
+
+// fetch users all data from db
+const BASE_URI = '/api/';
+
 function getDataForPeriod(months, isPrevious) {
   const offset = isPrevious ? months : 0;
   return Array.from({ length: months }, () =>
@@ -122,11 +137,39 @@ function selectPeriod(months) {
   period.value = months;
   loadData();
 }
+
+const borderColor = computed(() => {
+  // color 클래스를 직접 사용하지 않고, 색상 코드로 매핑
+  const colorMap = {
+    'text-success': '#2e7d32',
+    'text-primary': '#1976d2',
+    'text-warning': '#fbc02d',
+    'text-danger': '#d32f2f',
+  };
+  return colorMap[gradeInfo.value.color] || '#ccc';
+});
+
+const gradeInfo = computed(() => {
+  const val = changeRate.value;
+  if (val <= 70)
+    return { grade: 'A', message: '절약 잘했어요!', color: 'text-success' };
+  if (val <= 90)
+    return { grade: 'B', message: '양호한 소비입니다.', color: 'text-primary' };
+  if (val <= 110)
+    return { grade: 'C', message: '주의가 필요해요.', color: 'text-warning' };
+  return {
+    grade: 'D',
+    message: '수입보다 더 많이 썼어요!',
+    color: 'text-danger',
+  };
+});
+
 const formattedChangeRate = computed(() => {
   if (changeRate.value > 0) return `+${changeRate.value.toFixed(1)}%`;
   return `${changeRate.value.toFixed(1)}%`;
 });
 
+// 전 N개월 대비 퍼센트
 const changeRateClass = computed(() => {
   if (changeRate.value > 0) return 'text-success';
   if (changeRate.value < 0) return 'text-danger';
@@ -145,6 +188,11 @@ function loadData() {
   previousData.value = getDataForPeriod(period.value, true);
   changeRate.value = getChangeRate(currentData.value, previousData.value);
 }
+const rate = computed(() => {
+  const expense = currentData.value[0];
+  const income = previousData.value[0];
+  return Math.round((expense / (income || 1)) * 100);
+});
 
 onMounted(() => {
   new Chart(categoryChart.value, {
@@ -209,17 +257,32 @@ onMounted(() => {
 .score-circle .circle {
   width: 100px;
   height: 100px;
-  border: 10px solid #6f42c1;
+  border: 10px solid #385531;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 3rem;
 }
 .score-circle .score {
   font-size: 1.5rem;
   color: #6f42c1;
   font-weight: bold;
 }
+
+.border-success {
+  border-color: #2e7d32;
+}
+.border-primary {
+  border-color: #1976d2;
+}
+.border-warning {
+  border-color: #fbc02d;
+}
+.border-danger {
+  border-color: #d32f2f;
+}
+
 canvas {
   width: 100% !important;
   height: 200px !important;
