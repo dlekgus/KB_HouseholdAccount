@@ -3,36 +3,39 @@
 </template>
 
 <script setup>
-import FullCalendar from '@fullcalendar/vue3';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import koLocale from '@fullcalendar/core/locales/ko';
+import FullCalendar from "@fullcalendar/vue3";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import koLocale from "@fullcalendar/core/locales/ko";
 
 const calendarOptions = {
   plugins: [dayGridPlugin, interactionPlugin],
-  initialView: 'dayGridMonth',
+  initialView: "dayGridMonth",
   locale: koLocale,
   headerToolbar: {
-    start: 'title',
-    center: '',
-    end: 'today prev,next',
+    start: "title",
+    center: "",
+    end: "today prev,next",
   },
-  titleFormat: { year: 'numeric', month: 'long' },
+  titleFormat: { year: "numeric", month: "long" },
   events: [],
   dateClick: (info) => {
     console.log(info.dateStr);
   },
+  dayCellContent: (arg) => {
+    return { html: String(arg.date.getDate()) }; // 숫자만 반환
+  },
   dayCellDidMount: (arg) => {
     const day = arg.date.getDay(); // 0:일, 1:월, ..., 6:토
-    const dayNumberElement = arg.el.querySelector('.fc-daygrid-day-number');
-    dayNumberElement.innerHTML = dayNumberElement.innerHTML.replace('일', '');
+    const dayNumberElement = arg.el.querySelector(".fc-daygrid-day-number");
+    dayNumberElement.innerHTML = dayNumberElement.innerHTML.replace("일", "");
     if (dayNumberElement) {
       if (day === 0) {
-        dayNumberElement.style.color = 'red'; // 일요일
+        dayNumberElement.style.color = "red"; // 일요일
       } else if (day === 6) {
-        dayNumberElement.style.color = 'blue'; // 토요일
+        dayNumberElement.style.color = "blue"; // 토요일
       } else {
-        dayNumberElement.style.color = 'black'; // 월~금
+        dayNumberElement.style.color = "black"; // 월~금
       }
     }
   },
