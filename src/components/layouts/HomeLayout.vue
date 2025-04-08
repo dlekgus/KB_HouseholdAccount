@@ -12,7 +12,7 @@
       </div>
       <div class="history-area">
         <slot name="recent-history" />
-        <slot name="this-month-history">ㅋㅋ</slot>
+        <slot name="this-month-history"></slot>
       </div>
     </main>
 
