@@ -117,6 +117,10 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
+
+const router = useRouter();
 
 // 사용자 입력 값들
 const nickname = ref('');
@@ -142,26 +146,48 @@ const toggleConfirmPassword = () => {
 };
 
 // 회원가입 처리
-const signup = () => {
+const signup = async () => {
   if (password.value !== confirmPassword.value) {
     errorMessage.value = '비밀번호가 일치하지 않습니다';
     return;
   }
 
-  // 에러 메시지 초기화
   errorMessage.value = '';
 
-  // 실제 회원가입 처리 로직
-  console.log('회원가입 정보:', {
-    nickname: nickname.value,
-    email: email.value,
-    password: password.value,
-  });
+  try {
+    // 이메일 중복 체크
+    const check = await axios.get('/api/users', {
+      params: { email: email.value },
+    });
 
-  // 예시용 리셋 (옵션)
-  nickname.value = '';
-  email.value = '';
-  password.value = '';
-  confirmPassword.value = '';
+    if (check.data.length > 0) {
+      errorMessage.value = '이미 사용 중인 이메일입니다.';
+      return;
+    }
+
+    // 회원 정보 db.json에 저장
+    const response = await axios.post('/api/users', {
+      nickname: nickname.value,
+      email: email.value,
+      password: password.value,
+    });
+
+    console.log('✅ 회원가입 성공:', response.data);
+
+    // 입력값 초기화
+    nickname.value = '';
+    email.value = '';
+    password.value = '';
+    confirmPassword.value = '';
+
+    // 완료 후 로그인 페이지로 이동 (옵션)
+    alert('회원가입이 완료되었습니다!');
+
+    // 로그인 페이지로 이동
+    router.push('/');
+  } catch (err) {
+    console.error('❌ 회원가입 오류:', err);
+    errorMessage.value = '회원가입 중 오류가 발생했습니다.';
+  }
 };
 </script>
