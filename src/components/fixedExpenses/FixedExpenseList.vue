@@ -1,55 +1,48 @@
-
-<script setup>
-import { computed } from 'vue';
-const props = defineProps({
-  subscriptions: Array,
-  userId: Number
-});
-
-const filteredList = computed(() =>
-  props.subscriptions.filter(
-    s => s.userId === props.userId && s.category === '고정지출'
-  )
-);
-</script>
-
 <template>
-  <div class="list-section">
-    <h4>구독 목록</h4>
-    <div
-      class="list-item"
-      v-for="item in filteredList"
-      :key="item.id"
-    >
-      <div>
-        <strong>{{ item.name }}</strong>
-        <p class="date">매월 {{ item.dueDate }}일</p>
+  <div class="card shadow-sm p-4">
+    <h6 class="text-muted mb-3">구독 목록</h6>
+    <div v-for="s in subscriptions" :key="s.name"
+      class="d-flex justify-content-between align-items-center py-3 border-bottom">
+      <div class="d-flex align-items-center gap-3">
+        <!-- 네모 안에 동그라미 -->
+        <div :style="getBoxStyle(s.boxColor)" class="rounded-4 d-flex align-items-center justify-content-center me-3"
+          style="width: 40px; height: 40px;">
+          <span :style="getDotStyle(s.dotColor)" class="rounded-circle"></span>
+        </div>
+        <div>
+          <div class="fw-semibold">{{ s.name }}</div>
+          <div class="text-muted small">매월 {{ s.day }}일</div>
+        </div>
       </div>
-      <span class="amount">{{ item.price.toLocaleString() }}원</span>
+      <div class="d-flex align-items-center gap-2">
+        <span class="fw-bold">{{ s.price.toLocaleString() }}원</span>
+        <i class="bi bi-three-dots-vertical"></i>
+      </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-.list-section {
-  margin-top: 2rem;
+<script setup>
+defineProps({
+  subscriptions: {
+    type: Array,
+    required: true,
+  },
+});
+
+// 각 박스 배경 스타일 계산
+function getBoxStyle(color) {
+  return {
+    backgroundColor: color || '#fcecec',
+  };
 }
-.list-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #fff;
-  padding: 1rem;
-  border-radius: 12px;
-  margin-bottom: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+// 동그라미 색상 스타일 계산
+function getDotStyle(color) {
+  return {
+    width: '10px',
+    height: '10px',
+    backgroundColor: color || '#e74c3c',
+  };
 }
-.date {
-  font-size: 0.9rem;
-  color: #888;
-  margin: 0;
-}
-.amount {
-  font-weight: bold;
-}
-</style>
+</script>

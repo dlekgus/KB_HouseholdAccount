@@ -1,0 +1,3231 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "ggim@dreamwiz.com",
+      "password": "1234",
+      "nickname": "안성민",
+      "joinDate": "2024-04-17"
+    },
+    {
+      "id": "2",
+      "email": "migyeongi@daum.net",
+      "password": "1234",
+      "nickname": "김하은",
+      "joinDate": "2025-04-07"
+    },
+    {
+      "id": "3",
+      "email": "sangceol15@coeii.net",
+      "password": "1234",
+      "nickname": "주예지",
+      "joinDate": "2024-06-25"
+    },
+    {
+      "id": "4",
+      "email": "songminji@gmail.com",
+      "password": "1234",
+      "nickname": "홍정식",
+      "joinDate": "2025-02-08"
+    },
+    {
+      "id": "5",
+      "email": "vryu@yu.com",
+      "password": "1234",
+      "nickname": "최상호",
+      "joinDate": "2022-11-15"
+    },
+    {
+      "id": "6",
+      "email": "gimjeongsu@dreamwiz.com",
+      "password": "1234",
+      "nickname": "최정식",
+      "joinDate": "2024-08-05"
+    },
+    {
+      "id": "7",
+      "email": "hyeonsugjo@naver.com",
+      "password": "1234",
+      "nickname": "최성훈",
+      "joinDate": "2024-09-18"
+    },
+    {
+      "id": "8",
+      "email": "seungmin20@baggim.org",
+      "password": "1234",
+      "nickname": "김광수",
+      "joinDate": "2022-08-10"
+    },
+    {
+      "id": "9",
+      "email": "miyeong33@live.com",
+      "password": "1234",
+      "nickname": "박은지",
+      "joinDate": "2025-03-30"
+    },
+    {
+      "id": "10",
+      "email": "isangho@nate.com",
+      "password": "1234",
+      "nickname": "김지민",
+      "joinDate": "2022-10-06"
+    },
+    {
+      "id": "c057",
+      "nickname": "meentho",
+      "email": "meentho@naver.com",
+      "password": "alstj"
+    },
+    {
+      "id": "2848",
+      "nickname": "000",
+      "email": "000@gmail.com",
+      "password": "000"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "1",
+      "userId": 3,
+      "type": "expense",
+      "date": "2025-02-21",
+      "category": "교통",
+      "title": "영화 관람",
+      "memo": "택시비 지출",
+      "amount": 90389
+    },
+    {
+      "id": "2",
+      "userId": 10,
+      "type": "income",
+      "date": "2025-01-10",
+      "category": "부수입",
+      "title": "월급",
+      "memo": "중고거래 수익",
+      "amount": 54869
+    },
+    {
+      "id": "3",
+      "userId": 8,
+      "type": "expense",
+      "date": "2025-02-25",
+      "category": "쇼핑",
+      "title": "생필품 구매",
+      "memo": "화장품 쇼핑",
+      "amount": 58614
+    },
+    {
+      "id": "4",
+      "userId": 2,
+      "type": "income",
+      "date": "2024-10-09",
+      "category": "부수입",
+      "title": "월급",
+      "memo": "블로그 광고 수익",
+      "amount": 66200
+    },
+    {
+      "id": "5",
+      "userId": 10,
+      "type": "expense",
+      "date": "2025-01-15",
+      "category": "쇼핑",
+      "title": "생필품 구매",
+      "memo": "화장품 쇼핑",
+      "amount": 25536
+    },
+    {
+      "id": "6",
+      "userId": 6,
+      "type": "expense",
+      "date": "2025-01-16",
+      "category": "쇼핑",
+      "title": "카페",
+      "memo": "신발 구매",
+      "amount": 98313
+    },
+    {
+      "id": "7",
+      "userId": 6,
+      "type": "expense",
+      "date": "2024-10-03",
+      "category": "식비",
+      "title": "옷 구매",
+      "memo": "오늘 점심 메뉴",
+      "amount": 34740
+    },
+    {
+      "id": "8",
+      "userId": 10,
+      "type": "expense",
+      "date": "2024-07-17",
+      "category": "교통",
+      "title": "옷 구매",
+      "memo": "주차 요금",
+      "amount": 43978
+    },
+    {
+      "id": "9",
+      "userId": 7,
+      "type": "income",
+      "date": "2025-01-13",
+      "category": "용돈",
+      "title": "세금 환급",
+      "memo": "용돈으로 생활비 충당",
+      "amount": 65254
+    },
+    {
+      "id": "10",
+      "userId": 4,
+      "type": "income",
+      "date": "2024-08-25",
+      "category": "급여",
+      "title": "아르바이트",
+      "memo": "급여 입금",
+      "amount": 1901
+    },
+    {
+      "id": "11",
+      "userId": 6,
+      "type": "income",
+      "date": "2024-06-29",
+      "category": "부수입",
+      "title": "월급",
+      "memo": "중고거래 수익",
+      "amount": 96813
+    },
+    {
+      "id": "12",
+      "userId": 3,
+      "type": "income",
+      "date": "2024-07-27",
+      "category": "급여",
+      "title": "부모님 용돈",
+      "memo": "이번 달 월급",
+      "amount": 99878
+    },
+    {
+      "id": "13",
+      "userId": 9,
+      "type": "income",
+      "date": "2024-07-29",
+      "category": "부수입",
+      "title": "아르바이트",
+      "memo": "중고거래 수익",
+      "amount": 59306
+    },
+    {
+      "id": "14",
+      "userId": 8,
+      "type": "expense",
+      "date": "2024-11-01",
+      "category": "생활",
+      "title": "생필품 구매",
+      "memo": "휴지 구매",
+      "amount": 13566
+    },
+    {
+      "id": "15",
+      "userId": 6,
+      "type": "income",
+      "date": "2024-04-18",
+      "category": "환급",
+      "title": "세금 환급",
+      "memo": "세금 환급",
+      "amount": 98029
+    },
+    {
+      "id": "16",
+      "userId": 9,
+      "type": "expense",
+      "date": "2024-04-12",
+      "category": "여가",
+      "title": "점심 식사",
+      "memo": "게임",
+      "amount": 15047
+    },
+    {
+      "id": "17",
+      "userId": 4,
+      "type": "expense",
+      "date": "2025-02-15",
+      "category": "문화",
+      "title": "생필품 구매",
+      "memo": "전시회 관람",
+      "amount": 2198
+    },
+    {
+      "id": "18",
+      "userId": 7,
+      "type": "income",
+      "date": "2025-01-01",
+      "category": "환급",
+      "title": "월급",
+      "memo": "미납금 환급",
+      "amount": 52148
+    },
+    {
+      "id": "19",
+      "userId": 1,
+      "type": "expense",
+      "date": "2024-11-28",
+      "category": "생활",
+      "title": "영양제 구매",
+      "memo": "휴지 구매",
+      "amount": 60966
+    },
+    {
+      "id": "20",
+      "userId": 4,
+      "type": "expense",
+      "date": "2024-04-20",
+      "category": "생활",
+      "title": "교통비",
+      "memo": "세제 구매",
+      "amount": 4331
+    },
+    {
+      "id": "21",
+      "userId": 4,
+      "type": "income",
+      "date": "2024-07-17",
+      "category": "급여",
+      "title": "부모님 용돈",
+      "memo": "월급날",
+      "amount": 5294
+    },
+    {
+      "id": "22",
+      "userId": 1,
+      "type": "income",
+      "date": "2024-09-23",
+      "category": "용돈",
+      "title": "세금 환급",
+      "memo": "용돈 받음",
+      "amount": 94814
+    },
+    {
+      "id": "23",
+      "userId": 2,
+      "type": "income",
+      "date": "2024-09-22",
+      "category": "환급",
+      "title": "세금 환급",
+      "memo": "세금 환급",
+      "amount": 41135
+    },
+    {
+      "id": "24",
+      "userId": 7,
+      "type": "income",
+      "date": "2024-06-01",
+      "category": "환급",
+      "title": "부모님 용돈",
+      "memo": "미납금 환급",
+      "amount": 61066
+    },
+    {
+      "id": "25",
+      "userId": 2,
+      "type": "expense",
+      "date": "2024-06-19",
+      "category": "쇼핑",
+      "title": "카페",
+      "memo": "신발 구매",
+      "amount": 90976
+    },
+    {
+      "id": "26",
+      "userId": 6,
+      "type": "expense",
+      "date": "2024-06-28",
+      "category": "건강",
+      "title": "영화 관람",
+      "memo": "영양제 구매",
+      "amount": 99352
+    },
+    {
+      "id": "27",
+      "userId": 4,
+      "type": "expense",
+      "date": "2025-01-03",
+      "category": "쇼핑",
+      "title": "영화 관람",
+      "memo": "옷 세일",
+      "amount": 96836
+    },
+    {
+      "id": "28",
+      "userId": 1,
+      "type": "expense",
+      "date": "2025-03-16",
+      "category": "여가",
+      "title": "옷 구매",
+      "memo": "카페 방문",
+      "amount": 14242
+    },
+    {
+      "id": "29",
+      "userId": 10,
+      "type": "expense",
+      "date": "2024-08-08",
+      "category": "교통",
+      "title": "점심 식사",
+      "memo": "버스 카드 충전",
+      "amount": 21045
+    },
+    {
+      "id": "30",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-09-02",
+      "category": "환급",
+      "title": "부모님 용돈",
+      "memo": "세금 환급",
+      "amount": 13544
+    },
+    {
+      "id": "31",
+      "userId": 3,
+      "type": "expense",
+      "date": "2025-03-31",
+      "category": "문화",
+      "title": "카페",
+      "memo": "영화 티켓",
+      "amount": 21946
+    },
+    {
+      "id": "32",
+      "userId": 3,
+      "type": "expense",
+      "date": "2025-03-20",
+      "category": "생활",
+      "title": "점심 식사",
+      "memo": "휴지 구매",
+      "amount": 93283
+    },
+    {
+      "id": "33",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-08-16",
+      "category": "용돈",
+      "title": "월급",
+      "memo": "부모님 감사합니다",
+      "amount": 73696
+    },
+    {
+      "id": "34",
+      "userId": 10,
+      "type": "expense",
+      "date": "2024-07-27",
+      "category": "식비",
+      "title": "옷 구매",
+      "memo": "저녁 외식",
+      "amount": 33146
+    },
+    {
+      "id": "35",
+      "userId": 5,
+      "type": "expense",
+      "date": "2024-06-18",
+      "category": "쇼핑",
+      "title": "교통비",
+      "memo": "옷 세일",
+      "amount": 17465
+    },
+    {
+      "id": "36",
+      "userId": 5,
+      "type": "expense",
+      "date": "2024-06-19",
+      "category": "쇼핑",
+      "title": "교통비",
+      "memo": "화장품 쇼핑",
+      "amount": 89570
+    },
+    {
+      "id": "37",
+      "userId": 3,
+      "type": "income",
+      "date": "2024-12-24",
+      "category": "용돈",
+      "title": "월급",
+      "memo": "용돈으로 생활비 충당",
+      "amount": 46174
+    },
+    {
+      "id": "38",
+      "userId": 4,
+      "type": "expense",
+      "date": "2025-03-29",
+      "category": "건강",
+      "title": "영양제 구매",
+      "memo": "영양제 구매",
+      "amount": 13444
+    },
+    {
+      "id": "39",
+      "userId": 9,
+      "type": "expense",
+      "date": "2024-05-13",
+      "category": "여가",
+      "title": "점심 식사",
+      "memo": "여행",
+      "amount": 93113
+    },
+    {
+      "id": "40",
+      "userId": 4,
+      "type": "expense",
+      "date": "2024-08-06",
+      "category": "건강",
+      "title": "카페",
+      "memo": "병원 진료",
+      "amount": 78231
+    },
+    {
+      "id": "41",
+      "userId": 7,
+      "type": "expense",
+      "date": "2024-06-26",
+      "category": "식비",
+      "title": "카페",
+      "memo": "오늘 점심 메뉴",
+      "amount": 61715
+    },
+    {
+      "id": "42",
+      "userId": 2,
+      "type": "income",
+      "date": "2024-10-17",
+      "category": "급여",
+      "title": "세금 환급",
+      "memo": "이번 달 월급",
+      "amount": 35778
+    },
+    {
+      "id": "43",
+      "userId": 2,
+      "type": "expense",
+      "date": "2024-05-25",
+      "category": "식비",
+      "title": "카페",
+      "memo": "오늘 점심 메뉴",
+      "amount": 31454
+    },
+    {
+      "id": "44",
+      "userId": 6,
+      "type": "income",
+      "date": "2024-08-18",
+      "category": "부수입",
+      "title": "아르바이트",
+      "memo": "중고거래 수익",
+      "amount": 45330
+    },
+    {
+      "id": "45",
+      "userId": 10,
+      "type": "income",
+      "date": "2024-09-26",
+      "category": "급여",
+      "title": "세금 환급",
+      "memo": "이번 달 월급",
+      "amount": 60544
+    },
+    {
+      "id": "46",
+      "userId": 1,
+      "type": "expense",
+      "date": "2024-08-29",
+      "category": "생활",
+      "title": "카페",
+      "memo": "휴지 구매",
+      "amount": 64275
+    },
+    {
+      "id": "47",
+      "userId": 5,
+      "type": "expense",
+      "date": "2024-08-18",
+      "category": "쇼핑",
+      "title": "카페",
+      "memo": "신발 구매",
+      "amount": 87627
+    },
+    {
+      "id": "48",
+      "userId": 3,
+      "type": "income",
+      "date": "2024-05-23",
+      "category": "환급",
+      "title": "부모님 용돈",
+      "memo": "보험 환급",
+      "amount": 81923
+    },
+    {
+      "id": "49",
+      "userId": 7,
+      "type": "expense",
+      "date": "2025-01-07",
+      "category": "쇼핑",
+      "title": "생필품 구매",
+      "memo": "신발 구매",
+      "amount": 12994
+    },
+    {
+      "id": "50",
+      "userId": 2,
+      "type": "expense",
+      "date": "2024-10-03",
+      "category": "건강",
+      "title": "점심 식사",
+      "memo": "영양제 구매",
+      "amount": 33893
+    },
+    {
+      "id": "51",
+      "userId": 10,
+      "type": "income",
+      "date": "2024-08-24",
+      "category": "환급",
+      "title": "아르바이트",
+      "memo": "미납금 환급",
+      "amount": 39123
+    },
+    {
+      "id": "52",
+      "userId": 4,
+      "type": "expense",
+      "date": "2024-05-28",
+      "category": "쇼핑",
+      "title": "카페",
+      "memo": "신발 구매",
+      "amount": 31221
+    },
+    {
+      "id": "53",
+      "userId": 3,
+      "type": "expense",
+      "date": "2024-11-22",
+      "category": "식비",
+      "title": "생필품 구매",
+      "memo": "간식 구매",
+      "amount": 87682
+    },
+    {
+      "id": "54",
+      "userId": 6,
+      "type": "expense",
+      "date": "2025-03-11",
+      "category": "건강",
+      "title": "카페",
+      "memo": "헬스장 등록",
+      "amount": 12741
+    },
+    {
+      "id": "55",
+      "userId": 5,
+      "type": "expense",
+      "date": "2025-02-02",
+      "category": "교통",
+      "title": "생필품 구매",
+      "memo": "버스 카드 충전",
+      "amount": 2212
+    },
+    {
+      "id": "56",
+      "userId": 5,
+      "type": "expense",
+      "date": "2025-02-07",
+      "category": "건강",
+      "title": "옷 구매",
+      "memo": "영양제 구매",
+      "amount": 64703
+    },
+    {
+      "id": "57",
+      "userId": 2,
+      "type": "income",
+      "date": "2024-06-10",
+      "category": "환급",
+      "title": "부모님 용돈",
+      "memo": "세금 환급",
+      "amount": 28082
+    },
+    {
+      "id": "58",
+      "userId": 9,
+      "type": "income",
+      "date": "2024-08-02",
+      "category": "환급",
+      "title": "세금 환급",
+      "memo": "미납금 환급",
+      "amount": 3011
+    },
+    {
+      "id": "59",
+      "userId": 10,
+      "type": "income",
+      "date": "2024-06-23",
+      "category": "용돈",
+      "title": "월급",
+      "memo": "부모님 감사합니다",
+      "amount": 92941
+    },
+    {
+      "id": "60",
+      "userId": 2,
+      "type": "income",
+      "date": "2024-06-13",
+      "category": "용돈",
+      "title": "세금 환급",
+      "memo": "용돈으로 생활비 충당",
+      "amount": 49531
+    },
+    {
+      "id": "61",
+      "userId": 4,
+      "type": "income",
+      "date": "2024-04-20",
+      "category": "환급",
+      "title": "월급",
+      "memo": "보험 환급",
+      "amount": 28030
+    },
+    {
+      "id": "62",
+      "userId": 6,
+      "type": "income",
+      "date": "2024-05-10",
+      "category": "부수입",
+      "title": "부모님 용돈",
+      "memo": "블로그 광고 수익",
+      "amount": 21728
+    },
+    {
+      "id": "63",
+      "userId": 2,
+      "type": "income",
+      "date": "2024-05-19",
+      "category": "용돈",
+      "title": "부모님 용돈",
+      "memo": "용돈 받음",
+      "amount": 15155
+    },
+    {
+      "id": "64",
+      "userId": 2,
+      "type": "expense",
+      "date": "2025-01-12",
+      "category": "건강",
+      "title": "점심 식사",
+      "memo": "헬스장 등록",
+      "amount": 91854
+    },
+    {
+      "id": "65",
+      "userId": 7,
+      "type": "expense",
+      "date": "2025-02-04",
+      "category": "교통",
+      "title": "점심 식사",
+      "memo": "택시비 지출",
+      "amount": 4829
+    },
+    {
+      "id": "66",
+      "userId": 5,
+      "type": "expense",
+      "date": "2024-10-26",
+      "category": "건강",
+      "title": "옷 구매",
+      "memo": "영양제 구매",
+      "amount": 59808
+    },
+    {
+      "id": "67",
+      "userId": 2,
+      "type": "expense",
+      "date": "2024-10-18",
+      "category": "문화",
+      "title": "교통비",
+      "memo": "전시회 관람",
+      "amount": 3243
+    },
+    {
+      "id": "68",
+      "userId": 9,
+      "type": "income",
+      "date": "2024-04-11",
+      "category": "용돈",
+      "title": "월급",
+      "memo": "용돈 받음",
+      "amount": 49529
+    },
+    {
+      "id": "69",
+      "userId": 4,
+      "type": "income",
+      "date": "2024-10-08",
+      "category": "환급",
+      "title": "세금 환급",
+      "memo": "세금 환급",
+      "amount": 93067
+    },
+    {
+      "id": "70",
+      "userId": 8,
+      "type": "expense",
+      "date": "2025-01-05",
+      "category": "생활",
+      "title": "교통비",
+      "memo": "생수 구매",
+      "amount": 21138
+    },
+    {
+      "id": "71",
+      "userId": 8,
+      "type": "expense",
+      "date": "2024-06-23",
+      "category": "여가",
+      "title": "영화 관람",
+      "memo": "게임",
+      "amount": 16399
+    },
+    {
+      "id": "72",
+      "userId": 6,
+      "type": "expense",
+      "date": "2024-12-10",
+      "category": "생활",
+      "title": "영화 관람",
+      "memo": "휴지 구매",
+      "amount": 57356
+    },
+    {
+      "id": "73",
+      "userId": 8,
+      "type": "expense",
+      "date": "2024-04-28",
+      "category": "건강",
+      "title": "영양제 구매",
+      "memo": "영양제 구매",
+      "amount": 24613
+    },
+    {
+      "id": "74",
+      "userId": 5,
+      "type": "expense",
+      "date": "2025-03-12",
+      "category": "식비",
+      "title": "영양제 구매",
+      "memo": "간식 구매",
+      "amount": 5059
+    },
+    {
+      "id": "75",
+      "userId": 2,
+      "type": "expense",
+      "date": "2024-11-29",
+      "category": "식비",
+      "title": "점심 식사",
+      "memo": "오늘 점심 메뉴",
+      "amount": 41767
+    },
+    {
+      "id": "76",
+      "userId": 9,
+      "type": "expense",
+      "date": "2024-09-27",
+      "category": "생활",
+      "title": "영화 관람",
+      "memo": "세제 구매",
+      "amount": 26040
+    },
+    {
+      "id": "77",
+      "userId": 1,
+      "type": "expense",
+      "date": "2024-05-15",
+      "category": "교통",
+      "title": "생필품 구매",
+      "memo": "버스 카드 충전",
+      "amount": 32987
+    },
+    {
+      "id": "78",
+      "userId": 3,
+      "type": "income",
+      "date": "2024-09-14",
+      "category": "급여",
+      "title": "월급",
+      "memo": "이번 달 월급",
+      "amount": 22398
+    },
+    {
+      "id": "79",
+      "userId": 9,
+      "type": "expense",
+      "date": "2024-07-04",
+      "category": "문화",
+      "title": "생필품 구매",
+      "memo": "콘서트 티켓",
+      "amount": 42707
+    },
+    {
+      "id": "80",
+      "userId": 10,
+      "type": "income",
+      "date": "2024-10-18",
+      "category": "용돈",
+      "title": "아르바이트",
+      "memo": "용돈으로 생활비 충당",
+      "amount": 60299
+    },
+    {
+      "id": "81",
+      "userId": 3,
+      "type": "income",
+      "date": "2025-04-02",
+      "category": "급여",
+      "title": "아르바이트",
+      "memo": "급여 입금",
+      "amount": 82056
+    },
+    {
+      "id": "82",
+      "userId": 2,
+      "type": "income",
+      "date": "2025-03-20",
+      "category": "용돈",
+      "title": "아르바이트",
+      "memo": "부모님 감사합니다",
+      "amount": 78318
+    },
+    {
+      "id": "83",
+      "userId": 9,
+      "type": "expense",
+      "date": "2024-07-04",
+      "category": "교통",
+      "title": "교통비",
+      "memo": "버스 카드 충전",
+      "amount": 59157
+    },
+    {
+      "id": "84",
+      "userId": 10,
+      "type": "income",
+      "date": "2025-02-24",
+      "category": "환급",
+      "title": "세금 환급",
+      "memo": "세금 환급",
+      "amount": 78409
+    },
+    {
+      "id": "85",
+      "userId": 2,
+      "type": "income",
+      "date": "2024-10-21",
+      "category": "급여",
+      "title": "세금 환급",
+      "memo": "이번 달 월급",
+      "amount": 76157
+    },
+    {
+      "id": "86",
+      "userId": 9,
+      "type": "income",
+      "date": "2024-05-31",
+      "category": "환급",
+      "title": "월급",
+      "memo": "미납금 환급",
+      "amount": 32157
+    },
+    {
+      "id": "87",
+      "userId": 2,
+      "type": "expense",
+      "date": "2024-09-10",
+      "category": "여가",
+      "title": "옷 구매",
+      "memo": "여행",
+      "amount": 25339
+    },
+    {
+      "id": "88",
+      "userId": 3,
+      "type": "expense",
+      "date": "2025-04-03",
+      "category": "쇼핑",
+      "title": "영화 관람",
+      "memo": "화장품 쇼핑",
+      "amount": 9273
+    },
+    {
+      "id": "89",
+      "userId": 9,
+      "type": "income",
+      "date": "2024-12-21",
+      "category": "환급",
+      "title": "월급",
+      "memo": "미납금 환급",
+      "amount": 22387
+    },
+    {
+      "id": "90",
+      "userId": 3,
+      "type": "expense",
+      "date": "2024-05-10",
+      "category": "생활",
+      "title": "영화 관람",
+      "memo": "세제 구매",
+      "amount": 21414
+    },
+    {
+      "id": "91",
+      "userId": 2,
+      "type": "expense",
+      "date": "2024-05-24",
+      "category": "생활",
+      "title": "영양제 구매",
+      "memo": "생수 구매",
+      "amount": 54344
+    },
+    {
+      "id": "92",
+      "userId": 1,
+      "type": "expense",
+      "date": "2024-07-23",
+      "category": "교통",
+      "title": "옷 구매",
+      "memo": "버스 카드 충전",
+      "amount": 8665
+    },
+    {
+      "id": "93",
+      "userId": 9,
+      "type": "income",
+      "date": "2024-07-07",
+      "category": "환급",
+      "title": "부모님 용돈",
+      "memo": "미납금 환급",
+      "amount": 9989
+    },
+    {
+      "id": "94",
+      "userId": 1,
+      "type": "expense",
+      "date": "2024-04-20",
+      "category": "건강",
+      "title": "카페",
+      "memo": "병원 진료",
+      "amount": 21080
+    },
+    {
+      "id": "95",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-04-18",
+      "category": "환급",
+      "title": "부모님 용돈",
+      "memo": "세금 환급",
+      "amount": 74576
+    },
+    {
+      "id": "96",
+      "userId": 9,
+      "type": "expense",
+      "date": "2024-04-08",
+      "category": "교통",
+      "title": "교통비",
+      "memo": "택시비 지출",
+      "amount": 89496
+    },
+    {
+      "id": "97",
+      "userId": 10,
+      "type": "income",
+      "date": "2025-01-06",
+      "category": "용돈",
+      "title": "월급",
+      "memo": "용돈 받음",
+      "amount": 52326
+    },
+    {
+      "id": "98",
+      "userId": 10,
+      "type": "income",
+      "date": "2025-01-08",
+      "category": "용돈",
+      "title": "부모님 용돈",
+      "memo": "용돈 받음",
+      "amount": 40195
+    },
+    {
+      "id": "99",
+      "userId": 10,
+      "type": "income",
+      "date": "2024-11-13",
+      "category": "환급",
+      "title": "아르바이트",
+      "memo": "세금 환급",
+      "amount": 21209
+    },
+    {
+      "id": "100",
+      "userId": 3,
+      "type": "expense",
+      "date": "2024-09-13",
+      "category": "교통",
+      "title": "교통비",
+      "memo": "택시비 지출",
+      "amount": 46342
+    },
+    {
+      "id": "101",
+      "userId": 7,
+      "type": "income",
+      "date": "2024-08-15",
+      "category": "부수입",
+      "title": "아르바이트",
+      "memo": "중고거래 수익",
+      "amount": 68401
+    },
+    {
+      "id": "102",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-08-10",
+      "category": "급여",
+      "title": "아르바이트",
+      "memo": "급여 입금",
+      "amount": 38922
+    },
+    {
+      "id": "103",
+      "userId": 8,
+      "type": "expense",
+      "date": "2024-10-21",
+      "category": "여가",
+      "title": "생필품 구매",
+      "memo": "카페 방문",
+      "amount": 62449
+    },
+    {
+      "id": "104",
+      "userId": 2,
+      "type": "income",
+      "date": "2024-06-14",
+      "category": "부수입",
+      "title": "부모님 용돈",
+      "memo": "중고거래 수익",
+      "amount": 32172
+    },
+    {
+      "id": "105",
+      "userId": 3,
+      "type": "income",
+      "date": "2024-08-26",
+      "category": "부수입",
+      "title": "아르바이트",
+      "memo": "중고거래 수익",
+      "amount": 12563
+    },
+    {
+      "id": "106",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-07-04",
+      "category": "부수입",
+      "title": "월급",
+      "memo": "앱테크 수익",
+      "amount": 83503
+    },
+    {
+      "id": "107",
+      "userId": 3,
+      "type": "expense",
+      "date": "2024-10-22",
+      "category": "여가",
+      "title": "영화 관람",
+      "memo": "여행",
+      "amount": 72968
+    },
+    {
+      "id": "108",
+      "userId": 1,
+      "type": "income",
+      "date": "2024-10-15",
+      "category": "환급",
+      "title": "아르바이트",
+      "memo": "보험 환급",
+      "amount": 22003
+    },
+    {
+      "id": "109",
+      "userId": 9,
+      "type": "expense",
+      "date": "2024-07-27",
+      "category": "여가",
+      "title": "교통비",
+      "memo": "여행",
+      "amount": 46894
+    },
+    {
+      "id": "110",
+      "userId": 2,
+      "type": "expense",
+      "date": "2024-07-18",
+      "category": "여가",
+      "title": "생필품 구매",
+      "memo": "카페 방문",
+      "amount": 93012
+    },
+    {
+      "id": "111",
+      "userId": 2,
+      "type": "expense",
+      "date": "2024-05-24",
+      "category": "여가",
+      "title": "카페",
+      "memo": "여행",
+      "amount": 43905
+    },
+    {
+      "id": "112",
+      "userId": 2,
+      "type": "expense",
+      "date": "2024-11-30",
+      "category": "식비",
+      "title": "교통비",
+      "memo": "저녁 외식",
+      "amount": 83518
+    },
+    {
+      "id": "113",
+      "userId": 2,
+      "type": "expense",
+      "date": "2025-02-23",
+      "category": "생활",
+      "title": "영양제 구매",
+      "memo": "생수 구매",
+      "amount": 85938
+    },
+    {
+      "id": "114",
+      "userId": 4,
+      "type": "expense",
+      "date": "2024-08-07",
+      "category": "문화",
+      "title": "옷 구매",
+      "memo": "콘서트 티켓",
+      "amount": 88341
+    },
+    {
+      "id": "115",
+      "userId": 6,
+      "type": "income",
+      "date": "2024-08-22",
+      "category": "급여",
+      "title": "부모님 용돈",
+      "memo": "이번 달 월급",
+      "amount": 71994
+    },
+    {
+      "id": "116",
+      "userId": 10,
+      "type": "income",
+      "date": "2024-05-08",
+      "category": "부수입",
+      "title": "월급",
+      "memo": "블로그 광고 수익",
+      "amount": 92672
+    },
+    {
+      "id": "117",
+      "userId": 8,
+      "type": "income",
+      "date": "2025-01-18",
+      "category": "환급",
+      "title": "세금 환급",
+      "memo": "세금 환급",
+      "amount": 59230
+    },
+    {
+      "id": "118",
+      "userId": 1,
+      "type": "income",
+      "date": "2025-03-16",
+      "category": "급여",
+      "title": "부모님 용돈",
+      "memo": "이번 달 월급",
+      "amount": 15773
+    },
+    {
+      "id": "119",
+      "userId": 2,
+      "type": "income",
+      "date": "2024-08-10",
+      "category": "환급",
+      "title": "아르바이트",
+      "memo": "미납금 환급",
+      "amount": 7778
+    },
+    {
+      "id": "120",
+      "userId": 9,
+      "type": "expense",
+      "date": "2025-03-25",
+      "category": "교통",
+      "title": "교통비",
+      "memo": "택시비 지출",
+      "amount": 12074
+    },
+    {
+      "id": "121",
+      "userId": 5,
+      "type": "income",
+      "date": "2024-05-28",
+      "category": "용돈",
+      "title": "월급",
+      "memo": "용돈 받음",
+      "amount": 88894
+    },
+    {
+      "id": "122",
+      "userId": 6,
+      "type": "income",
+      "date": "2024-09-28",
+      "category": "급여",
+      "title": "월급",
+      "memo": "급여 입금",
+      "amount": 84185
+    },
+    {
+      "id": "123",
+      "userId": 6,
+      "type": "income",
+      "date": "2025-02-15",
+      "category": "용돈",
+      "title": "세금 환급",
+      "memo": "부모님 감사합니다",
+      "amount": 94620
+    },
+    {
+      "id": "124",
+      "userId": 10,
+      "type": "expense",
+      "date": "2024-04-28",
+      "category": "여가",
+      "title": "교통비",
+      "memo": "여행",
+      "amount": 98753
+    },
+    {
+      "id": "125",
+      "userId": 8,
+      "type": "expense",
+      "date": "2024-11-22",
+      "category": "여가",
+      "title": "영양제 구매",
+      "memo": "여행",
+      "amount": 44863
+    },
+    {
+      "id": "126",
+      "userId": 5,
+      "type": "income",
+      "date": "2024-09-19",
+      "category": "환급",
+      "title": "부모님 용돈",
+      "memo": "보험 환급",
+      "amount": 20305
+    },
+    {
+      "id": "127",
+      "userId": 5,
+      "type": "expense",
+      "date": "2024-05-05",
+      "category": "생활",
+      "title": "점심 식사",
+      "memo": "생수 구매",
+      "amount": 35591
+    },
+    {
+      "id": "128",
+      "userId": 7,
+      "type": "expense",
+      "date": "2025-03-12",
+      "category": "건강",
+      "title": "카페",
+      "memo": "병원 진료",
+      "amount": 6487
+    },
+    {
+      "id": "129",
+      "userId": 3,
+      "type": "income",
+      "date": "2024-10-27",
+      "category": "환급",
+      "title": "월급",
+      "memo": "미납금 환급",
+      "amount": 44904
+    },
+    {
+      "id": "130",
+      "userId": 5,
+      "type": "expense",
+      "date": "2024-04-19",
+      "category": "쇼핑",
+      "title": "옷 구매",
+      "memo": "옷 세일",
+      "amount": 69179
+    },
+    {
+      "id": "131",
+      "userId": 4,
+      "type": "expense",
+      "date": "2024-04-23",
+      "category": "건강",
+      "title": "점심 식사",
+      "memo": "헬스장 등록",
+      "amount": 29870
+    },
+    {
+      "id": "132",
+      "userId": 6,
+      "type": "expense",
+      "date": "2024-09-20",
+      "category": "식비",
+      "title": "교통비",
+      "memo": "저녁 외식",
+      "amount": 7549
+    },
+    {
+      "id": "133",
+      "userId": 9,
+      "type": "income",
+      "date": "2025-01-26",
+      "category": "급여",
+      "title": "부모님 용돈",
+      "memo": "급여 입금",
+      "amount": 87256
+    },
+    {
+      "id": "134",
+      "userId": 3,
+      "type": "income",
+      "date": "2024-05-13",
+      "category": "부수입",
+      "title": "부모님 용돈",
+      "memo": "앱테크 수익",
+      "amount": 47594
+    },
+    {
+      "id": "135",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-04-19",
+      "category": "부수입",
+      "title": "아르바이트",
+      "memo": "앱테크 수익",
+      "amount": 76412
+    },
+    {
+      "id": "136",
+      "userId": 5,
+      "type": "expense",
+      "date": "2024-07-23",
+      "category": "문화",
+      "title": "교통비",
+      "memo": "콘서트 티켓",
+      "amount": 42878
+    },
+    {
+      "id": "137",
+      "userId": 3,
+      "type": "income",
+      "date": "2024-06-03",
+      "category": "환급",
+      "title": "월급",
+      "memo": "보험 환급",
+      "amount": 25893
+    },
+    {
+      "id": "138",
+      "userId": 8,
+      "type": "expense",
+      "date": "2024-06-13",
+      "category": "교통",
+      "title": "옷 구매",
+      "memo": "택시비 지출",
+      "amount": 58110
+    },
+    {
+      "id": "139",
+      "userId": 10,
+      "type": "income",
+      "date": "2024-07-10",
+      "category": "용돈",
+      "title": "월급",
+      "memo": "부모님 감사합니다",
+      "amount": 45925
+    },
+    {
+      "id": "140",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-05-01",
+      "category": "급여",
+      "title": "세금 환급",
+      "memo": "월급날",
+      "amount": 18876
+    },
+    {
+      "id": "141",
+      "userId": 3,
+      "type": "income",
+      "date": "2024-08-23",
+      "category": "용돈",
+      "title": "세금 환급",
+      "memo": "용돈 받음",
+      "amount": 41974
+    },
+    {
+      "id": "142",
+      "userId": 7,
+      "type": "expense",
+      "date": "2024-06-30",
+      "category": "여가",
+      "title": "점심 식사",
+      "memo": "카페 방문",
+      "amount": 50152
+    },
+    {
+      "id": "143",
+      "userId": 4,
+      "type": "expense",
+      "date": "2024-11-11",
+      "category": "여가",
+      "title": "영양제 구매",
+      "memo": "카페 방문",
+      "amount": 74828
+    },
+    {
+      "id": "144",
+      "userId": 10,
+      "type": "expense",
+      "date": "2024-08-13",
+      "category": "식비",
+      "title": "영양제 구매",
+      "memo": "오늘 점심 메뉴",
+      "amount": 44381
+    },
+    {
+      "id": "145",
+      "userId": 1,
+      "type": "income",
+      "date": "2024-11-14",
+      "category": "환급",
+      "title": "부모님 용돈",
+      "memo": "세금 환급",
+      "amount": 85540
+    },
+    {
+      "id": "146",
+      "userId": 4,
+      "type": "income",
+      "date": "2024-12-16",
+      "category": "용돈",
+      "title": "아르바이트",
+      "memo": "부모님 감사합니다",
+      "amount": 27797
+    },
+    {
+      "id": "147",
+      "userId": 1,
+      "type": "income",
+      "date": "2024-05-21",
+      "category": "환급",
+      "title": "아르바이트",
+      "memo": "세금 환급",
+      "amount": 26706
+    },
+    {
+      "id": "148",
+      "userId": 7,
+      "type": "expense",
+      "date": "2025-03-21",
+      "category": "식비",
+      "title": "카페",
+      "memo": "오늘 점심 메뉴",
+      "amount": 12592
+    },
+    {
+      "id": "149",
+      "userId": 2,
+      "type": "income",
+      "date": "2024-12-05",
+      "category": "급여",
+      "title": "아르바이트",
+      "memo": "이번 달 월급",
+      "amount": 22650
+    },
+    {
+      "id": "150",
+      "userId": 6,
+      "type": "income",
+      "date": "2025-03-16",
+      "category": "환급",
+      "title": "아르바이트",
+      "memo": "세금 환급",
+      "amount": 24894
+    },
+    {
+      "id": "151",
+      "userId": 7,
+      "type": "income",
+      "date": "2024-04-19",
+      "category": "급여",
+      "title": "아르바이트",
+      "memo": "이번 달 월급",
+      "amount": 26176
+    },
+    {
+      "id": "152",
+      "userId": 6,
+      "type": "expense",
+      "date": "2024-12-15",
+      "category": "쇼핑",
+      "title": "영화 관람",
+      "memo": "화장품 쇼핑",
+      "amount": 53270
+    },
+    {
+      "id": "153",
+      "userId": 2,
+      "type": "income",
+      "date": "2025-03-15",
+      "category": "부수입",
+      "title": "부모님 용돈",
+      "memo": "앱테크 수익",
+      "amount": 39018
+    },
+    {
+      "id": "154",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-09-02",
+      "category": "환급",
+      "title": "세금 환급",
+      "memo": "미납금 환급",
+      "amount": 22759
+    },
+    {
+      "id": "155",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-06-19",
+      "category": "부수입",
+      "title": "아르바이트",
+      "memo": "블로그 광고 수익",
+      "amount": 85877
+    },
+    {
+      "id": "156",
+      "userId": 7,
+      "type": "expense",
+      "date": "2024-12-19",
+      "category": "생활",
+      "title": "점심 식사",
+      "memo": "휴지 구매",
+      "amount": 60539
+    },
+    {
+      "id": "157",
+      "userId": 4,
+      "type": "income",
+      "date": "2024-05-30",
+      "category": "부수입",
+      "title": "세금 환급",
+      "memo": "블로그 광고 수익",
+      "amount": 92218
+    },
+    {
+      "id": "158",
+      "userId": 4,
+      "type": "expense",
+      "date": "2024-09-12",
+      "category": "여가",
+      "title": "교통비",
+      "memo": "게임",
+      "amount": 31228
+    },
+    {
+      "id": "159",
+      "userId": 5,
+      "type": "income",
+      "date": "2024-07-12",
+      "category": "부수입",
+      "title": "아르바이트",
+      "memo": "블로그 광고 수익",
+      "amount": 55568
+    },
+    {
+      "id": "160",
+      "userId": 4,
+      "type": "expense",
+      "date": "2025-03-04",
+      "category": "생활",
+      "title": "교통비",
+      "memo": "생수 구매",
+      "amount": 83145
+    },
+    {
+      "id": "161",
+      "userId": 6,
+      "type": "expense",
+      "date": "2025-03-10",
+      "category": "문화",
+      "title": "옷 구매",
+      "memo": "영화 티켓",
+      "amount": 20104
+    },
+    {
+      "id": "162",
+      "userId": 10,
+      "type": "expense",
+      "date": "2024-12-05",
+      "category": "교통",
+      "title": "영화 관람",
+      "memo": "주차 요금",
+      "amount": 50799
+    },
+    {
+      "id": "163",
+      "userId": 5,
+      "type": "income",
+      "date": "2024-06-18",
+      "category": "환급",
+      "title": "아르바이트",
+      "memo": "세금 환급",
+      "amount": 31575
+    },
+    {
+      "id": "164",
+      "userId": 7,
+      "type": "income",
+      "date": "2025-03-27",
+      "category": "부수입",
+      "title": "세금 환급",
+      "memo": "중고거래 수익",
+      "amount": 81742
+    },
+    {
+      "id": "165",
+      "userId": 5,
+      "type": "income",
+      "date": "2024-11-30",
+      "category": "급여",
+      "title": "월급",
+      "memo": "이번 달 월급",
+      "amount": 64780
+    },
+    {
+      "id": "166",
+      "userId": 1,
+      "type": "income",
+      "date": "2024-10-13",
+      "category": "환급",
+      "title": "아르바이트",
+      "memo": "미납금 환급",
+      "amount": 43551
+    },
+    {
+      "id": "167",
+      "userId": 9,
+      "type": "income",
+      "date": "2024-08-16",
+      "category": "급여",
+      "title": "월급",
+      "memo": "급여 입금",
+      "amount": 40962
+    },
+    {
+      "id": "168",
+      "userId": 2,
+      "type": "income",
+      "date": "2024-11-14",
+      "category": "환급",
+      "title": "세금 환급",
+      "memo": "세금 환급",
+      "amount": 30889
+    },
+    {
+      "id": "169",
+      "userId": 8,
+      "type": "expense",
+      "date": "2024-09-20",
+      "category": "문화",
+      "title": "영화 관람",
+      "memo": "콘서트 티켓",
+      "amount": 67722
+    },
+    {
+      "id": "170",
+      "userId": 4,
+      "type": "expense",
+      "date": "2024-09-19",
+      "category": "여가",
+      "title": "영화 관람",
+      "memo": "게임",
+      "amount": 61969
+    },
+    {
+      "id": "171",
+      "userId": 7,
+      "type": "expense",
+      "date": "2024-06-04",
+      "category": "여가",
+      "title": "옷 구매",
+      "memo": "카페 방문",
+      "amount": 47280
+    },
+    {
+      "id": "172",
+      "userId": 6,
+      "type": "expense",
+      "date": "2024-08-31",
+      "category": "여가",
+      "title": "생필품 구매",
+      "memo": "게임",
+      "amount": 3132
+    },
+    {
+      "id": "173",
+      "userId": 9,
+      "type": "expense",
+      "date": "2024-08-14",
+      "category": "식비",
+      "title": "옷 구매",
+      "memo": "오늘 점심 메뉴",
+      "amount": 9487
+    },
+    {
+      "id": "174",
+      "userId": 1,
+      "type": "income",
+      "date": "2024-07-26",
+      "category": "부수입",
+      "title": "세금 환급",
+      "memo": "앱테크 수익",
+      "amount": 22671
+    },
+    {
+      "id": "175",
+      "userId": 3,
+      "type": "income",
+      "date": "2024-12-20",
+      "category": "급여",
+      "title": "아르바이트",
+      "memo": "이번 달 월급",
+      "amount": 87318
+    },
+    {
+      "id": "176",
+      "userId": 6,
+      "type": "income",
+      "date": "2024-06-16",
+      "category": "부수입",
+      "title": "아르바이트",
+      "memo": "앱테크 수익",
+      "amount": 35664
+    },
+    {
+      "id": "177",
+      "userId": 3,
+      "type": "expense",
+      "date": "2024-11-17",
+      "category": "여가",
+      "title": "영화 관람",
+      "memo": "게임",
+      "amount": 47163
+    },
+    {
+      "id": "178",
+      "userId": 1,
+      "type": "expense",
+      "date": "2024-06-28",
+      "category": "여가",
+      "title": "옷 구매",
+      "memo": "여행",
+      "amount": 39884
+    },
+    {
+      "id": "179",
+      "userId": 3,
+      "type": "income",
+      "date": "2024-06-22",
+      "category": "환급",
+      "title": "월급",
+      "memo": "세금 환급",
+      "amount": 87635
+    },
+    {
+      "id": "180",
+      "userId": 10,
+      "type": "expense",
+      "date": "2024-06-02",
+      "category": "쇼핑",
+      "title": "영화 관람",
+      "memo": "신발 구매",
+      "amount": 68941
+    },
+    {
+      "id": "181",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-06-25",
+      "category": "용돈",
+      "title": "부모님 용돈",
+      "memo": "부모님 감사합니다",
+      "amount": 1132
+    },
+    {
+      "id": "182",
+      "userId": 5,
+      "type": "expense",
+      "date": "2025-01-17",
+      "category": "여가",
+      "title": "영양제 구매",
+      "memo": "카페 방문",
+      "amount": 79253
+    },
+    {
+      "id": "183",
+      "userId": 3,
+      "type": "income",
+      "date": "2024-05-24",
+      "category": "환급",
+      "title": "월급",
+      "memo": "미납금 환급",
+      "amount": 27063
+    },
+    {
+      "id": "184",
+      "userId": 4,
+      "type": "expense",
+      "date": "2024-09-15",
+      "category": "건강",
+      "title": "카페",
+      "memo": "병원 진료",
+      "amount": 90275
+    },
+    {
+      "id": "185",
+      "userId": 7,
+      "type": "income",
+      "date": "2024-11-21",
+      "category": "부수입",
+      "title": "아르바이트",
+      "memo": "앱테크 수익",
+      "amount": 12877
+    },
+    {
+      "id": "186",
+      "userId": 1,
+      "type": "expense",
+      "date": "2024-07-29",
+      "category": "식비",
+      "title": "영양제 구매",
+      "memo": "저녁 외식",
+      "amount": 39418
+    },
+    {
+      "id": "187",
+      "userId": 4,
+      "type": "income",
+      "date": "2024-10-13",
+      "category": "용돈",
+      "title": "월급",
+      "memo": "용돈 받음",
+      "amount": 55121
+    },
+    {
+      "id": "188",
+      "userId": 5,
+      "type": "expense",
+      "date": "2024-06-25",
+      "category": "식비",
+      "title": "영화 관람",
+      "memo": "오늘 점심 메뉴",
+      "amount": 99623
+    },
+    {
+      "id": "189",
+      "userId": 6,
+      "type": "expense",
+      "date": "2025-01-08",
+      "category": "문화",
+      "title": "점심 식사",
+      "memo": "콘서트 티켓",
+      "amount": 38642
+    },
+    {
+      "id": "190",
+      "userId": 3,
+      "type": "expense",
+      "date": "2024-09-18",
+      "category": "교통",
+      "title": "영양제 구매",
+      "memo": "택시비 지출",
+      "amount": 96731
+    },
+    {
+      "id": "191",
+      "userId": 6,
+      "type": "income",
+      "date": "2024-10-03",
+      "category": "부수입",
+      "title": "아르바이트",
+      "memo": "블로그 광고 수익",
+      "amount": 55719
+    },
+    {
+      "id": "192",
+      "userId": 10,
+      "type": "expense",
+      "date": "2025-01-21",
+      "category": "식비",
+      "title": "옷 구매",
+      "memo": "저녁 외식",
+      "amount": 54024
+    },
+    {
+      "id": "193",
+      "userId": 6,
+      "type": "income",
+      "date": "2024-12-22",
+      "category": "급여",
+      "title": "부모님 용돈",
+      "memo": "월급날",
+      "amount": 85556
+    },
+    {
+      "id": "194",
+      "userId": 9,
+      "type": "income",
+      "date": "2024-05-15",
+      "category": "부수입",
+      "title": "월급",
+      "memo": "앱테크 수익",
+      "amount": 25595
+    },
+    {
+      "id": "195",
+      "userId": 4,
+      "type": "income",
+      "date": "2024-06-07",
+      "category": "용돈",
+      "title": "아르바이트",
+      "memo": "부모님 감사합니다",
+      "amount": 42229
+    },
+    {
+      "id": "196",
+      "userId": 6,
+      "type": "expense",
+      "date": "2025-03-01",
+      "category": "생활",
+      "title": "교통비",
+      "memo": "세제 구매",
+      "amount": 46685
+    },
+    {
+      "id": "197",
+      "userId": 9,
+      "type": "income",
+      "date": "2024-06-29",
+      "category": "급여",
+      "title": "부모님 용돈",
+      "memo": "급여 입금",
+      "amount": 69077
+    },
+    {
+      "id": "198",
+      "userId": 9,
+      "type": "income",
+      "date": "2024-09-16",
+      "category": "부수입",
+      "title": "부모님 용돈",
+      "memo": "중고거래 수익",
+      "amount": 34039
+    },
+    {
+      "id": "199",
+      "userId": 4,
+      "type": "expense",
+      "date": "2024-04-22",
+      "category": "여가",
+      "title": "영화 관람",
+      "memo": "여행",
+      "amount": 64644
+    },
+    {
+      "id": "200",
+      "userId": 1,
+      "type": "expense",
+      "date": "2024-04-27",
+      "category": "교통",
+      "title": "옷 구매",
+      "memo": "주차 요금",
+      "amount": 41570
+    },
+    {
+      "id": "201",
+      "userId": 9,
+      "type": "income",
+      "date": "2024-11-01",
+      "category": "용돈",
+      "title": "아르바이트",
+      "memo": "용돈 받음",
+      "amount": 27479
+    },
+    {
+      "id": "202",
+      "userId": 6,
+      "type": "expense",
+      "date": "2025-04-02",
+      "category": "문화",
+      "title": "옷 구매",
+      "memo": "영화 티켓",
+      "amount": 39567
+    },
+    {
+      "id": "203",
+      "userId": 6,
+      "type": "income",
+      "date": "2024-07-27",
+      "category": "용돈",
+      "title": "세금 환급",
+      "memo": "용돈 받음",
+      "amount": 28931
+    },
+    {
+      "id": "204",
+      "userId": 4,
+      "type": "expense",
+      "date": "2024-10-01",
+      "category": "교통",
+      "title": "점심 식사",
+      "memo": "버스 카드 충전",
+      "amount": 43318
+    },
+    {
+      "id": "205",
+      "userId": 9,
+      "type": "income",
+      "date": "2024-05-20",
+      "category": "부수입",
+      "title": "아르바이트",
+      "memo": "앱테크 수익",
+      "amount": 1792
+    },
+    {
+      "id": "206",
+      "userId": 10,
+      "type": "expense",
+      "date": "2024-05-23",
+      "category": "건강",
+      "title": "카페",
+      "memo": "헬스장 등록",
+      "amount": 50376
+    },
+    {
+      "id": "207",
+      "userId": 5,
+      "type": "income",
+      "date": "2024-05-24",
+      "category": "용돈",
+      "title": "부모님 용돈",
+      "memo": "용돈 받음",
+      "amount": 89969
+    },
+    {
+      "id": "208",
+      "userId": 6,
+      "type": "expense",
+      "date": "2024-06-09",
+      "category": "문화",
+      "title": "생필품 구매",
+      "memo": "영화 티켓",
+      "amount": 59171
+    },
+    {
+      "id": "209",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-12-06",
+      "category": "환급",
+      "title": "아르바이트",
+      "memo": "세금 환급",
+      "amount": 42489
+    },
+    {
+      "id": "210",
+      "userId": 5,
+      "type": "expense",
+      "date": "2024-09-30",
+      "category": "교통",
+      "title": "옷 구매",
+      "memo": "택시비 지출",
+      "amount": 48985
+    },
+    {
+      "id": "211",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-10-21",
+      "category": "급여",
+      "title": "세금 환급",
+      "memo": "이번 달 월급",
+      "amount": 83680
+    },
+    {
+      "id": "212",
+      "userId": 8,
+      "type": "income",
+      "date": "2025-01-27",
+      "category": "용돈",
+      "title": "아르바이트",
+      "memo": "용돈으로 생활비 충당",
+      "amount": 48389
+    },
+    {
+      "id": "213",
+      "userId": 5,
+      "type": "expense",
+      "date": "2025-04-03",
+      "category": "문화",
+      "title": "교통비",
+      "memo": "콘서트 티켓",
+      "amount": 54497
+    },
+    {
+      "id": "214",
+      "userId": 4,
+      "type": "expense",
+      "date": "2025-01-27",
+      "category": "교통",
+      "title": "영양제 구매",
+      "memo": "주차 요금",
+      "amount": 35268
+    },
+    {
+      "id": "215",
+      "userId": 7,
+      "type": "expense",
+      "date": "2024-12-28",
+      "category": "식비",
+      "title": "옷 구매",
+      "memo": "저녁 외식",
+      "amount": 49345
+    },
+    {
+      "id": "216",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-04-23",
+      "category": "환급",
+      "title": "월급",
+      "memo": "세금 환급",
+      "amount": 58550
+    },
+    {
+      "id": "217",
+      "userId": 6,
+      "type": "income",
+      "date": "2024-05-09",
+      "category": "급여",
+      "title": "세금 환급",
+      "memo": "이번 달 월급",
+      "amount": 19976
+    },
+    {
+      "id": "218",
+      "userId": 2,
+      "type": "expense",
+      "date": "2024-05-14",
+      "category": "식비",
+      "title": "생필품 구매",
+      "memo": "간식 구매",
+      "amount": 1107
+    },
+    {
+      "id": "219",
+      "userId": 5,
+      "type": "income",
+      "date": "2025-03-06",
+      "category": "부수입",
+      "title": "세금 환급",
+      "memo": "중고거래 수익",
+      "amount": 87592
+    },
+    {
+      "id": "220",
+      "userId": 6,
+      "type": "expense",
+      "date": "2025-02-05",
+      "category": "생활",
+      "title": "생필품 구매",
+      "memo": "세제 구매",
+      "amount": 78514
+    },
+    {
+      "id": "221",
+      "userId": 9,
+      "type": "expense",
+      "date": "2025-02-20",
+      "category": "쇼핑",
+      "title": "영화 관람",
+      "memo": "옷 세일",
+      "amount": 14310
+    },
+    {
+      "id": "222",
+      "userId": 3,
+      "type": "expense",
+      "date": "2024-10-11",
+      "category": "생활",
+      "title": "영양제 구매",
+      "memo": "생수 구매",
+      "amount": 96129
+    },
+    {
+      "id": "223",
+      "userId": 6,
+      "type": "income",
+      "date": "2024-10-04",
+      "category": "부수입",
+      "title": "월급",
+      "memo": "블로그 광고 수익",
+      "amount": 63784
+    },
+    {
+      "id": "224",
+      "userId": 4,
+      "type": "income",
+      "date": "2024-12-09",
+      "category": "급여",
+      "title": "세금 환급",
+      "memo": "급여 입금",
+      "amount": 51713
+    },
+    {
+      "id": "225",
+      "userId": 1,
+      "type": "expense",
+      "date": "2025-03-31",
+      "category": "문화",
+      "title": "생필품 구매",
+      "memo": "콘서트 티켓",
+      "amount": 61713
+    },
+    {
+      "id": "226",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-08-16",
+      "category": "환급",
+      "title": "월급",
+      "memo": "세금 환급",
+      "amount": 88215
+    },
+    {
+      "id": "227",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-05-16",
+      "category": "용돈",
+      "title": "아르바이트",
+      "memo": "용돈으로 생활비 충당",
+      "amount": 36495
+    },
+    {
+      "id": "228",
+      "userId": 8,
+      "type": "expense",
+      "date": "2025-02-19",
+      "category": "여가",
+      "title": "카페",
+      "memo": "게임",
+      "amount": 44580
+    },
+    {
+      "id": "229",
+      "userId": 10,
+      "type": "expense",
+      "date": "2024-07-25",
+      "category": "여가",
+      "title": "영양제 구매",
+      "memo": "게임",
+      "amount": 50472
+    },
+    {
+      "id": "230",
+      "userId": 5,
+      "type": "expense",
+      "date": "2024-10-21",
+      "category": "여가",
+      "title": "옷 구매",
+      "memo": "여행",
+      "amount": 68182
+    },
+    {
+      "id": "231",
+      "userId": 7,
+      "type": "expense",
+      "date": "2024-10-05",
+      "category": "생활",
+      "title": "점심 식사",
+      "memo": "생수 구매",
+      "amount": 22660
+    },
+    {
+      "id": "232",
+      "userId": 1,
+      "type": "expense",
+      "date": "2024-07-25",
+      "category": "여가",
+      "title": "영화 관람",
+      "memo": "카페 방문",
+      "amount": 5665
+    },
+    {
+      "id": "233",
+      "userId": 7,
+      "type": "expense",
+      "date": "2024-06-01",
+      "category": "식비",
+      "title": "카페",
+      "memo": "간식 구매",
+      "amount": 94951
+    },
+    {
+      "id": "234",
+      "userId": 7,
+      "type": "expense",
+      "date": "2024-09-18",
+      "category": "생활",
+      "title": "교통비",
+      "memo": "세제 구매",
+      "amount": 20048
+    },
+    {
+      "id": "235",
+      "userId": 1,
+      "type": "income",
+      "date": "2024-04-18",
+      "category": "급여",
+      "title": "부모님 용돈",
+      "memo": "급여 입금",
+      "amount": 39760
+    },
+    {
+      "id": "236",
+      "userId": 1,
+      "type": "expense",
+      "date": "2024-11-28",
+      "category": "생활",
+      "title": "점심 식사",
+      "memo": "휴지 구매",
+      "amount": 33766
+    },
+    {
+      "id": "237",
+      "userId": 2,
+      "type": "income",
+      "date": "2024-07-15",
+      "category": "부수입",
+      "title": "부모님 용돈",
+      "memo": "블로그 광고 수익",
+      "amount": 8779
+    },
+    {
+      "id": "238",
+      "userId": 6,
+      "type": "income",
+      "date": "2024-09-25",
+      "category": "용돈",
+      "title": "세금 환급",
+      "memo": "용돈으로 생활비 충당",
+      "amount": 78053
+    },
+    {
+      "id": "239",
+      "userId": 5,
+      "type": "income",
+      "date": "2025-01-22",
+      "category": "급여",
+      "title": "아르바이트",
+      "memo": "이번 달 월급",
+      "amount": 62689
+    },
+    {
+      "id": "240",
+      "userId": 7,
+      "type": "expense",
+      "date": "2024-10-22",
+      "category": "여가",
+      "title": "점심 식사",
+      "memo": "카페 방문",
+      "amount": 81163
+    },
+    {
+      "id": "241",
+      "userId": 3,
+      "type": "expense",
+      "date": "2024-11-27",
+      "category": "식비",
+      "title": "생필품 구매",
+      "memo": "간식 구매",
+      "amount": 78319
+    },
+    {
+      "id": "242",
+      "userId": 6,
+      "type": "income",
+      "date": "2024-04-11",
+      "category": "급여",
+      "title": "월급",
+      "memo": "급여 입금",
+      "amount": 24426
+    },
+    {
+      "id": "243",
+      "userId": 4,
+      "type": "income",
+      "date": "2024-10-30",
+      "category": "부수입",
+      "title": "부모님 용돈",
+      "memo": "블로그 광고 수익",
+      "amount": 96600
+    },
+    {
+      "id": "244",
+      "userId": 10,
+      "type": "income",
+      "date": "2024-11-10",
+      "category": "급여",
+      "title": "아르바이트",
+      "memo": "월급날",
+      "amount": 44902
+    },
+    {
+      "id": "245",
+      "userId": 10,
+      "type": "expense",
+      "date": "2025-01-20",
+      "category": "여가",
+      "title": "영양제 구매",
+      "memo": "여행",
+      "amount": 44778
+    },
+    {
+      "id": "246",
+      "userId": 6,
+      "type": "expense",
+      "date": "2024-09-07",
+      "category": "식비",
+      "title": "영화 관람",
+      "memo": "간식 구매",
+      "amount": 41876
+    },
+    {
+      "id": "247",
+      "userId": 5,
+      "type": "expense",
+      "date": "2024-06-03",
+      "category": "여가",
+      "title": "카페",
+      "memo": "여행",
+      "amount": 85636
+    },
+    {
+      "id": "248",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-10-31",
+      "category": "부수입",
+      "title": "세금 환급",
+      "memo": "중고거래 수익",
+      "amount": 9912
+    },
+    {
+      "id": "249",
+      "userId": 2,
+      "type": "expense",
+      "date": "2025-02-24",
+      "category": "생활",
+      "title": "옷 구매",
+      "memo": "휴지 구매",
+      "amount": 63570
+    },
+    {
+      "id": "250",
+      "userId": 8,
+      "type": "expense",
+      "date": "2024-11-11",
+      "category": "여가",
+      "title": "카페",
+      "memo": "카페 방문",
+      "amount": 79175
+    },
+    {
+      "id": "251",
+      "userId": 7,
+      "type": "income",
+      "date": "2024-06-13",
+      "category": "부수입",
+      "title": "세금 환급",
+      "memo": "블로그 광고 수익",
+      "amount": 44125
+    },
+    {
+      "id": "252",
+      "userId": 1,
+      "type": "income",
+      "date": "2024-07-07",
+      "category": "급여",
+      "title": "아르바이트",
+      "memo": "이번 달 월급",
+      "amount": 11396
+    },
+    {
+      "id": "253",
+      "userId": 9,
+      "type": "expense",
+      "date": "2024-08-29",
+      "category": "생활",
+      "title": "영화 관람",
+      "memo": "생수 구매",
+      "amount": 61821
+    },
+    {
+      "id": "254",
+      "userId": 6,
+      "type": "expense",
+      "date": "2024-07-20",
+      "category": "쇼핑",
+      "title": "카페",
+      "memo": "화장품 쇼핑",
+      "amount": 18639
+    },
+    {
+      "id": "255",
+      "userId": 4,
+      "type": "expense",
+      "date": "2024-08-04",
+      "category": "생활",
+      "title": "카페",
+      "memo": "세제 구매",
+      "amount": 21408
+    },
+    {
+      "id": "256",
+      "userId": 5,
+      "type": "expense",
+      "date": "2024-12-15",
+      "category": "식비",
+      "title": "점심 식사",
+      "memo": "오늘 점심 메뉴",
+      "amount": 10197
+    },
+    {
+      "id": "257",
+      "userId": 6,
+      "type": "expense",
+      "date": "2024-07-27",
+      "category": "쇼핑",
+      "title": "교통비",
+      "memo": "옷 세일",
+      "amount": 4834
+    },
+    {
+      "id": "258",
+      "userId": 10,
+      "type": "expense",
+      "date": "2025-03-09",
+      "category": "식비",
+      "title": "카페",
+      "memo": "저녁 외식",
+      "amount": 15108
+    },
+    {
+      "id": "259",
+      "userId": 2,
+      "type": "expense",
+      "date": "2024-11-16",
+      "category": "교통",
+      "title": "생필품 구매",
+      "memo": "택시비 지출",
+      "amount": 64599
+    },
+    {
+      "id": "260",
+      "userId": 3,
+      "type": "expense",
+      "date": "2025-01-20",
+      "category": "문화",
+      "title": "영양제 구매",
+      "memo": "전시회 관람",
+      "amount": 90812
+    },
+    {
+      "id": "261",
+      "userId": 2,
+      "type": "expense",
+      "date": "2025-02-15",
+      "category": "건강",
+      "title": "점심 식사",
+      "memo": "헬스장 등록",
+      "amount": 19984
+    },
+    {
+      "id": "262",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-07-13",
+      "category": "급여",
+      "title": "부모님 용돈",
+      "memo": "이번 달 월급",
+      "amount": 90025
+    },
+    {
+      "id": "263",
+      "userId": 1,
+      "type": "income",
+      "date": "2025-02-09",
+      "category": "급여",
+      "title": "부모님 용돈",
+      "memo": "이번 달 월급",
+      "amount": 86925
+    },
+    {
+      "id": "264",
+      "userId": 3,
+      "type": "income",
+      "date": "2025-03-15",
+      "category": "환급",
+      "title": "아르바이트",
+      "memo": "미납금 환급",
+      "amount": 18056
+    },
+    {
+      "id": "265",
+      "userId": 5,
+      "type": "expense",
+      "date": "2025-01-15",
+      "category": "교통",
+      "title": "점심 식사",
+      "memo": "택시비 지출",
+      "amount": 91700
+    },
+    {
+      "id": "266",
+      "userId": 7,
+      "type": "income",
+      "date": "2024-05-17",
+      "category": "용돈",
+      "title": "아르바이트",
+      "memo": "용돈으로 생활비 충당",
+      "amount": 99959
+    },
+    {
+      "id": "267",
+      "userId": 6,
+      "type": "expense",
+      "date": "2024-06-20",
+      "category": "식비",
+      "title": "생필품 구매",
+      "memo": "간식 구매",
+      "amount": 28832
+    },
+    {
+      "id": "268",
+      "userId": 10,
+      "type": "expense",
+      "date": "2025-03-22",
+      "category": "건강",
+      "title": "영양제 구매",
+      "memo": "병원 진료",
+      "amount": 19244
+    },
+    {
+      "id": "269",
+      "userId": 2,
+      "type": "expense",
+      "date": "2024-07-22",
+      "category": "여가",
+      "title": "옷 구매",
+      "memo": "카페 방문",
+      "amount": 65720
+    },
+    {
+      "id": "270",
+      "userId": 5,
+      "type": "income",
+      "date": "2024-10-20",
+      "category": "환급",
+      "title": "아르바이트",
+      "memo": "미납금 환급",
+      "amount": 16287
+    },
+    {
+      "id": "271",
+      "userId": 3,
+      "type": "expense",
+      "date": "2024-12-12",
+      "category": "쇼핑",
+      "title": "점심 식사",
+      "memo": "신발 구매",
+      "amount": 3609
+    },
+    {
+      "id": "272",
+      "userId": 4,
+      "type": "expense",
+      "date": "2025-02-12",
+      "category": "식비",
+      "title": "점심 식사",
+      "memo": "오늘 점심 메뉴",
+      "amount": 77443
+    },
+    {
+      "id": "273",
+      "userId": 7,
+      "type": "income",
+      "date": "2024-08-08",
+      "category": "환급",
+      "title": "아르바이트",
+      "memo": "세금 환급",
+      "amount": 94517
+    },
+    {
+      "id": "274",
+      "userId": 10,
+      "type": "expense",
+      "date": "2025-03-03",
+      "category": "생활",
+      "title": "교통비",
+      "memo": "생수 구매",
+      "amount": 49597
+    },
+    {
+      "id": "275",
+      "userId": 3,
+      "type": "expense",
+      "date": "2025-02-24",
+      "category": "교통",
+      "title": "영화 관람",
+      "memo": "택시비 지출",
+      "amount": 37714
+    },
+    {
+      "id": "276",
+      "userId": 6,
+      "type": "expense",
+      "date": "2024-05-23",
+      "category": "식비",
+      "title": "카페",
+      "memo": "오늘 점심 메뉴",
+      "amount": 51067
+    },
+    {
+      "id": "277",
+      "userId": 6,
+      "type": "income",
+      "date": "2024-12-23",
+      "category": "용돈",
+      "title": "부모님 용돈",
+      "memo": "부모님 감사합니다",
+      "amount": 6827
+    },
+    {
+      "id": "278",
+      "userId": 4,
+      "type": "income",
+      "date": "2024-06-26",
+      "category": "급여",
+      "title": "부모님 용돈",
+      "memo": "월급날",
+      "amount": 93686
+    },
+    {
+      "id": "279",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-09-15",
+      "category": "부수입",
+      "title": "아르바이트",
+      "memo": "블로그 광고 수익",
+      "amount": 47664
+    },
+    {
+      "id": "280",
+      "userId": 8,
+      "type": "expense",
+      "date": "2024-05-10",
+      "category": "건강",
+      "title": "영화 관람",
+      "memo": "영양제 구매",
+      "amount": 57539
+    },
+    {
+      "id": "281",
+      "userId": 3,
+      "type": "income",
+      "date": "2024-09-27",
+      "category": "급여",
+      "title": "부모님 용돈",
+      "memo": "급여 입금",
+      "amount": 68728
+    },
+    {
+      "id": "282",
+      "userId": 5,
+      "type": "expense",
+      "date": "2024-05-16",
+      "category": "문화",
+      "title": "옷 구매",
+      "memo": "콘서트 티켓",
+      "amount": 79655
+    },
+    {
+      "id": "283",
+      "userId": 1,
+      "type": "income",
+      "date": "2024-10-16",
+      "category": "급여",
+      "title": "월급",
+      "memo": "월급날",
+      "amount": 68178
+    },
+    {
+      "id": "284",
+      "userId": 2,
+      "type": "income",
+      "date": "2024-04-27",
+      "category": "급여",
+      "title": "세금 환급",
+      "memo": "급여 입금",
+      "amount": 7014
+    },
+    {
+      "id": "285",
+      "userId": 1,
+      "type": "income",
+      "date": "2024-10-17",
+      "category": "환급",
+      "title": "부모님 용돈",
+      "memo": "미납금 환급",
+      "amount": 71803
+    },
+    {
+      "id": "286",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-07-04",
+      "category": "환급",
+      "title": "아르바이트",
+      "memo": "보험 환급",
+      "amount": 40731
+    },
+    {
+      "id": "287",
+      "userId": 2,
+      "type": "income",
+      "date": "2025-03-21",
+      "category": "부수입",
+      "title": "부모님 용돈",
+      "memo": "앱테크 수익",
+      "amount": 67973
+    },
+    {
+      "id": "288",
+      "userId": 10,
+      "type": "income",
+      "date": "2024-04-26",
+      "category": "부수입",
+      "title": "월급",
+      "memo": "블로그 광고 수익",
+      "amount": 53085
+    },
+    {
+      "id": "289",
+      "userId": 9,
+      "type": "income",
+      "date": "2025-02-03",
+      "category": "용돈",
+      "title": "아르바이트",
+      "memo": "용돈 받음",
+      "amount": 93339
+    },
+    {
+      "id": "290",
+      "userId": 10,
+      "type": "expense",
+      "date": "2025-02-21",
+      "category": "교통",
+      "title": "카페",
+      "memo": "버스 카드 충전",
+      "amount": 16035
+    },
+    {
+      "id": "291",
+      "userId": 1,
+      "type": "expense",
+      "date": "2024-09-17",
+      "category": "여가",
+      "title": "생필품 구매",
+      "memo": "카페 방문",
+      "amount": 80571
+    },
+    {
+      "id": "292",
+      "userId": 10,
+      "type": "income",
+      "date": "2024-09-15",
+      "category": "용돈",
+      "title": "아르바이트",
+      "memo": "용돈 받음",
+      "amount": 71347
+    },
+    {
+      "id": "293",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-05-17",
+      "category": "용돈",
+      "title": "부모님 용돈",
+      "memo": "용돈으로 생활비 충당",
+      "amount": 5987
+    },
+    {
+      "id": "294",
+      "userId": 5,
+      "type": "income",
+      "date": "2024-05-28",
+      "category": "용돈",
+      "title": "부모님 용돈",
+      "memo": "부모님 감사합니다",
+      "amount": 72376
+    },
+    {
+      "id": "295",
+      "userId": 3,
+      "type": "income",
+      "date": "2024-10-13",
+      "category": "부수입",
+      "title": "아르바이트",
+      "memo": "블로그 광고 수익",
+      "amount": 55072
+    },
+    {
+      "id": "296",
+      "userId": 5,
+      "type": "income",
+      "date": "2024-07-05",
+      "category": "급여",
+      "title": "아르바이트",
+      "memo": "이번 달 월급",
+      "amount": 58102
+    },
+    {
+      "id": "297",
+      "userId": 9,
+      "type": "expense",
+      "date": "2025-01-17",
+      "category": "교통",
+      "title": "교통비",
+      "memo": "주차 요금",
+      "amount": 17601
+    },
+    {
+      "id": "298",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-09-18",
+      "category": "용돈",
+      "title": "부모님 용돈",
+      "memo": "용돈으로 생활비 충당",
+      "amount": 89210
+    },
+    {
+      "id": "299",
+      "userId": 9,
+      "type": "income",
+      "date": "2024-06-23",
+      "category": "용돈",
+      "title": "부모님 용돈",
+      "memo": "부모님 감사합니다",
+      "amount": 90698
+    },
+    {
+      "id": "300",
+      "userId": 8,
+      "type": "income",
+      "date": "2024-09-01",
+      "category": "부수입",
+      "title": "부모님 용돈",
+      "memo": "앱테크 수익",
+      "amount": 34320
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": "1",
+      "userId": 7,
+      "name": "운동",
+      "price": 43116,
+      "dueDate": 23,
+      "category": "구독"
+    },
+    {
+      "id": "2",
+      "userId": 7,
+      "name": "게임패스",
+      "price": 11686,
+      "dueDate": 24,
+      "category": "구독"
+    },
+    {
+      "id": "3",
+      "userId": 5,
+      "name": "통신비",
+      "price": 23572,
+      "dueDate": 28,
+      "category": "고정지출"
+    },
+    {
+      "id": "4",
+      "userId": 4,
+      "name": "운동",
+      "price": 10587,
+      "dueDate": 2,
+      "category": "구독"
+    },
+    {
+      "id": "5",
+      "userId": 2,
+      "name": "OTT",
+      "price": 22202,
+      "dueDate": 10,
+      "category": "구독"
+    },
+    {
+      "id": "6",
+      "userId": 9,
+      "name": "통신비",
+      "price": 12745,
+      "dueDate": 17,
+      "category": "고정지출"
+    },
+    {
+      "id": "7",
+      "userId": 4,
+      "name": "OTT",
+      "price": 15718,
+      "dueDate": 3,
+      "category": "구독"
+    },
+    {
+      "id": "8",
+      "userId": 7,
+      "name": "OTT",
+      "price": 23985,
+      "dueDate": 10,
+      "category": "구독"
+    },
+    {
+      "id": "9",
+      "userId": 9,
+      "name": "YouTube Premium",
+      "price": 42616,
+      "dueDate": 17,
+      "category": "구독"
+    },
+    {
+      "id": "10",
+      "userId": 4,
+      "name": "운동",
+      "price": 11901,
+      "dueDate": 14,
+      "category": "구독"
+    },
+    {
+      "id": "11",
+      "userId": 9,
+      "name": "게임패스",
+      "price": 23259,
+      "dueDate": 10,
+      "category": "구독"
+    },
+    {
+      "id": "12",
+      "userId": 8,
+      "name": "통신비",
+      "price": 42239,
+      "dueDate": 21,
+      "category": "고정지출"
+    },
+    {
+      "id": "13",
+      "userId": 3,
+      "name": "YouTube Premium",
+      "price": 13080,
+      "dueDate": 23,
+      "category": "구독"
+    },
+    {
+      "id": "14",
+      "userId": 2,
+      "name": "게임패스",
+      "price": 31294,
+      "dueDate": 19,
+      "category": "구독"
+    },
+    {
+      "id": "15",
+      "userId": 8,
+      "name": "YouTube Premium",
+      "price": 41674,
+      "dueDate": 22,
+      "category": "구독"
+    },
+    {
+      "id": "16",
+      "userId": 5,
+      "name": "통신비",
+      "price": 46426,
+      "dueDate": 16,
+      "category": "고정지출"
+    },
+    {
+      "id": "17",
+      "userId": 7,
+      "name": "YouTube Premium",
+      "price": 36242,
+      "dueDate": 16,
+      "category": "구독"
+    },
+    {
+      "id": "18",
+      "userId": 9,
+      "name": "통신비"
+    }
+  ]
+}

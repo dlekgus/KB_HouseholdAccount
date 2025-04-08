@@ -1,15 +1,13 @@
-<!-- 소비 캘린더 -->
-<!-- 이번달 수입/지출 -->
-<!-- 최근 거래 -->
-
 <script setup>
+import { ref } from 'vue';
+import TransactionModal from '@/components/modal/TransactionModal.vue';
+
+const showTransactionModal = ref(false);
 import Calendar from '@/components/Calendar.vue';
 import HomeLayout from '@/components/layouts/HomeLayout.vue';
 import RecentHistory from '@/components/RecentHistory.vue';
 import ThisMonthHistory from '@/components/ThisMonthHistory.vue';
 import Footer from '@/components/Footer.vue';
-import TransactionModal from '@/components/modal/TransactionModal.vue';
-import { ref } from 'vue';
 
 const showModal = ref(false);
 </script>
@@ -24,9 +22,8 @@ const showModal = ref(false);
       <template v-slot:recent-history>
         <RecentHistory></RecentHistory>
       </template>
-
       <template v-slot:this-month-history>
-        <ThisMonthHistory />
+        <ThisMonthHistory></ThisMonthHistory>
       </template>
 
       <template v-slot:footer>
