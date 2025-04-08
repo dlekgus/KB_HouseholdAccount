@@ -18,7 +18,7 @@ import FixedExpenseAddModal from '../modal/FixedExpenseAddModal.vue'
 const isOpen = ref(false)
 
 const fetchSubscriptions = async () => {
-    const res = await axios.get('http://localhost:8282/subscriptions?userId=1')
+    const res = await axios.get('http://localhost:3000/subscriptions?userId=1')
     subscriptions.value = res.data
 }
 </script>
