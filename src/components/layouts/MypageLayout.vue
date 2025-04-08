@@ -21,11 +21,17 @@
 </template>
 
 <style scoped>
+.container {
+  max-width: 600px; /* 원하는 최대 너비로 조정 (ex. 500px, 600px 등) */
+  margin: 0 auto; /* 가로 가운데 정렬 */
+  padding: 1rem; /* 좌우 여백 (선택) */
+}
 .title {
+  margin: 1.5rem;
 }
 .card {
   margin: 1.5rem;
-  /* align-items: center; */
+  padding: 1rem;
 }
 .profile-area {
   display: flex;
