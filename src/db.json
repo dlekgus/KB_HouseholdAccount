@@ -3673,6 +3673,14 @@
       "price": 9695,
       "dueDate": 7,
       "category": "구독"
+    },
+    {
+      "id": 201,
+      "name": "ㅇ",
+      "price": 0,
+      "dueDate": 1,
+      "category": "구독",
+      "userId": 1
     }
   ]
 }
