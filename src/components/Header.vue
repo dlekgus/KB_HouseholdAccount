@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-sm bg-light navbar-light">
-    <span class="navbar-brand ps-2">Household Account</span>
+    <span class="navbar-brand ps-2">KB 가계부</span>
     <button
       class="navbar-toggler"
       type="button"
@@ -24,6 +24,9 @@
           <router-link class="nav-link" to="/fixedExpenses"
             >fixedExpenses</router-link
           >
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link" to="/analysis">통계</router-link>
         </li>
         <li class="nav-item">
           <router-link class="nav-link" to="/mypage">Mypage</router-link>
