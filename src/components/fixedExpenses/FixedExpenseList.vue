@@ -4,7 +4,7 @@
     <div v-for="s in subscriptions" :key="s.name"
       class="d-flex justify-content-between align-items-center py-3 border-bottom">
       <div class="d-flex align-items-center gap-3">
-        <!-- 네모 안에 동그라미 -->
+
         <div :style="getBoxStyle(s.boxColor)" class="rounded-4 d-flex align-items-center justify-content-center me-3"
           style="width: 40px; height: 40px;">
           <span :style="getDotStyle(s.dotColor)" class="rounded-circle"></span>
