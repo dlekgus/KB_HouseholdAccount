@@ -3,13 +3,13 @@
     <h5>최근내역</h5>
     <div>
       <div class="card">
-        <h6>⭐ 편의점 -2000원</h6>
+        <h6>⭐ 편의점 -2,000원</h6>
       </div>
       <div class="card">
         <h6>월급 +4,500,000원</h6>
       </div>
       <div class="card">
-        <h6>편의점 -2000원</h6>
+        <h6>편의점 -2,000원</h6>
       </div>
     </div>
   </div>

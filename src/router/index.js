@@ -1,3 +1,4 @@
+import Analysis from '@/pages/Analysis.vue';
 import Details from '@/pages/Details.vue';
 import FixedExpenses from '@/pages/FixedExpenses.vue';
 import Home from '@/pages/Home.vue';
@@ -21,6 +22,11 @@ const router = createRouter({
       path: '/fixedExpenses',
       name: 'fixedExpenses',
       component: FixedExpenses,
+    },
+    {
+      path: '/analysis',
+      name: 'analysis',
+      component: Analysis,
     },
     {
       path: '/mypage',
