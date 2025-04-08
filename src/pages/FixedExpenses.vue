@@ -41,7 +41,7 @@ const colorPairs = [
 
 const fetchSubscriptions = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/subscriptions?userId=1');
+    const res = await axios.get('api/subscriptions?userId=1');
     subscriptions.value = res.data.map(item => {
       const randomColor = colorPairs[Math.floor(Math.random() * colorPairs.length)];
       return {

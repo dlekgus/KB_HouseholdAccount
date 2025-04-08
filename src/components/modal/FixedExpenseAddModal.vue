@@ -63,7 +63,7 @@ const form = reactive({
 
 const submit = async () => {
     try {
-        const { data } = await axios.get('http://localhost:3000/subscriptions');
+        const { data } = await axios.get('api/subscriptions');
         const maxId = Math.max(...data.map(item => Number(item.id)), 0);
 
         const payload = {
@@ -72,7 +72,7 @@ const submit = async () => {
             userId: 1,
         };
 
-        await axios.post('http://localhost:3000/subscriptions', payload);
+        await axios.post('api/subscriptions', payload);
         alert('항목이 추가되었습니다!');
         emit('added');
         emit('update:modelValue', false);

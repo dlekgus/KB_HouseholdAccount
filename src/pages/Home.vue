@@ -1,17 +1,15 @@
 <script setup>
 import { ref } from 'vue';
-import TransactionModal from '@/components/modal/TransactionModal.vue';
-
-const showTransactionModal = ref(false);
 import Calendar from '@/components/Calendar.vue';
 import HomeLayout from '@/components/layouts/HomeLayout.vue';
 import RecentHistory from '@/components/RecentHistory.vue';
 import ThisMonthHistory from '@/components/ThisMonthHistory.vue';
 import Footer from '@/components/Footer.vue';
 import TransactionModal from '@/components/modal/TransactionModal.vue';
-import { ref } from 'vue';
+
 const showModal = ref(false);
 </script>
+
 
 <template>
   <div>
@@ -25,10 +23,6 @@ const showModal = ref(false);
       </template>
       <template v-slot:this-month-history>
         <ThisMonthHistory></ThisMonthHistory>
-      </template>
-
-      <template v-slot:this-month-history>
-        <ThisMonthHistory />
       </template>
 
       <template v-slot:footer>
