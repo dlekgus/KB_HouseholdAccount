@@ -48,9 +48,10 @@
       >
         <div class="score-circle text-center">
           <div class="circle">
-            <span class="score">85</span>
+            <span class="score" :class="gradeInfo.color">{{ rate }}%</span>
           </div>
-          <div class="mt-2 text-muted">당신의 소비 분석</div>
+          <div class="mt-2 fw-bold">{{ gradeInfo.grade }}등급</div>
+          <div class="text-muted">{{ gradeInfo.message }}</div>
         </div>
       </div>
     </div>
@@ -122,6 +123,28 @@ function selectPeriod(months) {
   period.value = months;
   loadData();
 }
+
+const rate = computed(() => {
+  const expense = currentData.value;
+  const income = previousData.value;
+  return Math.round((expense / (income || 1)) * 100);
+});
+
+const gradeInfo = computed(() => {
+  const val = rate.value;
+  if (val <= 70)
+    return { grade: 'A', message: '절약 잘했어요!', color: 'text-success' };
+  if (val <= 90)
+    return { grade: 'B', message: '양호한 소비입니다.', color: 'text-primary' };
+  if (val <= 110)
+    return { grade: 'C', message: '주의가 필요해요.', color: 'text-warning' };
+  return {
+    grade: 'D',
+    message: '수입보다 더 많이 썼어요!',
+    color: 'text-danger',
+  };
+});
+
 const formattedChangeRate = computed(() => {
   if (changeRate.value > 0) return `+${changeRate.value.toFixed(1)}%`;
   return `${changeRate.value.toFixed(1)}%`;
@@ -214,6 +237,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 3rem;
 }
 .score-circle .score {
   font-size: 1.5rem;
