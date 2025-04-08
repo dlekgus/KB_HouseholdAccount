@@ -23,7 +23,11 @@
             <div class="row">
               <div class="col-12 col-md-4 mb-3">
                 <small class="text-muted">총 지출</small>
-                <div class="h5">2,456,000원</div>
+                <div class="h5">
+                  {{
+                    !periodStat.total ? 0 : periodStat.total.toLocaleString()
+                  }}원
+                </div>
                 <div class="small" :class="changeRateClass">
                   {{ formattedChangeRate }}
                 </div>
@@ -35,7 +39,9 @@
               </div>
               <div class="col-12 col-md-4">
                 <small class="text-muted">최다 지출 항목</small>
-                <div class="h5">식비</div>
+                <div class="h5">
+                  {{ !periodStat.topCategory ? '' : periodStat.topCategory }}
+                </div>
               </div>
             </div>
           </div>
@@ -89,7 +95,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed, reactive, watch } from 'vue';
 import {
   Chart,
   DoughnutController,
@@ -101,6 +107,8 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+
+import axios from 'axios';
 
 Chart.register(
   DoughnutController,
@@ -117,14 +125,99 @@ const categoryChart = ref(null);
 const weeklyChart = ref(null);
 // ✅ 상태 변수
 const period = ref(1);
+const periodStat = reactive({ total: 0, topCategory: '' });
+
+watch(period, () => {
+  updatePeriodStats();
+});
 const currentData = ref([]);
 const previousData = ref([]);
 const changeRate = ref(0);
 
-const userId = 2;
+const state = reactive({ userTransactions: [] });
 
+const userId = 3;
+const BASE_URI = '/api/transactions';
 // fetch users all data from db
-const BASE_URI = '/api/';
+const fetchUserTransactions = async () => {
+  try {
+    const response = await axios.get(BASE_URI + `?userId=${userId}`);
+    if (response.status === 200) {
+      state.userTransactions = response.data;
+      updatePeriodStats();
+      //   calcMonthlySpending(state.userTransactions);
+    } else {
+      alert('데이터 조회 실패');
+    }
+  } catch (e) {
+    alert('에러 발생');
+  }
+};
+
+function updatePeriodStats() {
+  const stats = getPeriodStats(period.value, state.userTransactions);
+  periodStat.total = stats.total;
+  periodStat.topCategory = stats.topCategory;
+}
+
+//월별 총합 계산 함수
+function calcMonthlySpending(transactions) {
+  const monthlyTotal = {};
+  transactions.forEach((tx) => {
+    if (tx.type === 'expense') {
+      const month = tx.date.slice(0, 7);
+      console.log(month);
+
+      if (!monthlyTotal[month]) {
+        monthlyTotal[month] = 0;
+      }
+      monthlyTotal[month] += tx.amount;
+    }
+  });
+
+  return monthlyTotal;
+}
+
+// period 계산
+function getPeriodStats(period, transactions) {
+  const now = new Date();
+  const prevDate = new Date();
+  prevDate.setMonth(now.getMonth() - period);
+
+  console.log(transactions);
+
+  //1. filtering peroid expense
+  const filtered = transactions.filter((t) => {
+    const txDate = new Date(t.date);
+    return t.type === 'expense' && txDate >= prevDate && txDate <= now;
+  });
+
+  // 2. calculate total
+  const total = filtered.reduce((sum, t) => sum + t.amount, 0);
+
+  // 3. daily average
+
+  // 4.
+  let categoryMap = {};
+  filtered.forEach((t) => {
+    if (!categoryMap[t.category]) categoryMap[t.category] = 0;
+    categoryMap[t.category] += t.amount;
+  });
+
+  let topCategory = '';
+  let max = 0;
+  for (const [category, amount] of Object.entries(categoryMap)) {
+    if (amount > max) {
+      max = amount;
+      topCategory = category;
+    }
+  }
+
+  return {
+    total,
+    topCategory,
+  };
+}
 
 function getDataForPeriod(months, isPrevious) {
   const offset = isPrevious ? months : 0;
@@ -195,6 +288,7 @@ const rate = computed(() => {
 });
 
 onMounted(() => {
+  fetchUserTransactions();
   new Chart(categoryChart.value, {
     type: 'doughnut',
     data: {
