@@ -66,6 +66,10 @@
           />
           <label class="form-check-label" for="autoLogin"> 자동 로그인 </label>
         </div>
+        <!-- 오류 메시지 출력 -->
+        <div v-if="errorMessage" class="text-danger small text-center mb-3">
+          {{ errorMessage }}
+        </div>
 
         <!-- 로그인 버튼 -->
         <button class="btn btn-primary w-100 mb-3" @click="login">
@@ -75,7 +79,7 @@
         <!-- 회원가입 링크 -->
         <p class="text-center text-muted small">
           아직 회원이 아니신가요?
-          <router-link to="/signup" class="text-primary">회원가입</router-link>
+          <router-link to="/signup" class="text-p">회원가입</router-link>
         </p>
       </div>
     </div>
@@ -83,20 +87,43 @@
 </template>
 
 <script setup>
+import axios from 'axios';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const email = ref('');
 const password = ref('');
 const showPassword = ref(false);
 const autoLogin = ref(false);
+const errorMessage = ref('');
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
 };
 
-const login = () => {
-  console.log('이메일:', email.value);
-  console.log('비밀번호:', password.value);
-  console.log('자동 로그인:', autoLogin.value);
+const login = async () => {
+  try {
+    const res = await axios.get('/api/users', {
+      params: {
+        email: email.value,
+        password: password.value,
+      },
+    });
+
+    if (res.data.length > 0) {
+      // 로그인 성공
+      console.log('✅ 로그인 성공:', res.data[0]);
+      errorMessage.value = '';
+      router.push('/home');
+    } else {
+      // 로그인 실패
+      errorMessage.value = '이메일 또는 비밀번호가 일치하지 않습니다.';
+    }
+  } catch (err) {
+    console.error('로그인 오류:', err);
+    errorMessage.value = '로그인 중 오류가 발생했습니다.';
+  }
 };
 </script>
