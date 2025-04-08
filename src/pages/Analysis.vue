@@ -47,11 +47,20 @@
         class="col-12 col-md-4 d-flex justify-content-center align-items-center"
       >
         <div class="score-circle text-center">
-          <div class="circle">
-            <span class="score" :class="gradeInfo.color">{{ rate }}%</span>
+          <div
+            class="circle"
+            :style="{
+              borderColor: borderColor,
+              borderWidth: '10px',
+              borderStyle: 'solid',
+            }"
+          >
+            <span class="score" :class="gradeInfo.color">{{ rate }}</span>
           </div>
-          <div class="mt-2 fw-bold">{{ gradeInfo.grade }}등급</div>
-          <div class="text-muted">{{ gradeInfo.message }}</div>
+          <div class="mt-2" :class="gradeInfo.color">
+            <div class="fw-bold">{{ gradeInfo.grade }} 등급</div>
+            <div class="text-muted">{{ gradeInfo.message }}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -124,14 +133,19 @@ function selectPeriod(months) {
   loadData();
 }
 
-const rate = computed(() => {
-  const expense = currentData.value;
-  const income = previousData.value;
-  return Math.round((expense / (income || 1)) * 100);
+const borderColor = computed(() => {
+  // color 클래스를 직접 사용하지 않고, 색상 코드로 매핑
+  const colorMap = {
+    'text-success': '#2e7d32',
+    'text-primary': '#1976d2',
+    'text-warning': '#fbc02d',
+    'text-danger': '#d32f2f',
+  };
+  return colorMap[gradeInfo.value.color] || '#ccc';
 });
 
 const gradeInfo = computed(() => {
-  const val = rate.value;
+  const val = changeRate.value;
   if (val <= 70)
     return { grade: 'A', message: '절약 잘했어요!', color: 'text-success' };
   if (val <= 90)
@@ -150,6 +164,7 @@ const formattedChangeRate = computed(() => {
   return `${changeRate.value.toFixed(1)}%`;
 });
 
+// 전 N개월 대비 퍼센트
 const changeRateClass = computed(() => {
   if (changeRate.value > 0) return 'text-success';
   if (changeRate.value < 0) return 'text-danger';
@@ -168,6 +183,11 @@ function loadData() {
   previousData.value = getDataForPeriod(period.value, true);
   changeRate.value = getChangeRate(currentData.value, previousData.value);
 }
+const rate = computed(() => {
+  const expense = currentData.value[0];
+  const income = previousData.value[0];
+  return Math.round((expense / (income || 1)) * 100);
+});
 
 onMounted(() => {
   new Chart(categoryChart.value, {
@@ -232,7 +252,7 @@ onMounted(() => {
 .score-circle .circle {
   width: 100px;
   height: 100px;
-  border: 10px solid #6f42c1;
+  border: 10px solid #385531;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -244,6 +264,20 @@ onMounted(() => {
   color: #6f42c1;
   font-weight: bold;
 }
+
+.border-success {
+  border-color: #2e7d32;
+}
+.border-primary {
+  border-color: #1976d2;
+}
+.border-warning {
+  border-color: #fbc02d;
+}
+.border-danger {
+  border-color: #d32f2f;
+}
+
 canvas {
   width: 100% !important;
   height: 200px !important;
