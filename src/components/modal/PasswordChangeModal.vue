@@ -70,14 +70,19 @@
 
 <script setup>
 import { ref } from 'vue';
-
+import axios from 'axios';
 const emit = defineEmits(['close']);
+const BASEURL = 'http://localhost:3000/';
 
 const currentPassword = ref('');
 const newPassword = ref('');
 const confirmPassword = ref('');
 
-const changePassword = () => {
+const props = defineProps({
+  userId: Number,
+});
+
+const changePassword = async () => {
   if (newPassword.value !== confirmPassword.value) {
     alert('새 비밀번호가 일치하지 않습니다.');
     return;
@@ -88,12 +93,38 @@ const changePassword = () => {
     return;
   }
 
-  // 비밀번호 변경 처리 로직
-  console.log({
-    currentPassword: currentPassword.value,
-    newPassword: newPassword.value,
-  });
+  try {
+    // 현재 유저 정보 가져오기
+    const response = await axios.get(
+      `http://localhost:3000/users/${props.userId}`
+    );
+    const user = response.data;
 
-  emit('close');
+    if (user.password !== currentPassword.value) {
+      alert('현재 비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    // 비밀번호 업데이트
+    const updatedUser = {
+      ...user,
+      password: newPassword.value,
+    };
+
+    const updateResponse = await axios.put(
+      `${BASEURL}users/${props.userId}`,
+      updatedUser
+    );
+
+    if (updateResponse.status === 200) {
+      alert('비밀번호가 성공적으로 변경되었습니다.');
+      emit('close');
+    } else {
+      alert('비밀번호 변경에 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('비밀번호 변경 오류:', error);
+    alert('서버 오류로 인해 비밀번호를 변경할 수 없습니다.');
+  }
 };
 </script>

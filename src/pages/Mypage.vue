@@ -1,10 +1,11 @@
 <template>
   <div>
-    <MypageLayout>
+    <MypageLayout v-if="user">
       <template v-slot:title-area>
         <h2>마이페이지</h2>
         <p>회원 정보 및 설정을 관리하세요</p>
       </template>
+
       <template v-slot:profile-area>
         <div class="user-image">
           <img
@@ -13,69 +14,55 @@
           />
         </div>
         <div class="info">
-          <div class="user-name">{{ nickname }}</div>
+          <div class="user-name">
+            <template v-if="isEditing">
+              <input type="text" v-model="editedNickname" />
+            </template>
+            <template v-else>
+              {{ nickname }}
+            </template>
+          </div>
           <div class="user-email">{{ email }}</div>
           <div class="user-join-date">{{ joinDate }}</div>
+        </div>
+        <div class="btn-modi">
+          <button
+            class="btn btn-primary pointer"
+            @click="isEditing ? saveNickname() : modiNickname()"
+          >
+            {{ isEditing ? '완료' : '수정' }}
+          </button>
         </div>
       </template>
 
       <template v-slot:alarm-area>
         <div>알림 설정</div>
         <hr />
-        <div class="switch-setting">
+        <div
+          class="switch-setting"
+          v-for="(label, key) in alarmLabels"
+          :key="key"
+        >
           <label
             class="form-check-label justify-content-end pointer"
-            for="pushAlarm"
+            :for="key"
           >
-            푸시 알림</label
-          >
+            {{ label }}
+          </label>
           <span class="form-check form-switch">
             <input
               class="form-check-input pointer"
               type="checkbox"
               role="switch"
-              id="pushAlarm"
-              :checked="pushAlarm"
-            />
-          </span>
-        </div>
-        <div class="switch-setting">
-          <label
-            class="form-check-label justify-content-end pointer"
-            for="emailAlarm"
-          >
-            이메일 알림</label
-          >
-          <span class="form-check form-switch">
-            <input
-              class="form-check-input pointer"
-              type="checkbox"
-              role="switch"
-              id="emailAlarm"
-              :checked="emailAlarm"
-            />
-          </span>
-        </div>
-        <div class="switch-setting">
-          <label
-            class="form-check-label justify-content-end pointer"
-            for="payAlarm"
-          >
-            결제 예정 알림</label
-          >
-          <span class="form-check form-switch">
-            <input
-              class="form-check-input pointer"
-              type="checkbox"
-              role="switch"
-              id="payAlarm"
-              :checked="payAlarm"
+              :id="key"
+              :checked="user[key]"
             />
           </span>
         </div>
       </template>
-      <template v-slot:manage-area
-        >계정 관리
+
+      <template v-slot:manage-area>
+        계정 관리
         <div class="d-flex flex-column gap-2 mt-2">
           <button
             class="btn btn-passwordChange"
@@ -85,8 +72,9 @@
           </button>
           <PasswordChangeModal
             v-if="showPasswordChangeModal"
+            :userId="user.id"
             @close="showPasswordChangeModal = false"
-          ></PasswordChangeModal>
+          />
           <button class="btn btn-logout">로그아웃</button>
           <button class="btn btn-out">회원 탈퇴</button>
         </div>
@@ -98,29 +86,64 @@
 <script setup>
 import MypageLayout from '@/components/layouts/MypageLayout.vue';
 import PasswordChangeModal from '@/components/modal/PasswordChangeModal.vue';
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
+import axios from 'axios';
 
+const BASEURL = 'http://localhost:3000/';
+const user = ref(null);
 const showPasswordChangeModal = ref(false);
-const users = [
-  {
-    id: 1, //로그인할 때 전역으로 둬야함
-    email: 'test@example.com',
-    password: '1234',
-    nickname: '김케이비',
-    joinDate: 'date',
-    pushAlarm: false,
-    emailAlarm: true,
-    payAlarm: true,
-  },
-];
+const isEditing = ref(false);
+const editedNickname = ref('');
+const id = 1;
 
-const user = ref(users[0]);
-const email = computed(() => user.value.email);
-const nickname = computed(() => user.value.nickname);
-const joinDate = computed(() => user.value.joinDate);
-const pushAlarm = computed(() => user.value.pushAlarm);
-const emailAlarm = computed(() => user.value.emailAlarm);
-const payAlarm = computed(() => user.value.payAlarm);
+const alarmLabels = {
+  pushAlarm: '푸시 알림',
+  emailAlarm: '이메일 알림',
+  payAlarm: '결제 예정 알림',
+};
+
+const modiNickname = () => {
+  isEditing.value = true;
+};
+
+const saveNickname = async () => {
+  try {
+    const updatedUser = {
+      ...user.value,
+      nickname: editedNickname.value,
+    };
+
+    const response = await axios.put(
+      `${BASEURL}users/${user.value.id}`,
+      updatedUser
+    );
+
+    if (response.status === 200) {
+      user.value.nickname = editedNickname.value;
+      isEditing.value = false;
+    } else {
+      alert('닉네임 수정에 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('닉네임 수정 오류:', error);
+    alert('서버 오류로 수정할 수 없습니다.');
+  }
+};
+
+onMounted(async () => {
+  try {
+    const response = await axios.get(`${BASEURL}users/${id}`);
+    user.value = response.data;
+    // editedNickname.value = user.value.nickname;
+  } catch (err) {
+    console.error('유저 정보 로드 실패:', err);
+  }
+});
+
+// 옵셔널 체이닝을 이용해 null 방지
+const email = computed(() => user.value?.email || '');
+const nickname = computed(() => user.value?.nickname || '');
+const joinDate = computed(() => user.value?.joinDate || '');
 </script>
 
 <style scoped>
@@ -131,7 +154,9 @@ const payAlarm = computed(() => user.value.payAlarm);
   width: 100%;
   margin-bottom: 0.5rem;
 }
-
+.btn-modi {
+  margin-left: auto;
+}
 .user-image {
   background-color: rgb(212, 212, 212);
   border-radius: 50px;
