@@ -12,12 +12,7 @@
         <FixedUpcoming :subscriptions="subscriptions" />
       </div>
       <div class="col-lg-4">
-        <div class="card shadow-sm p-4 h-100 d-flex align-items-center justify-content-center" style="cursor: pointer;" @click="openAdd">
-          <h6 class="text-muted mb-2">빠른 추가</h6>
-          <div class="border rounded w-100 d-flex align-items-center justify-content-center" style="height: 100px;">
-            <span class="fs-2 text-muted">+</span>
-          </div>
-        </div>
+        <FixedExpenseQuickAdd/>
       </div>
     </div>
 
@@ -30,6 +25,8 @@
 import FixedExpenseSum from '@/components/fixedExpenses/FixedExpenseSum.vue';
 import FixedUpcoming from '@/components/fixedExpenses/FixedUpcoming.vue';
 import FixedExpenseList from '@/components/fixedExpenses/FixedExpenseList.vue';
+import FixedExpenseQuickAdd from'@/components/fixedExpenses/FixedExpenseQuickAdd.vue';
+
 
 const subscriptions = [
   { name: 'Netflix', price: 17000, day: 15, boxColor: '#fcecec',dotColor: '#e74c3c' },
