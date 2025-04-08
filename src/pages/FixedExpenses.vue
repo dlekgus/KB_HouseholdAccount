@@ -22,18 +22,44 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
 import FixedExpenseSum from '@/components/fixedExpenses/FixedExpenseSum.vue';
 import FixedUpcoming from '@/components/fixedExpenses/FixedUpcoming.vue';
 import FixedExpenseList from '@/components/fixedExpenses/FixedExpenseList.vue';
-import FixedExpenseQuickAdd from'@/components/fixedExpenses/FixedExpenseQuickAdd.vue';
+import FixedExpenseQuickAdd from '@/components/fixedExpenses/FixedExpenseQuickAdd.vue';
 
+const subscriptions = ref([]);
 
-const subscriptions = [
-  { name: 'Netflix', price: 17000, day: 15, boxColor: '#fcecec',dotColor: '#e74c3c' },
-  { name: '헬스장', price: 80000, day: 1, boxColor: '#f1f9fa',dotColor: '#52a8c9'},
-  { name: '통신비', price: 50000, day: 10, boxColor: '#fff7ec',dotColor: '#f2992e'  },
-  { name: '멜론', price: 10900, day: 20, boxColor: '#f1f9f3', dotColor: '#64c364' },
+const colorPairs = [
+  { boxColor: '#fcecec', dotColor: '#e74c3c' },
+  { boxColor: '#f1f9fa', dotColor: '#52a8c9' },
+  { boxColor: '#fff7ec', dotColor: '#f2992e' },
+  { boxColor: '#f1f9f3', dotColor: '#64c364' },
 ];
+
+const fetchSubscriptions = async () => {
+  try {
+    const res = await axios.get('api/subscriptions?userId=1');
+    subscriptions.value = res.data.map(item => {
+      const randomColor = colorPairs[Math.floor(Math.random() * colorPairs.length)];
+      return {
+        ...item,
+        name: item.name,
+        price: item.price,
+        day: item.dueDate,
+        ...randomColor
+      };
+    });
+  } catch (err) {
+    console.error('구독 정보 가져오기 실패:', err);
+  }
+};
+
+onMounted(() => {
+  fetchSubscriptions();
+});
 
 const openAdd = () => {
   alert('추가 기능 열기!');

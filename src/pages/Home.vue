@@ -1,16 +1,15 @@
 <script setup>
 import { ref } from 'vue';
-import TransactionModal from '@/components/modal/TransactionModal.vue';
-
-const showTransactionModal = ref(false);
 import Calendar from '@/components/Calendar.vue';
 import HomeLayout from '@/components/layouts/HomeLayout.vue';
 import RecentHistory from '@/components/RecentHistory.vue';
 import ThisMonthHistory from '@/components/ThisMonthHistory.vue';
 import Footer from '@/components/Footer.vue';
+import TransactionModal from '@/components/modal/TransactionModal.vue';
 
 const showModal = ref(false);
 </script>
+
 
 <template>
   <div>
