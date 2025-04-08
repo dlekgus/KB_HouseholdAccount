@@ -34,8 +34,16 @@
               </div>
               <div class="col-12 col-md-4 mb-3">
                 <small class="text-muted">평균 일 지출</small>
-                <div class="h5">79,225원</div>
-                <div class="small">-15.2%</div>
+                <div class="h5">
+                  {{
+                    !periodStat.dailyAvg
+                      ? 0
+                      : periodStat.dailyAvg.toLocaleString()
+                  }}원
+                </div>
+                <div class="small" :class="chagedailyRateClass">
+                  {{ formattedDailyRate }}
+                </div>
               </div>
               <div class="col-12 col-md-4">
                 <small class="text-muted">최다 지출 항목</small>
@@ -125,14 +133,20 @@ const categoryChart = ref(null);
 const weeklyChart = ref(null);
 // ✅ 상태 변수
 const period = ref(1);
-const periodStat = reactive({ total: 0, topCategory: '' });
+const periodStat = reactive({
+  expense: 0,
+  income: 0,
+  dailyAvg: 0,
+  topCategory: '',
+  changeRate: 0,
+  dailyAvgChangeRate: 0,
+});
 
 watch(period, () => {
   updatePeriodStats();
 });
 const currentData = ref([]);
 const previousData = ref([]);
-const changeRate = ref(0);
 
 const state = reactive({ userTransactions: [] });
 
@@ -157,49 +171,52 @@ const fetchUserTransactions = async () => {
 function updatePeriodStats() {
   const stats = getPeriodStats(period.value, state.userTransactions);
   periodStat.total = stats.total;
+  periodStat.dailyAvg = stats.dailyAvg;
   periodStat.topCategory = stats.topCategory;
+  periodStat.changeRate = stats.changeRate;
+  periodStat.dailyAvgChangeRate = stats.dailyAvgChangeRate;
 }
 
-//월별 총합 계산 함수
-function calcMonthlySpending(transactions) {
-  const monthlyTotal = {};
-  transactions.forEach((tx) => {
-    if (tx.type === 'expense') {
-      const month = tx.date.slice(0, 7);
-      console.log(month);
-
-      if (!monthlyTotal[month]) {
-        monthlyTotal[month] = 0;
-      }
-      monthlyTotal[month] += tx.amount;
-    }
-  });
-
-  return monthlyTotal;
-}
-
-// period 계산
 function getPeriodStats(period, transactions) {
   const now = new Date();
   const prevDate = new Date();
+  const compareDate = new Date();
   prevDate.setMonth(now.getMonth() - period);
+  compareDate.setMonth(prevDate.getMonth() - period);
 
-  console.log(transactions);
-
-  //1. filtering peroid expense
-  const filtered = transactions.filter((t) => {
+  // 현재 기간
+  const currentFiltered = transactions.filter((t) => {
     const txDate = new Date(t.date);
     return t.type === 'expense' && txDate >= prevDate && txDate <= now;
   });
 
-  // 2. calculate total
-  const total = filtered.reduce((sum, t) => sum + t.amount, 0);
+  // 이전 기간
+  const prevFiltered = transactions.filter((t) => {
+    const txDate = new Date(t.date);
+    return t.type === 'expense' && txDate >= compareDate && txDate < prevDate;
+  });
 
-  // 3. daily average
+  // 총합 계산
+  const currentTotal = currentFiltered.reduce((sum, t) => sum + t.amount, 0);
+  const prevTotal = prevFiltered.reduce((sum, t) => sum + t.amount, 0);
 
-  // 4.
+  // 현재 일평균
+  const currDiffDays = Math.max(
+    1,
+    Math.floor((now - prevDate) / (1000 * 60 * 60 * 24))
+  );
+  const dailyAvg = Math.round(currentTotal / currDiffDays);
+
+  // 이전 일평균
+  const prevDiffDays = Math.max(
+    1,
+    Math.floor((prevDate - compareDate) / (1000 * 60 * 60 * 24))
+  );
+  const prevDailyAvg = Math.round(prevTotal / prevDiffDays);
+
+  // 카테고리별 계산
   let categoryMap = {};
-  filtered.forEach((t) => {
+  currentFiltered.forEach((t) => {
     if (!categoryMap[t.category]) categoryMap[t.category] = 0;
     categoryMap[t.category] += t.amount;
   });
@@ -213,22 +230,23 @@ function getPeriodStats(period, transactions) {
     }
   }
 
+  // 증가율 계산
+  const totalChangeRate = ((currentTotal - prevTotal) / (prevTotal || 1)) * 100;
+  const dailyAvgChangeRate =
+    ((dailyAvg - prevDailyAvg) / (prevDailyAvg || 1)) * 100;
+
   return {
-    total,
+    total: currentTotal,
+    dailyAvg,
     topCategory,
+    changeRate: totalChangeRate,
+    dailyAvgChangeRate,
   };
 }
 
-function getDataForPeriod(months, isPrevious) {
-  const offset = isPrevious ? months : 0;
-  return Array.from({ length: months }, () =>
-    Math.floor(Math.random() * 20000)
-  );
-}
 // 기간 선택 함수
 function selectPeriod(months) {
   period.value = months;
-  loadData();
 }
 
 const borderColor = computed(() => {
@@ -243,7 +261,7 @@ const borderColor = computed(() => {
 });
 
 const gradeInfo = computed(() => {
-  const val = changeRate.value;
+  const val = periodStat.total;
   if (val <= 70)
     return { grade: 'A', message: '절약 잘했어요!', color: 'text-success' };
   if (val <= 90)
@@ -257,17 +275,25 @@ const gradeInfo = computed(() => {
   };
 });
 
-const formattedChangeRate = computed(() => {
-  if (changeRate.value > 0) return `+${changeRate.value.toFixed(1)}%`;
-  return `${changeRate.value.toFixed(1)}%`;
-});
+function formatRate(rate) {
+  const sign = rate > 0 ? '+' : '';
+  return `${sign}${rate.toFixed(1)}%`;
+}
 
-// 전 N개월 대비 퍼센트
-const changeRateClass = computed(() => {
-  if (changeRate.value > 0) return 'text-success';
-  if (changeRate.value < 0) return 'text-danger';
+function rateClass(rate) {
+  if (rate > 0) return 'text-danger';
+  if (rate < 0) return 'text-success';
   return 'text-muted';
-});
+}
+const formattedChangeRate = computed(() => formatRate(periodStat.changeRate));
+const formattedDailyRate = computed(() =>
+  formatRate(periodStat.dailyAvgChangeRate)
+);
+
+const changeRateClass = computed(() => rateClass(periodStat.changeRate));
+const chagedailyRateClass = computed(() =>
+  rateClass(periodStat.dailyAvgChangeRate)
+);
 
 function getChangeRate(current, prev) {
   const currTotal = current.reduce((a, b) => a + b, 0);
@@ -275,12 +301,7 @@ function getChangeRate(current, prev) {
   const diff = currTotal - prevTotal;
   return (diff / (prevTotal || 1)) * 100; // 숫자만 반환
 }
-// ✅ 데이터 로드 함수
-function loadData() {
-  currentData.value = getDataForPeriod(period.value, false);
-  previousData.value = getDataForPeriod(period.value, true);
-  changeRate.value = getChangeRate(currentData.value, previousData.value);
-}
+
 const rate = computed(() => {
   const expense = currentData.value[0];
   const income = previousData.value[0];
