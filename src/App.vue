@@ -1,6 +1,7 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
-import Header from "@/components/Header.vue";
+import { RouterLink, RouterView } from 'vue-router';
+import Header from '@/components/Header.vue';
+import { reactive } from 'vue';
 </script>
 
 <template>
@@ -9,5 +10,5 @@ import Header from "@/components/Header.vue";
 </template>
 
 <style lang="scss">
-@import "@/assets/main.scss";
+@import '@/assets/main.scss';
 </style>

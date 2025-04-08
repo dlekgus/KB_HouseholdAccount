@@ -6,8 +6,11 @@ const showTransactionModal = ref(false);
 import Calendar from '@/components/Calendar.vue';
 import HomeLayout from '@/components/layouts/HomeLayout.vue';
 import RecentHistory from '@/components/RecentHistory.vue';
-import Footer from '@/components/Footer.vue';
 import ThisMonthHistory from '@/components/ThisMonthHistory.vue';
+import Footer from '@/components/Footer.vue';
+import TransactionModal from '@/components/modal/TransactionModal.vue';
+import { ref } from 'vue';
+const showModal = ref(false);
 </script>
 
 <template>
@@ -24,18 +27,25 @@ import ThisMonthHistory from '@/components/ThisMonthHistory.vue';
         <ThisMonthHistory></ThisMonthHistory>
       </template>
 
+      <template v-slot:this-month-history>
+        <ThisMonthHistory />
+      </template>
+
       <template v-slot:footer>
         <Footer />
       </template>
 
       <template v-slot:fab>
-        <button class="btn btn-outline" @click="showTransactionModal = true">
+
+        <button class="btn btn-outline" @click="showModal = true">
           +
           <!-- <font-awesome-icon :icon="['fas', 'circle-plus']" /> -->
         </button>
         <TransactionModal
-          v-if="showTransactionModal"
-          @close="showTransactionModal = false"
+
+          v-if="showModal"
+          @close="showModal = false"
+
         ></TransactionModal>
       </template>
     </HomeLayout>
