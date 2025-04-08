@@ -121,6 +121,11 @@ const currentData = ref([]);
 const previousData = ref([]);
 const changeRate = ref(0);
 
+const userId = 2;
+
+// fetch users all data from db
+const BASE_URI = '/api/';
+
 function getDataForPeriod(months, isPrevious) {
   const offset = isPrevious ? months : 0;
   return Array.from({ length: months }, () =>
