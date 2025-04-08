@@ -1,42 +1,67 @@
-
-<script setup>
-import FixedSummary from '@/components/fixedExpenses/FixedSummary.vue';
-import FixedQuickAdd from '@/components/fixedExpenses/FixedQuickAdd.vue';
-import FixedExpenseList from '@/components/fixedExpenses/FixedExpenseList.vue';
-
-const userId = 1;
-const subscriptions = [
-  { id: 1, userId: 1, name: "Netflix", price: 17000, dueDate: 15, category: "구독" },
-  { id: 2, userId: 1, name: "헬스장", price: 80000, dueDate: 1, category: "고정지출" },
-  { id: 3, userId: 1, name: "통신비", price: 50000, dueDate: 10, category: "고정지출" },
-  { id: 4, userId: 1, name: "멜론", price: 10900, dueDate: 20, category: "구독" }
-];
-</script>
-
 <template>
-  <div class="container">
-    <h2 class="page-title">고정관리</h2>
-    <p class="subtitle">월 고정 지출 내역을 관리하세요</p>
+  <div class="container my-5">
+    <h5 class="fw-bold mb-2">구독 관리</h5>
+    <p class="text-muted">고정 지출 내역을 관리하세요</p>
 
-    <FixedSummary :subscriptions="subscriptions" :userId="userId" />
-    <FixedQuickAdd />
-    <FixedExpenseList :subscriptions="subscriptions" :userId="userId" />
+    <!-- 상단 카드 3개 -->
+    <div class="row g-3 mb-4">
+      <div class="col-lg-4">
+        <FixedExpenseSum :subscriptions="subscriptions" @openAdd="openAdd" />
+      </div>
+      <div class="col-lg-4">
+        <FixedUpcoming :subscriptions="subscriptions" />
+      </div>
+      <div class="col-lg-4">
+        <FixedExpenseQuickAdd/>
+      </div>
+    </div>
+
+    <!-- 구독 목록 -->
+    <FixedExpenseList :subscriptions="subscriptions" />
   </div>
 </template>
 
-<style scoped>
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 1.5rem;
-  font-family: sans-serif;
-}
-.page-title {
-  font-size: 1.8rem;
-  font-weight: bold;
-}
-.subtitle {
-  color: #666;
-  margin-bottom: 1rem;
-}
-</style>
+<script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
+import FixedExpenseSum from '@/components/fixedExpenses/FixedExpenseSum.vue';
+import FixedUpcoming from '@/components/fixedExpenses/FixedUpcoming.vue';
+import FixedExpenseList from '@/components/fixedExpenses/FixedExpenseList.vue';
+import FixedExpenseQuickAdd from '@/components/fixedExpenses/FixedExpenseQuickAdd.vue';
+
+const subscriptions = ref([]);
+
+const colorPairs = [
+  { boxColor: '#fcecec', dotColor: '#e74c3c' },
+  { boxColor: '#f1f9fa', dotColor: '#52a8c9' },
+  { boxColor: '#fff7ec', dotColor: '#f2992e' },
+  { boxColor: '#f1f9f3', dotColor: '#64c364' },
+];
+
+const fetchSubscriptions = async () => {
+  try {
+    const res = await axios.get('api/subscriptions?userId=1');
+    subscriptions.value = res.data.map(item => {
+      const randomColor = colorPairs[Math.floor(Math.random() * colorPairs.length)];
+      return {
+        ...item,
+        name: item.name,
+        price: item.price,
+        day: item.dueDate,
+        ...randomColor
+      };
+    });
+  } catch (err) {
+    console.error('구독 정보 가져오기 실패:', err);
+  }
+};
+
+onMounted(() => {
+  fetchSubscriptions();
+});
+
+const openAdd = () => {
+  alert('추가 기능 열기!');
+};
+</script>
