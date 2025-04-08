@@ -77,7 +77,16 @@
       <template v-slot:manage-area
         >계정 관리
         <div class="d-flex flex-column gap-2 mt-2">
-          <button class="btn btn-passwordChange">비밀번호 변경</button>
+          <button
+            class="btn btn-passwordChange"
+            @click="showPasswordChangeModal = true"
+          >
+            비밀번호 변경
+          </button>
+          <PasswordChangeModal
+            v-if="showPasswordChangeModal"
+            @close="showPasswordChangeModal = false"
+          ></PasswordChangeModal>
           <button class="btn btn-logout">로그아웃</button>
           <button class="btn btn-out">회원 탈퇴</button>
         </div>
@@ -88,8 +97,10 @@
 
 <script setup>
 import MypageLayout from '@/components/layouts/MypageLayout.vue';
+import PasswordChangeModal from '@/components/modal/PasswordChangeModal.vue';
 import { computed, ref } from 'vue';
 
+const showPasswordChangeModal = ref(false);
 const users = [
   {
     id: 1, //로그인할 때 전역으로 둬야함
