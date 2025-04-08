@@ -6,7 +6,12 @@
 import Calendar from '@/components/Calendar.vue';
 import HomeLayout from '@/components/layouts/HomeLayout.vue';
 import RecentHistory from '@/components/RecentHistory.vue';
+import ThisMonthHistory from '@/components/ThisMonthHistory.vue';
 import Footer from '@/components/Footer.vue';
+import TransactionModal from '@/components/modal/TransactionModal.vue';
+import { ref } from 'vue';
+
+const showModal = ref(false);
 </script>
 
 <template>
@@ -16,8 +21,12 @@ import Footer from '@/components/Footer.vue';
         <Calendar />
       </template>
 
-      <template v-slot:history>
+      <template v-slot:recent-history>
         <RecentHistory></RecentHistory>
+      </template>
+
+      <template v-slot:this-month-history>
+        <ThisMonthHistory />
       </template>
 
       <template v-slot:footer>
@@ -25,10 +34,14 @@ import Footer from '@/components/Footer.vue';
       </template>
 
       <template v-slot:fab>
-        <button class="btn btn-outline">
+        <button class="btn btn-outline" @click="showModal = true">
           +
           <!-- <font-awesome-icon :icon="['fas', 'circle-plus']" /> -->
         </button>
+        <TransactionModal
+          v-if="showModal"
+          @close="showModal = false"
+        ></TransactionModal>
       </template>
     </HomeLayout>
   </div>
