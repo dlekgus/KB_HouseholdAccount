@@ -19,34 +19,65 @@
       <div class="col-12 col-md-8">
         <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title text-muted">전 {{ period }}개월 대비</h5>
+            <h5 class="card-title text-muted">
+              전{{ period === 1 ? '' : ` ${period}개` }}월 대비
+            </h5>
+
+            <!-- 첫 번째 줄: 총 지출, 평균 일 지출, 최다 카테고리 -->
             <div class="row">
+              <div class="col-12 col-md-4 mb-3">
+                <small class="text-muted">총 수입</small>
+                <div class="h5 text-success">
+                  <AnimatedNumber :value="periodStat.income" />원
+                </div>
+              </div>
               <div class="col-12 col-md-4 mb-3">
                 <small class="text-muted">총 지출</small>
                 <div class="h5">
-                  {{
-                    !periodStat.total ? 0 : periodStat.total.toLocaleString()
-                  }}원
+                  <AnimatedNumber :value="periodStat.total" />원
                 </div>
                 <div class="small" :class="changeRateClass">
-                  {{ formattedChangeRate }}
+                  {{
+                    formattedChangeRate === '0.0%'
+                      ? '이전 데이터 없음'
+                      : formattedChangeRate
+                  }}
                 </div>
               </div>
               <div class="col-12 col-md-4 mb-3">
+                <small class="text-muted">합계</small>
+                <div
+                  class="h5"
+                  :class="{
+                    'text-danger': netDiff < 0,
+                    'text-success': netDiff >= 0,
+                  }"
+                >
+                  <AnimatedNumber :value="Math.abs(netDiff)" />원
+                  <span class="small">
+                    {{ netDiff < 0 ? '지출 초과' : '수입 초과' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 두 번째 줄: 수입, 수입 - 지출 합계 -->
+            <div class="row">
+              <div class="col-12 col-md-4 mb-3">
                 <small class="text-muted">평균 일 지출</small>
                 <div class="h5">
-                  {{
-                    !periodStat.dailyAvg
-                      ? 0
-                      : periodStat.dailyAvg.toLocaleString()
-                  }}원
+                  <AnimatedNumber :value="periodStat.dailyAvg" />원
                 </div>
                 <div class="small" :class="chagedailyRateClass">
-                  {{ formattedDailyRate }}
+                  {{
+                    formattedDailyRate === '0.0%'
+                      ? '이전 데이터 없음'
+                      : formattedDailyRate
+                  }}
                 </div>
               </div>
               <div class="col-12 col-md-4">
-                <small class="text-muted">최다 지출 항목</small>
+                <small class="text-muted">최다 지출 카테고리</small>
                 <div class="h5">
                   {{ !periodStat.topCategory ? '' : periodStat.topCategory }}
                 </div>
@@ -69,7 +100,9 @@
               borderStyle: 'solid',
             }"
           >
-            <span class="score" :class="gradeInfo.color">{{ rate }}</span>
+            <span class="score" :class="gradeInfo.color">{{
+              gradeInfo.grade
+            }}</span>
           </div>
           <div class="mt-2" :class="gradeInfo.color">
             <div class="fw-bold">{{ gradeInfo.grade }} 등급</div>
@@ -104,43 +137,19 @@
 
 <script setup>
 import { onMounted, ref, computed, reactive, watch } from 'vue';
-import {
-  Chart,
-  DoughnutController,
-  ArcElement,
-  BarElement,
-  BarController,
-  CategoryScale,
-  LinearScale,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-
+import { renderCategoryChart, renderWeeklyChart } from '@/composables/useChart';
+import AnimatedNumber from '@/components/AnimatedNumber.vue';
 import axios from 'axios';
-
-Chart.register(
-  DoughnutController,
-  ArcElement,
-  BarElement,
-  BarController,
-  CategoryScale,
-  LinearScale,
-  Tooltip,
-  Legend
-);
 
 const categoryChart = ref(null);
 const weeklyChart = ref(null);
 
-let categoryChartInstance = null;
-let weeklyChartInstance = null;
-// ✅ 상태 변수
 const period = ref(1);
 const periodStat = reactive({
   expense: 0,
   income: 0,
   dailyAvg: 0,
-  topCategory: '',
+  topCategory: '데이터 없음',
   changeRate: 0,
   dailyAvgChangeRate: 0,
   category: {},
@@ -149,12 +158,10 @@ const periodStat = reactive({
 watch(period, () => {
   updatePeriodStats();
 });
-const currentData = ref([]);
-const previousData = ref([]);
 
 const state = reactive({ userTransactions: [] });
 
-const userId = 2;
+const userId = 10;
 const BASE_URI = '/api/transactions';
 // fetch users all data from db
 const fetchUserTransactions = async () => {
@@ -181,6 +188,13 @@ function updatePeriodStats() {
   periodStat.category = stats.category;
 }
 
+function getFiltered(transactions, type, prevDate, curDate) {
+  return transactions.filter((t) => {
+    const txDate = new Date(t.date);
+    return t.type === type && txDate >= prevDate && txDate <= curDate;
+  });
+}
+
 function getPeriodStats(period, transactions) {
   const now = new Date();
   const prevDate = new Date();
@@ -189,40 +203,31 @@ function getPeriodStats(period, transactions) {
   compareDate.setMonth(prevDate.getMonth() - period);
 
   // 현재 기간
-  const currentFiltered = transactions.filter((t) => {
-    const txDate = new Date(t.date);
-    return t.type === 'expense' && txDate >= prevDate && txDate <= now;
-  });
+  const curExpenseFilter = getFiltered(transactions, 'expense', prevDate, now);
+  const curIncomeFilter = getFiltered(transactions, 'income', prevDate, now);
 
   // 이전 기간
-  const prevFiltered = transactions.filter((t) => {
-    const txDate = new Date(t.date);
-    return t.type === 'expense' && txDate >= compareDate && txDate < prevDate;
-  });
-
-  // 총합 계산
-  const currentTotal = currentFiltered.reduce((sum, t) => sum + t.amount, 0);
-  const prevTotal = prevFiltered.reduce((sum, t) => sum + t.amount, 0);
-
-  // 현재 일평균
-  const currDiffDays = Math.max(
-    1,
-    Math.floor((now - prevDate) / (1000 * 60 * 60 * 24))
+  const prevExpeseFilter = getFiltered(
+    transactions,
+    'expense',
+    compareDate,
+    prevDate
   );
-  const dailyAvg = Math.round(currentTotal / currDiffDays);
 
-  // 이전 일평균
-  const prevDiffDays = Math.max(
-    1,
-    Math.floor((prevDate - compareDate) / (1000 * 60 * 60 * 24))
-  );
-  const prevDailyAvg = Math.round(prevTotal / prevDiffDays);
+  // 총 지출 계산
+  const currentTotal = curExpenseFilter.reduce((sum, t) => sum + t.amount, 0);
+  const prevTotal = prevExpeseFilter.reduce((sum, t) => sum + t.amount, 0);
 
-  const { categoryMap, topCategory } = getTopCategory(currentFiltered);
-  // 증가율 계산
-  const totalChangeRate = ((currentTotal - prevTotal) / (prevTotal || 1)) * 100;
-  const dailyAvgChangeRate =
-    ((dailyAvg - prevDailyAvg) / (prevDailyAvg || 1)) * 100;
+  // 일 평균 계산
+  const dailyAvg = getAvg(prevDate, now, currentTotal);
+  const prevDailyAvg = getAvg(compareDate, prevDate, prevTotal);
+
+  // 증감율 계산
+  const totalChangeRate = getChangeRage(prevTotal, currentTotal);
+  const dailyAvgChangeRate = getChangeRage(prevDailyAvg, dailyAvg);
+
+  // 최다 지출 카테고리 계산
+  const { categoryMap, topCategory } = getTopCategory(curExpenseFilter);
 
   return {
     total: currentTotal,
@@ -234,28 +239,38 @@ function getPeriodStats(period, transactions) {
   };
 }
 
-function getTopCategory(currentFiltered) {
+// 일 평균 값 구하기
+function getAvg(prevDate, now, total) {
+  const diffDays = Math.max(
+    1,
+    Math.floor((now - prevDate) / (1000 * 60 * 60 * 24))
+  );
+  return Math.round(total / diffDays);
+}
+
+function getChangeRage(prevTotal, curTotal) {
+  if (prevTotal === 0) {
+    return 0;
+  }
+  return ((curTotal - prevTotal) / (prevTotal || 1)) * 100;
+}
+
+function getTopCategory(curExpenseFilter) {
   let total = 0;
   const categoryMap = {};
 
-  currentFiltered.forEach((t) => {
+  curExpenseFilter.forEach((t) => {
     if (!categoryMap[t.category]) categoryMap[t.category] = 0;
     categoryMap[t.category] += t.amount;
     total += t.amount;
   });
 
-  // 퍼센트로 변환
-  Object.keys(categoryMap).forEach((category) => {
-    const percentage = (categoryMap[category] / total) * 100;
-    categoryMap[category] = Number(percentage.toFixed(2)); // 소수점 2자리
-  });
-
   // 가장 높은 비중의 카테고리 계산
-  let topCategory = '';
+  let topCategory = '데이터 없음';
   let max = 0;
-  for (const [category, percent] of Object.entries(categoryMap)) {
-    if (percent > max) {
-      max = percent;
+  for (const [category, amount] of Object.entries(categoryMap)) {
+    if (amount > max) {
+      max = amount;
       topCategory = category;
     }
   }
@@ -279,12 +294,12 @@ const borderColor = computed(() => {
 });
 
 const gradeInfo = computed(() => {
-  const val = periodStat.total;
-  if (val <= 70)
+  const val = periodStat.changeRate;
+  if (val <= 0)
     return { grade: 'A', message: '절약 잘했어요!', color: 'text-success' };
-  if (val <= 90)
+  if (val <= 25)
     return { grade: 'B', message: '양호한 소비입니다.', color: 'text-primary' };
-  if (val <= 110)
+  if (val <= 50)
     return { grade: 'C', message: '주의가 필요해요.', color: 'text-warning' };
   return {
     grade: 'D',
@@ -312,104 +327,17 @@ const changeRateClass = computed(() => rateClass(periodStat.changeRate));
 const chagedailyRateClass = computed(() =>
   rateClass(periodStat.dailyAvgChangeRate)
 );
-
-const rate = computed(() => {
-  const expense = currentData.value[0];
-  const income = previousData.value[0];
-  return Math.round((expense / (income || 1)) * 100);
-});
-
-const renderCategoryChart = () => {
-  if (categoryChartInstance) categoryChartInstance.destroy(); // 이전 차트 제거
-
-  const labels = Object.keys(periodStat.category);
-  const data = Object.values(periodStat.category);
-  const isEmpty = labels.length === 0 || data.reduce((a, b) => a + b, 0) === 0;
-  const backgroundColors = generateColors(labels.length);
-  categoryChartInstance = new Chart(categoryChart.value, {
-    type: 'doughnut',
-    data: {
-      labels: isEmpty ? ['데이터 없음'] : labels,
-      datasets: [
-        {
-          data: isEmpty ? [1] : data,
-          backgroundColor: isEmpty
-            ? ['#d3d3d3'] // 회색
-            : backgroundColors, // 동적으로 색상 생성 함수
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '65%',
-    },
-  });
-};
-
-const renderWeeklyChart = () => {
-  if (weeklyChartInstance) weeklyChartInstance.destroy();
-
-  weeklyChartInstance = new Chart(weeklyChart.value, {
-    type: 'bar',
-    data: {
-      labels: ['월', '화', '수', '목', '금', '토', '일'],
-      datasets: [
-        {
-          label: '지출',
-          data: [12000, 15000, 9000, 11000, 17000, 23000, 20000],
-          backgroundColor: '#6610f2',
-          barThickness: 10,
-          borderRadius: {
-            topLeft: 8,
-            topRight: 8,
-          },
-          borderSkipped: false,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        x: {
-          grid: { display: false },
-        },
-        y: {
-          grid: { display: false },
-          beginAtZero: true,
-        },
-      },
-    },
-  });
-};
-
 onMounted(async () => {
   await fetchUserTransactions();
-  renderCategoryChart();
-  renderWeeklyChart();
+  renderCategoryChart(categoryChart.value, periodStat);
+  renderWeeklyChart(weeklyChart.value, periodStat);
 });
 
 watch(period, async () => {
   await fetchUserTransactions(); // period 변경 시 데이터 재조회
-  renderCategoryChart();
-  renderWeeklyChart();
+  renderCategoryChart(categoryChart.value, periodStat);
+  renderWeeklyChart(weeklyChart.value, periodStat);
 });
-
-const generateColors = (count) => {
-  const colors = [
-    '#FF6384',
-    '#36A2EB',
-    '#FFCE56',
-    '#4BC0C0',
-    '#9966FF',
-    '#FF9F40',
-    '#28a745',
-    '#0d6efd',
-    '#ffc107',
-  ];
-  return Array.from({ length: count }, (_, i) => colors[i % colors.length]);
-};
 </script>
 
 <style scoped>
@@ -444,6 +372,6 @@ const generateColors = (count) => {
 
 canvas {
   width: 100% !important;
-  height: 200px !important;
+  height: 400px !important;
 }
 </style>

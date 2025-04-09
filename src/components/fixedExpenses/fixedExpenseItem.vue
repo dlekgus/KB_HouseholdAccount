@@ -1,11 +1,13 @@
 <template>
-  <div class="d-flex justify-content-between align-items-center py-3 border-bottom position-relative">
+  <div
+    class="d-flex justify-content-between align-items-center py-3 border-bottom position-relative"
+  >
     <div class="d-flex align-items-center gap-3">
       <!-- ✅ 아이콘 or ● -->
       <div
         :style="getBoxStyle(item.boxColor)"
         class="rounded-4 d-flex align-items-center justify-content-center me-3"
-        style="width: 40px; height: 40px;"
+        style="width: 40px; height: 40px"
       >
         <template v-if="item.icon && item.icon.class">
           <i :class="item.icon.class" :style="item.icon.style" class="fa-lg"></i>
@@ -26,7 +28,7 @@
     <div class="d-flex align-items-center gap-2">
       <span class="fw-bold">{{ item.price.toLocaleString() }}원</span>
       <div class="dropdown-container" @click.stop="toggleMenu">
-        <span style="cursor: pointer;">⋮</span>
+        <span style="cursor: pointer">⋮</span>
         <div v-if="showMenu" class="custom-dropdown">
           <div @click="editItem" class="dropdown-item">수정</div>
           <div @click="deleteItem" class="dropdown-item">삭제</div>

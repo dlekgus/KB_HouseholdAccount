@@ -11,8 +11,8 @@
         <slot name="calendar" />
       </div>
       <div class="history-area">
-        <slot name="recent-history" />
         <slot name="this-month-history"></slot>
+        <slot name="recent-history" />
       </div>
     </main>
 
