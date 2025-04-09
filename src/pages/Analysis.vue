@@ -6,8 +6,8 @@
         v-for="m in [1, 3, 6, 12]"
         :key="m"
         class="btn"
-        :class="period === m ? 'btn-primary' : 'btn-secondary'"
-        @click="selectPeriod(m)"
+        :class="store.period === m ? 'btn-primary' : 'btn-secondary'"
+        @click="store.selectPeriod(m)"
       >
         {{ m }}개월
       </button>
@@ -15,82 +15,87 @@
 
     <!-- 요약 및 점수 -->
     <div class="row g-4">
-      <!-- 전월 대비 카드 -->
+      <!-- 수입 지출 카드 -->
       <div class="col-12 col-md-8">
         <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title text-muted">
-              <!-- 전{{ period === 1 ? '' : ` ${period}개` }}월 대비 -->
-              수입 지출 통계
-            </h5>
+            <h5 class="card-title text-muted">수입 지출 통계</h5>
 
-            <!-- 첫 번째 줄: 총 지출, 평균 일 지출, 최다 카테고리 -->
+            <!-- 총 수입, 지출 등 -->
             <div class="row">
               <div class="col-12 col-md-3 mb-3">
-                <small class="text-muted"
-                  >총 수입
+                <small class="text-muted">
+                  총 수입
                   <span
                     :class="
-                      parseFloat(periodStat.diffIncome.replace('%', '')) > 0
+                      parseFloat(store.periodStat.diffIncome.replace('%', '')) >
+                      0
                         ? 'text-success'
                         : 'text-danger'
                     "
-                    >{{ periodStat.diffIncome }}</span
                   >
+                    {{ store.periodStat.diffIncome }}
+                  </span>
                 </small>
                 <div class="h5">
-                  <AnimatedNumber :value="periodStat.income" />원
+                  <AnimatedNumber :value="store.periodStat.income" />원
                 </div>
                 <div class="small">
                   {{
-                    periodStat.prevIncome === 0
+                    store.periodStat.prevIncome === 0
                       ? '지난 데이터 없음'
-                      : `지난 수입 ${periodStat.prevIncome.toLocaleString()}원`
+                      : `지난 수입 ${store.periodStat.prevIncome.toLocaleString()}원`
                   }}
                 </div>
               </div>
+
               <div class="col-12 col-md-3 mb-3">
-                <small class="text-muted"
-                  >총 지출
+                <small class="text-muted">
+                  총 지출
                   <span
                     :class="
-                      parseFloat(periodStat.diffIncome.replace('%', '')) < 0
+                      parseFloat(
+                        store.periodStat.diffExpense.replace('%', '')
+                      ) < 0
                         ? 'text-success'
                         : 'text-danger'
                     "
-                    >{{ periodStat.diffExpense }}</span
                   >
+                    {{ store.periodStat.diffExpense }}
+                  </span>
                 </small>
                 <div class="h5">
-                  <AnimatedNumber :value="periodStat.expense" />원
+                  <AnimatedNumber :value="store.periodStat.expense" />원
                 </div>
                 <div class="small">
                   {{
-                    periodStat.prevExpense === 0
+                    store.periodStat.prevExpense === 0
                       ? '지난 데이터 없음'
-                      : `지난 지출 ${periodStat.prevExpense.toLocaleString()}원`
+                      : `지난 지출 ${store.periodStat.prevExpense.toLocaleString()}원`
                   }}
                 </div>
               </div>
+
               <div class="col-12 col-md-3 mb-3">
                 <small class="text-muted">합계</small>
                 <div
                   class="h5"
                   :class="
-                    periodStat.income - periodStat.expense > 0
+                    store.periodStat.income - store.periodStat.expense > 0
                       ? 'text-success'
                       : 'text-danger'
                   "
                 >
                   <AnimatedNumber
-                    :value="periodStat.income - periodStat.expense"
+                    :value="store.periodStat.income - store.periodStat.expense"
                   />원
                 </div>
               </div>
+
               <div class="col-12 col-md-3">
                 <small class="text-muted">최다 지출 카테고리</small>
                 <div class="h5">
-                  {{ !periodStat.topCategory ? '' : periodStat.topCategory }}
+                  {{ store.periodStat.topCategory || '' }}
                 </div>
               </div>
             </div>
@@ -111,9 +116,9 @@
               borderStyle: 'solid',
             }"
           >
-            <span class="score" :class="gradeInfo.color">{{
-              gradeInfo.grade
-            }}</span>
+            <span class="score" :class="gradeInfo.color">
+              {{ gradeInfo.grade }}
+            </span>
           </div>
           <div class="mt-2" :class="gradeInfo.color">
             <div class="fw-bold">{{ gradeInfo.grade }} 등급</div>
@@ -123,7 +128,7 @@
       </div>
     </div>
 
-    <!-- 하단 차트 -->
+    <!-- 차트 -->
     <div class="row mt-4 g-4">
       <div class="col-12 col-md-6">
         <div class="card h-100">
@@ -147,158 +152,25 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed, reactive, watch } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
+import { useAnalysisStore } from '@/stores/analysisStore';
 import { renderCategoryChart, renderWeeklyChart } from '@/composables/useChart';
 import AnimatedNumber from '@/components/AnimatedNumber.vue';
-import axios from 'axios';
 
 const categoryChart = ref(null);
 const weeklyChart = ref(null);
 
-const period = ref(1);
-const periodStat = reactive({
-  expense: 0,
-  income: 0,
-  topCategory: '데이터 없음',
-  prevIncome: 0,
-  prevExpense: 0,
-  diffExpense: '',
-  diffIncome: '',
-  category: {},
-});
-
-watch(period, () => {
-  updatePeriodStats();
-});
-
-const state = reactive({ userTransactions: [] });
-
-const userId = localStorage.getItem('userId');
-const BASE_URI = '/api/transactions';
-// fetch users all data from db
-const fetchUserTransactions = async () => {
-  try {
-    const response = await axios.get(BASE_URI + `?userId=${userId}`);
-    if (response.status === 200) {
-      state.userTransactions = response.data;
-      updatePeriodStats();
-    } else {
-      alert('데이터 조회 실패');
-    }
-  } catch (e) {
-    alert('에러 발생');
-  }
-};
-
-function updatePeriodStats() {
-  const stats = getPeriodStats(period.value, state.userTransactions);
-  periodStat.expense = stats.expense;
-  periodStat.income = stats.income;
-  periodStat.topCategory = stats.topCategory;
-  periodStat.prevExpense = stats.prevExpense;
-  periodStat.prevIncome = stats.prevIncome;
-  periodStat.diffIncome = stats.diffIncome;
-  periodStat.diffExpense = stats.diffExpense;
-  periodStat.category = stats.category;
-}
-
-function getFiltered(transactions, type, prevDate, curDate) {
-  return transactions.filter((t) => {
-    const txDate = new Date(t.date);
-    return t.type === type && txDate >= prevDate && txDate <= curDate;
-  });
-}
-
-function getPeriodStats(period, transactions) {
-  const now = new Date();
-  const prevDate = new Date();
-  const compareDate = new Date();
-  prevDate.setMonth(now.getMonth() - period);
-  compareDate.setMonth(prevDate.getMonth() - period);
-
-  // 현재 기간
-  const curExpenseFilter = getFiltered(transactions, 'expense', prevDate, now);
-  const curIncomeFilter = getFiltered(transactions, 'income', prevDate, now);
-
-  // 이전 기간
-  const prevExpeseFilter = getFiltered(
-    transactions,
-    'expense',
-    compareDate,
-    prevDate
-  );
-
-  // 이전 기간
-  const prevIncomeFilter = getFiltered(
-    transactions,
-    'income',
-    compareDate,
-    prevDate
-  );
-
-  //총 수입 계산
-  const currentIncome = curIncomeFilter.reduce((sum, t) => sum + t.amount, 0);
-  const prevIncome = prevIncomeFilter.reduce((sum, t) => sum + t.amount, 0);
-
-  // 총 지출 계산
-  const currentExpense = curExpenseFilter.reduce((sum, t) => sum + t.amount, 0);
-  const prevExpense = prevExpeseFilter.reduce((sum, t) => sum + t.amount, 0);
-
-  const diffExpense = getDiffRate(prevExpense, currentExpense);
-  const diffIncome = getDiffRate(prevIncome, currentIncome);
-  // 최다 지출 카테고리 계산
-  const { categoryMap, topCategory } = getTopCategory(curExpenseFilter);
-
-  return {
-    expense: currentExpense,
-    income: currentIncome,
-    topCategory,
-    category: categoryMap,
-    prevExpense,
-    prevIncome,
-    diffExpense,
-    diffIncome,
-  };
-}
-
-function getDiffRate(prev, cur) {
-  let diffRate;
-  if (prev === 0) {
-    diffRate = cur === 0 ? 0 : 100;
-  } else {
-    diffRate = ((cur - prev) / Math.abs(prev)) * 100;
-  }
-  return (diffRate > 0 ? '+' : '') + diffRate.toFixed(1) + '%';
-}
-function getTopCategory(curExpenseFilter) {
-  let total = 0;
-  const categoryMap = {};
-
-  curExpenseFilter.forEach((t) => {
-    if (!categoryMap[t.category]) categoryMap[t.category] = 0;
-    categoryMap[t.category] += t.amount;
-    total += t.amount;
-  });
-
-  // 가장 높은 비중의 카테고리 계산
-  let topCategory = '데이터 없음';
-  let max = 0;
-  for (const [category, amount] of Object.entries(categoryMap)) {
-    if (amount > max) {
-      max = amount;
-      topCategory = category;
-    }
-  }
-
-  return { categoryMap, topCategory };
-}
-// 기간 선택 함수
-function selectPeriod(months) {
-  period.value = months;
-}
+// ✅ Pinia 스토어 가져오기
+const store = useAnalysisStore();
+const {
+  period,
+  periodStat,
+  fetchUserTransactions,
+  selectPeriod,
+  updatePeriodStats,
+} = store;
 
 const borderColor = computed(() => {
-  // color 클래스를 직접 사용하지 않고, 색상 코드로 매핑
   const colorMap = {
     'text-success': '#2e7d32',
     'text-primary': '#1976d2',
@@ -310,9 +182,9 @@ const borderColor = computed(() => {
 
 const gradeInfo = computed(() => {
   const val = (periodStat.expense / periodStat.income) * 100;
-  let grade = '';
-  let flag = '';
-  let color = '';
+  let grade = '',
+    flag = '',
+    color = '';
   if (val <= 30) {
     grade = 'A';
     flag = '30%';
@@ -341,16 +213,30 @@ const gradeInfo = computed(() => {
 });
 
 onMounted(async () => {
-  await fetchUserTransactions();
-  renderCategoryChart(categoryChart.value, periodStat);
-  renderWeeklyChart(weeklyChart.value, periodStat);
+  await store.fetchUserTransactions();
+  renderCategoryChart(categoryChart.value, store.periodStat);
+  renderWeeklyChart(
+    weeklyChart.value,
+    store.periodStat.income,
+    store.periodStat.expense
+  );
 });
-
-watch(period, async () => {
-  await fetchUserTransactions(); // period 변경 시 데이터 재조회
-  renderCategoryChart(categoryChart.value, periodStat);
-  renderWeeklyChart(weeklyChart.value, periodStat);
-});
+watch(
+  () => [store.period], // 바라볼 값들
+  () => {
+    console.log('call!');
+    if (categoryChart.value) {
+      renderCategoryChart(categoryChart.value, store.periodStat);
+    }
+    if (weeklyChart.value) {
+      renderWeeklyChart(
+        weeklyChart.value,
+        store.periodStat.income,
+        store.periodStat.expense
+      );
+    }
+  }
+);
 </script>
 
 <style scoped>

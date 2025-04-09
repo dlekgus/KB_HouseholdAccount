@@ -85,7 +85,7 @@ export const renderCategoryChart = (ctx, periodStat) => {
   });
 };
 
-export const renderWeeklyChart = (ctx) => {
+export const renderWeeklyChart = (ctx, incomes, expenses) => {
   if (weeklyChartInstance) weeklyChartInstance.destroy();
 
   weeklyChartInstance = new Chart(ctx, {
@@ -95,13 +95,23 @@ export const renderWeeklyChart = (ctx) => {
       datasets: [
         {
           label: '지출',
-          data: [12000, 15000, 9000, 11000, 17000, 23000, 20000],
+          data: expenses,
           borderColor: 'red',
-          backgroundColor: 'red',
-          tension: 0.4, // 부드러운 곡선
-          fill: false, // 아래 채우지 않음
-          pointRadius: 4, // 점 크기
-          pointHoverRadius: 7, // 호버 시 점 크기
+          backgroundColor: 'rgba(255, 99, 132, 0.1)',
+          tension: 0.4,
+          fill: false,
+          pointRadius: 4,
+          pointHoverRadius: 7,
+        },
+        {
+          label: '수입',
+          data: incomes,
+          borderColor: 'blue',
+          backgroundColor: 'rgba(54, 162, 235, 0.1)',
+          tension: 0.4,
+          fill: false,
+          pointRadius: 4,
+          pointHoverRadius: 7,
         },
       ],
     },
@@ -116,13 +126,13 @@ export const renderWeeklyChart = (ctx) => {
           grid: { display: false },
           beginAtZero: true,
           ticks: {
-            callback: (value) => `₩${value.toLocaleString()}`, // y축 숫자에 원 표시
+            callback: (value) => `₩${value.toLocaleString()}`,
           },
         },
       },
       plugins: {
         legend: {
-          display: false,
+          display: true,
         },
         tooltip: {
           callbacks: {
