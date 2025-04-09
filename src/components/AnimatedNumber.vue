@@ -12,7 +12,7 @@
     },
     duration: {
       type: Number,
-      default: 1000, // 1초 애니메이션
+      default: 280, // 1초 애니메이션  
     },
   });
   
