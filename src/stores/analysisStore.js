@@ -16,7 +16,9 @@ export const useAnalysisStore = defineStore('analysis', () => {
     category: {},
   });
 
-  const userTransactions = ref([]);
+  let curExpenseFilter = reactive([]);
+  let curIncomeFilter = reactive([]);
+  let userTransactions = reactive([]);
 
   const userId = localStorage.getItem('userId');
   const BASE_URI = '/api/transactions';
@@ -24,6 +26,7 @@ export const useAnalysisStore = defineStore('analysis', () => {
   const fetchUserTransactions = async () => {
     try {
       const response = await axios.get(`${BASE_URI}?userId=${userId}`);
+      console.log(response);
       if (response.status === 200) {
         userTransactions.value = response.data;
         updatePeriodStats();
@@ -31,7 +34,8 @@ export const useAnalysisStore = defineStore('analysis', () => {
         alert('데이터 조회 실패');
       }
     } catch (e) {
-      alert('에러 발생');
+      alert('에러 발생', e);
+      console.log(e);
     }
   };
 
@@ -59,13 +63,8 @@ export const useAnalysisStore = defineStore('analysis', () => {
     prevDate.setMonth(now.getMonth() - period);
     compareDate.setMonth(prevDate.getMonth() - period);
 
-    const curExpenseFilter = getFiltered(
-      transactions,
-      'expense',
-      prevDate,
-      now
-    );
-    const curIncomeFilter = getFiltered(transactions, 'income', prevDate, now);
+    curExpenseFilter = getFiltered(transactions, 'expense', prevDate, now);
+    curIncomeFilter = getFiltered(transactions, 'income', prevDate, now);
 
     const prevExpenseFilter = getFiltered(
       transactions,
@@ -142,8 +141,9 @@ export const useAnalysisStore = defineStore('analysis', () => {
     period,
     periodStat,
     userTransactions,
+    curExpenseFilter,
+    curIncomeFilter,
     fetchUserTransactions,
     selectPeriod,
-    updatePeriodStats,
   };
 });

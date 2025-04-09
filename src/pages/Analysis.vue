@@ -7,7 +7,7 @@
         :key="m"
         class="btn"
         :class="store.period === m ? 'btn-primary' : 'btn-secondary'"
-        @click="store.selectPeriod(m)"
+        @click="selectPeriod(m)"
       >
         {{ m }}개월
       </button>
@@ -163,11 +163,11 @@ const weeklyChart = ref(null);
 // ✅ Pinia 스토어 가져오기
 const store = useAnalysisStore();
 const {
-  period,
   periodStat,
   fetchUserTransactions,
   selectPeriod,
-  updatePeriodStats,
+  curExpenseFilter,
+  curIncomeFilter,
 } = store;
 
 const borderColor = computed(() => {
@@ -213,27 +213,18 @@ const gradeInfo = computed(() => {
 });
 
 onMounted(async () => {
-  await store.fetchUserTransactions();
-  renderCategoryChart(categoryChart.value, store.periodStat);
-  renderWeeklyChart(
-    weeklyChart.value,
-    store.periodStat.income,
-    store.periodStat.expense
-  );
+  await fetchUserTransactions();
+  renderCategoryChart(categoryChart.value, periodStat);
+  // renderWeeklyChart(weeklyChart.value, curIncomeFilter, curExpenseFilter);
 });
 watch(
   () => [store.period], // 바라볼 값들
   () => {
-    console.log('call!');
     if (categoryChart.value) {
       renderCategoryChart(categoryChart.value, store.periodStat);
     }
     if (weeklyChart.value) {
-      renderWeeklyChart(
-        weeklyChart.value,
-        store.periodStat.income,
-        store.periodStat.expense
-      );
+      renderWeeklyChart(weeklyChart.value, curIncomeFilter, curExpenseFilter);
     }
   }
 );
