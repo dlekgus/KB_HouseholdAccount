@@ -7,6 +7,7 @@ import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import koLocale from '@fullcalendar/core/locales/ko';
+import dayjs from 'dayjs';
 import { ref, onMounted } from 'vue';
 import { useTransactionStore } from '@/stores/transactionStore';
 import { useUserStore } from '@/stores/userStore';
@@ -43,7 +44,7 @@ const calendarOptions = ref({
   locale: koLocale,
   events: calendarEvents,
   dayCellContent: (arg) => {
-    const dateStr = arg.date.toISOString().split('T')[0];
+    const dateStr = dayjs(arg.date).format('YYYY-MM-DD');
     const totals = dailyTotals.value[dateStr];
     const day = arg.date.getDate();
 
