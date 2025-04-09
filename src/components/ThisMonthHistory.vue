@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script >
+<!-- <script >
 import { useUserStore } from '@/stores/userStore';
 import { useTransactionStore } from '@/stores/transactionStore';
 
@@ -18,4 +18,4 @@ onMounted(async () => {
 
   await transactionStore.fetchByUser(userId);
 });
-</script>
+</script> -->
