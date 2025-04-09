@@ -22,7 +22,15 @@
             <h5 class="card-title text-muted">
               전{{ period === 1 ? '' : ` ${period}개` }}월 대비
             </h5>
+
+            <!-- 첫 번째 줄: 총 지출, 평균 일 지출, 최다 카테고리 -->
             <div class="row">
+              <div class="col-12 col-md-4 mb-3">
+                <small class="text-muted">총 수입</small>
+                <div class="h5 text-success">
+                  <AnimatedNumber :value="periodStat.income" />원
+                </div>
+              </div>
               <div class="col-12 col-md-4 mb-3">
                 <small class="text-muted">총 지출</small>
                 <div class="h5">
@@ -36,6 +44,25 @@
                   }}
                 </div>
               </div>
+              <div class="col-12 col-md-4 mb-3">
+                <small class="text-muted">합계</small>
+                <div
+                  class="h5"
+                  :class="{
+                    'text-danger': netDiff < 0,
+                    'text-success': netDiff >= 0,
+                  }"
+                >
+                  <AnimatedNumber :value="Math.abs(netDiff)" />원
+                  <span class="small">
+                    {{ netDiff < 0 ? '지출 초과' : '수입 초과' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 두 번째 줄: 수입, 수입 - 지출 합계 -->
+            <div class="row">
               <div class="col-12 col-md-4 mb-3">
                 <small class="text-muted">평균 일 지출</small>
                 <div class="h5">
@@ -134,7 +161,7 @@ watch(period, () => {
 
 const state = reactive({ userTransactions: [] });
 
-const userId = 5;
+const userId = 10;
 const BASE_URI = '/api/transactions';
 // fetch users all data from db
 const fetchUserTransactions = async () => {
@@ -161,6 +188,13 @@ function updatePeriodStats() {
   periodStat.category = stats.category;
 }
 
+function getFiltered(transactions, type, prevDate, curDate) {
+  return transactions.filter((t) => {
+    const txDate = new Date(t.date);
+    return t.type === type && txDate >= prevDate && txDate <= curDate;
+  });
+}
+
 function getPeriodStats(period, transactions) {
   const now = new Date();
   const prevDate = new Date();
@@ -169,20 +203,20 @@ function getPeriodStats(period, transactions) {
   compareDate.setMonth(prevDate.getMonth() - period);
 
   // 현재 기간
-  const currentFiltered = transactions.filter((t) => {
-    const txDate = new Date(t.date);
-    return t.type === 'expense' && txDate >= prevDate && txDate <= now;
-  });
+  const curExpenseFilter = getFiltered(transactions, 'expense', prevDate, now);
+  const curIncomeFilter = getFiltered(transactions, 'income', prevDate, now);
 
   // 이전 기간
-  const prevFiltered = transactions.filter((t) => {
-    const txDate = new Date(t.date);
-    return t.type === 'expense' && txDate >= compareDate && txDate < prevDate;
-  });
+  const prevExpeseFilter = getFiltered(
+    transactions,
+    'expense',
+    compareDate,
+    prevDate
+  );
 
   // 총 지출 계산
-  const currentTotal = currentFiltered.reduce((sum, t) => sum + t.amount, 0);
-  const prevTotal = prevFiltered.reduce((sum, t) => sum + t.amount, 0);
+  const currentTotal = curExpenseFilter.reduce((sum, t) => sum + t.amount, 0);
+  const prevTotal = prevExpeseFilter.reduce((sum, t) => sum + t.amount, 0);
 
   // 일 평균 계산
   const dailyAvg = getAvg(prevDate, now, currentTotal);
@@ -193,7 +227,7 @@ function getPeriodStats(period, transactions) {
   const dailyAvgChangeRate = getChangeRage(prevDailyAvg, dailyAvg);
 
   // 최다 지출 카테고리 계산
-  const { categoryMap, topCategory } = getTopCategory(currentFiltered);
+  const { categoryMap, topCategory } = getTopCategory(curExpenseFilter);
 
   return {
     total: currentTotal,
@@ -221,11 +255,11 @@ function getChangeRage(prevTotal, curTotal) {
   return ((curTotal - prevTotal) / (prevTotal || 1)) * 100;
 }
 
-function getTopCategory(currentFiltered) {
+function getTopCategory(curExpenseFilter) {
   let total = 0;
   const categoryMap = {};
 
-  currentFiltered.forEach((t) => {
+  curExpenseFilter.forEach((t) => {
     if (!categoryMap[t.category]) categoryMap[t.category] = 0;
     categoryMap[t.category] += t.amount;
     total += t.amount;
