@@ -55,6 +55,8 @@ const upcoming = computed(() =>
 
 
 <style scoped>
+
+
 .scroll-area {
   max-height: 250px;
   overflow-y: auto;

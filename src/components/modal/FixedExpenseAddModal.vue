@@ -2,87 +2,56 @@
 <template>
   <teleport to="body">
     <transition name="fade">
-      <div
-        v-if="modelValue"
-        class="modal fade show d-block"
-        tabindex="-1"
-        style="background-color: rgba(0, 0, 0, 0.5)"
-      >
+      <div v-if="modelValue" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5)">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">고정 지출 추가</h5>
-              <button
-                type="button"
-                class="btn-close"
-                @click="$emit('update:modelValue', false)"
-              ></button>
+              <h5 class="modal-title"></h5>
+              <button type="button" class="btn-close" @click="$emit('update:modelValue', false)"></button>
             </div>
             <div class="modal-body">
               <form @submit.prevent="submit">
                 <!-- 카테고리 토글 -->
-                <div class="mb-4">
+                <div class="mb-4" style="margin-top: 4px;">
                   <div class="category-toggle">
-                    <button
-                      v-for="option in categoryOptions"
-                      :key="option"
-                      type="button"
-                      class="toggle-button"
-                      :class="{ active: form.category === option }"
-                      @click="form.category = option"
-                    >
+                    <button v-for="option in categoryOptions" :key="option" type="button" class="toggle-button"
+                      :class="{ active: form.category === option }" @click="form.category = option">
                       {{ option }}
                     </button>
                   </div>
                 </div>
+                <hr/>
 
                 <!-- 폼 영역 -->
                 <div class="row">
                   <!-- 좌: 입력 -->
-                  <div class="col-md-5" style="margin-top: 25px;">
+                  <div class="col-md-7" style="margin-top: 4px;">
                     <div class="mb-3">
-                      <input
-                        v-model="form.name"
-                        type="text"
-                        class="form-control form-control-sm custom-input"
-                        required
-                        placeholder="항목명을 입력하세요."
-                      />
+                      <input v-model="form.name" type="text" class="form-control form-control-sm custom-input" required
+                        placeholder="항목명을 입력하세요." />
                     </div>
 
-                    <div class="mb-3">
-                      <input
-                        v-model="displayPrice"
-                        type="text"
-                        class="form-control form-control-sm custom-input price-input"
-                        @input="onPriceInput"
-                        required
-                        placeholder="금액을 입력하세요."
-                      />
+                    <div class="mb-3 position-relative price-wrapper">
+                      <input v-model="displayPrice" type="text" class="form-control form-control-sm price-input"
+                        @input="onPriceInput" required placeholder="금액을 입력하세요." />
+                      <span class="unit-text">원</span>
                     </div>
+
 
                     <div class="mb-3">
                       <label class="form-label">결제일</label>
-                      <select
-                        v-model.number="form.dueDate"
-                        class="form-select form-select-sm"
-                      >
+                      <select v-model.number="form.dueDate" class="form-select form-select-sm">
                         <option v-for="n in 31" :key="n" :value="n">{{ n }}일</option>
                       </select>
                     </div>
                   </div>
 
                   <!-- 우: 아이콘 -->
-                  <div class="col-md-7" style="margin-bottom: 40px;">
+                  <div class="col-md-5 " style="margin-bottom: 40px;">
                     <label class="form-label"></label>
                     <div class="icon-grid">
-                      <div
-                        v-for="icon in iconList"
-                        :key="icon.label"
-                        class="icon-box"
-                        :class="{ selected: form.icon?.label === icon.label }"
-                        @click="toggleIcon(icon)"
-                      >
+                      <div v-for="icon in iconList" :key="icon.label" class="icon-box"
+                        :class="{ selected: form.icon?.label === icon.label }" @click="toggleIcon(icon)">
                         <i :class="icon.class" :style="icon.style" class="fa-lg"></i>
                       </div>
                     </div>
@@ -91,11 +60,7 @@
 
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary">저장</button>
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    @click="$emit('update:modelValue', false)"
-                  >
+                  <button type="button" class="btn btn-secondary" @click="ret">
                     닫기
                   </button>
                 </div>
@@ -137,8 +102,15 @@ const form = reactive({
   category: categoryOptions[0],
   icon: null,
 });
+const ret = () => {
+  emit('update:modelValue', false);
+  displayPrice.value = '';
+  form.dueDate = 1;
+  form.name = '';
 
-const displayPrice = ref('0');
+}
+
+const displayPrice = ref('');
 
 watch(
   () => form.price,
@@ -147,10 +119,15 @@ watch(
   }
 );
 
+
+
 const onPriceInput = (e) => {
   const onlyNumber = e.target.value.replace(/[^0-9]/g, '');
   form.price = Number(onlyNumber);
-  displayPrice.value = Number(onlyNumber).toLocaleString();
+  if (displayPrice.value == 0) displayPrice.value = '';
+  else {
+    displayPrice.value = Number(onlyNumber).toLocaleString();
+  }
 };
 
 const toggleIcon = (icon) => {
@@ -176,10 +153,47 @@ const submit = async () => {
 </script>
 
 <style scoped>
+
+/*  전체 row 간격 줄이기 */
+.row {
+  margin-top: 10px ;
+  margin-bottom: 10px ;
+  height: 268px;
+}
+
+/* 입력창 간 여백 최소화 */
+.mb-3 {
+  margin-top: 25px ;
+}
+::placeholder{
+  color: rgb(184, 180, 180);
+  font-size: 15px;
+}
+
+.price-wrapper {
+  position: relative;
+}
+
+.unit-text {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+
+.price-input {
+  font-size: 15px;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s;
 }
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
@@ -189,11 +203,14 @@ const submit = async () => {
 .category-toggle {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border: 2px solid #4f2ee8;
-  border-radius: 12px;
+  border: 1px solid #4f2ee8;
+  border-radius: 9px;
   overflow: hidden;
-  height: 49px;
+  height: 48px;
+  text-align: center;
+  font-size: 10%;
 }
+
 .toggle-button {
   padding: 12px 0;
   background: white;
@@ -203,7 +220,12 @@ const submit = async () => {
   transition: all 0.3s ease-in-out;
   font-size: 16px;
 }
+
 .toggle-button.active {
+  background: #4f2ee8;
+  color: white;
+}
+.toggle-button:hover {
   background: #4f2ee8;
   color: white;
 }
@@ -215,8 +237,10 @@ const submit = async () => {
   color: #333;
   transition: border-color 0.2s ease-in-out;
 }
+
 .custom-input:focus {
-  border-color: #6f42c1; /* 보라색 */
+  border-color: #6f42c1;
+  /* 보라색 */
   box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
 }
 
@@ -226,8 +250,9 @@ const submit = async () => {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(4, auto);
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 0px;
 }
+
 .icon-box {
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -236,9 +261,11 @@ const submit = async () => {
   cursor: pointer;
   transition: all 0.2s;
 }
+
 .icon-box:hover {
   background-color: #f9f9f9;
 }
+
 .icon-box.selected {
   background-color: #e0e7ff;
 }
