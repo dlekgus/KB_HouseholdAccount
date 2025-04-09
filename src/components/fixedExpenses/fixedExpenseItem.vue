@@ -1,20 +1,28 @@
 <template>
   <div class="d-flex justify-content-between align-items-center py-3 border-bottom position-relative">
     <div class="d-flex align-items-center gap-3">
+      <!-- ✅ 아이콘 or ● -->
       <div
         :style="getBoxStyle(item.boxColor)"
         class="rounded-4 d-flex align-items-center justify-content-center me-3"
         style="width: 40px; height: 40px;"
       >
-        <span :style="getDotStyle(item.dotColor)" class="rounded-circle"></span>
+        <template v-if="item.icon && item.icon.class">
+          <i :class="item.icon.class" :style="item.icon.style" class="fa-lg"></i>
+        </template>
+        <template v-else>
+          <span :style="getDotStyle(item.dotColor)" class="rounded-circle"></span>
+        </template>
       </div>
+
+      <!-- 이름/날짜 -->
       <div>
         <div class="fw-semibold">{{ item.name }}</div>
         <div class="text-muted small">매월 {{ item.day }}일</div>
       </div>
     </div>
 
-    <!-- 오른쪽 가격 + 점 세 개 -->
+    <!-- 오른쪽 가격 + 메뉴 -->
     <div class="d-flex align-items-center gap-2">
       <span class="fw-bold">{{ item.price.toLocaleString() }}원</span>
       <div class="dropdown-container" @click.stop="toggleMenu">
@@ -38,8 +46,6 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['edit', 'delete']);
-
 const showMenu = ref(false);
 
 const toggleMenu = () => {
@@ -47,15 +53,16 @@ const toggleMenu = () => {
 };
 
 const editItem = () => {
-  emit('edit', props.item);
+  alert(`수정: ${props.item.name}`);
   showMenu.value = false;
 };
 
 const deleteItem = () => {
-  emit('delete', props.item);
+  alert(`삭제: ${props.item.name}`);
   showMenu.value = false;
 };
 
+// 기본 색상 함수
 function getBoxStyle(color) {
   return {
     backgroundColor: color || '#fcecec',
