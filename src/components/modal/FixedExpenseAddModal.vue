@@ -20,12 +20,12 @@
                     </button>
                   </div>
                 </div>
-                <hr/>
+                <hr />
 
                 <!-- 폼 영역 -->
                 <div class="row">
                   <!-- 좌: 입력 -->
-                  <div class="col-md-7" style="margin-top: 4px;">
+                  <div class="col-md-8" style="margin-top: 4px;">
                     <div class="mb-3">
                       <input v-model="form.name" type="text" class="form-control form-control-sm custom-input" required
                         placeholder="항목명을 입력하세요." />
@@ -39,15 +39,14 @@
 
 
                     <div class="mb-3">
-                      <label class="form-label">결제일</label>
-                      <select v-model.number="form.dueDate" class="form-select form-select-sm">
-                        <option v-for="n in 31" :key="n" :value="n">{{ n }}일</option>
-                      </select>
+                      <label class="form-label"></label>
+                      <v-select v-model="form.dueDate" :options="dayOptions" :reduce="day => day"
+                        placeholder="날짜를 선택하세요" class="custom-select" />
                     </div>
                   </div>
 
                   <!-- 우: 아이콘 -->
-                  <div class="col-md-5 " style="margin-bottom: 40px;">
+                  <div class="col-md-4 " style="margin-bottom: 40px;">
                     <label class="form-label"></label>
                     <div class="icon-grid">
                       <div v-for="icon in iconList" :key="icon.label" class="icon-box"
@@ -83,7 +82,7 @@ const store = useFixedExpenseStore();
 const userId = localStorage.getItem('userId');
 
 const categoryOptions = ['구독', '고정지출'];
-
+const dayOptions = Array.from({ length: 31 }, (_, i) => i + 1); // [1,2,...31] -> v-Select
 const iconList = [
   { label: 'music', class: 'fa-solid fa-headphones', style: 'color: #002feb;' },
   { label: 'youtube', class: 'fa-brands fa-youtube', style: 'color: #e61700;' },
@@ -105,7 +104,7 @@ const form = reactive({
 const ret = () => {
   emit('update:modelValue', false);
   displayPrice.value = '';
-  form.dueDate = 1;
+  form.dueDate = '';
   form.name = '';
 
 }
@@ -154,18 +153,30 @@ const submit = async () => {
 
 <style scoped>
 
+.custom-select {
+  max-height: 40px;
+  font-size: 14px;
+}
+.custom-select :hover{
+  cursor: pointer;
+}
+.vs__dropdown-menu {
+  max-height: 40px;
+  overflow-y: auto;
+}
 /*  전체 row 간격 줄이기 */
 .row {
-  margin-top: 10px ;
-  margin-bottom: 10px ;
+  margin-top: 10px;
+  margin-bottom: 10px;
   height: 268px;
 }
 
 /* 입력창 간 여백 최소화 */
 .mb-3 {
-  margin-top: 25px ;
+  margin-top: 25px;
 }
-::placeholder{
+
+::placeholder {
   color: rgb(184, 180, 180);
   font-size: 15px;
 }
@@ -225,6 +236,7 @@ const submit = async () => {
   background: #4f2ee8;
   color: white;
 }
+
 .toggle-button:hover {
   background: #4f2ee8;
   color: white;
