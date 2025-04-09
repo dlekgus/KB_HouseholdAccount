@@ -13,7 +13,6 @@ export const useTransactionStore = defineStore('transaction', {
   getters: {
     currentMonthIncome: (state) => {
       const now = new Date();
-      //   const currentMonth = now.toISOString().slice(0, 7); // 'YYYY-MM'
       const currentMonth = dayjs(now).format('YYYY-MM'); // 'YYYY-MM'
       console.log('이번달:', currentMonth);
       const filtered = state.transactions.filter((tx) => {
