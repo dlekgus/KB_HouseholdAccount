@@ -44,8 +44,8 @@
                 <div class="small">
                   {{
                     periodStat.prevIncome === 0
-                      ? '이전 데이터 없음'
-                      : `지난달 ${periodStat.prevIncome.toLocaleString()}원`
+                      ? '지난 데이터 없음'
+                      : `지난 수입 ${periodStat.prevIncome.toLocaleString()}원`
                   }}
                 </div>
               </div>
@@ -67,8 +67,8 @@
                 <div class="small">
                   {{
                     periodStat.prevExpense === 0
-                      ? '이전 데이터 없음'
-                      : `지난달 ${periodStat.prevExpense.toLocaleString()}원`
+                      ? '지난 데이터 없음'
+                      : `지난 지출 ${periodStat.prevExpense.toLocaleString()}원`
                   }}
                 </div>
               </div>
