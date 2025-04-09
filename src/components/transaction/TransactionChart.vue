@@ -1,183 +1,225 @@
 <template>
-  <div class="card border p-4 rounded-4 shadow-sm bg-white h-100">
-    <h5 class="fw-semibold mb-4">기간별 비교</h5>
-
-    <div v-if="isEmpty" class="text-muted text-center my-5">
-      최근 5{{ viewMode.value === "월간" ? "개월간" : viewMode.value }}
-      거래내역이 없습니다.
+  <div class="card border rounded-4 shadow-sm bg-white mt-4 position-relative">
+    <div
+      v-if="isLoading"
+      class="position-absolute rounded-4 top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+      style="background-color: rgba(0, 0, 0, 0.3); z-index: 10"
+    >
+      <Loading />
     </div>
 
-    <Bar v-else :data="chartData" :options="chartOptions" />
+    <!-- 거래 내역 테이블 -->
+    <table
+      class="table mb-0 align-middle table-fixed"
+      style="table-layout: fixed"
+    >
+      <thead class="table-light text-secondary small">
+        <tr>
+          <th class="ps-4 p-3" style="width: 15%">날짜</th>
+          <th class="p-3" style="width: 15%">카테고리</th>
+          <th class="p-3" style="width: 15%">내용</th>
+          <th class="p-3" style="width: 30%">메모</th>
+          <th class="text-end pe-4 p-3" style="width: 20%">금액</th>
+          <th class="p-3" style="width: 5%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in pagedTransactions" :key="item.id" class="border-top">
+          <td class="ps-4 p-3">{{ item.date }}</td>
+          <td class="p-3">
+            <span class="me-1" :style="{ color: getColor(item.category) }"
+              >⬤</span
+            >
+            {{ item.category }}
+          </td>
+          <td class="fw-semibold p-3">{{ item.title }}</td>
+          <td class="text-secondary small p-3">{{ item.memo }}</td>
+          <td class="text-end pe-4 fw-semibold p-3">
+            <span
+              :class="
+                item.amount > 0
+                  ? item.type === 'income'
+                    ? 'text-primary'
+                    : 'text-danger'
+                  : ''
+              "
+            >
+              {{ item.amount > 0 ? (item.type === "income" ? "+" : "-") : "" }}
+              {{ item.amount.toLocaleString() }}원
+            </span>
+          </td>
+          <td>
+            <div class="transaction-dropdown position-relative z-index-1">
+              <button
+                class="btn btn-sm border-0 bg-transparent"
+                @click.stop="toggleDropdown(item.id)"
+              >
+                ⋮
+              </button>
+
+              <ul
+                v-if="openDropdownId === item.id"
+                class="dropdown-menu show position-absolute end-0 mt-1"
+                style="display: block"
+              >
+                <li>
+                  <button class="dropdown-item" @click="onEdit(item)">
+                    수정
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="dropdown-item text-danger"
+                    @click="onDelete(item)"
+                  >
+                    삭제
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr v-if="pagedTransactions.length === 0">
+          <td colspan="5" class="text-center text-muted p-3">
+            {{ message || "거래 내역이 없습니다." }}
+          </td>
+        </tr>
+      </tbody>
+
+      <!-- tfoot -->
+      <tfoot>
+        <tr>
+          <td colspan="5" class="px-4 py-2">
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="text-secondary small">총 {{ totalCount }}건</span>
+              <nav>
+                <ul class="pagination pagination-sm mb-0">
+                  <li
+                    class="page-item"
+                    :class="{ disabled: currentPage === 1 }"
+                  >
+                    <button class="page-link" @click="goToPage(1)">«</button>
+                  </li>
+                  <li
+                    class="page-item"
+                    :class="{ disabled: currentPage === 1 }"
+                  >
+                    <button class="page-link" @click="prevPage">‹</button>
+                  </li>
+                  <li class="page-item active">
+                    <span class="page-link">{{ currentPage }}</span>
+                  </li>
+                  <li
+                    class="page-item"
+                    :class="{ disabled: currentPage === totalPages }"
+                  >
+                    <button class="page-link" @click="nextPage">›</button>
+                  </li>
+                  <li
+                    class="page-item"
+                    :class="{ disabled: currentPage === totalPages }"
+                  >
+                    <button class="page-link" @click="goToPage(totalPages)">
+                      »
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
   </div>
 </template>
 
+<script>
+function getColor(category) {
+  const map = {
+    식비: "red",
+    교통: "blue",
+    급여: "green",
+    쇼핑: "orange",
+    생활: "orange",
+    기타: "gray",
+  };
+  return map[category] || "black";
+}
+</script>
+
 <script setup>
-import { ref, watch } from "vue";
-import { Bar } from "vue-chartjs";
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-} from "chart.js";
-
-import dayjs from "dayjs";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-dayjs.extend(isSameOrAfter);
-dayjs.extend(isSameOrBefore);
-
+import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
 import { useTransactionStore } from "@/stores/transaction";
 import { storeToRefs } from "pinia";
-import { fetchTransactionsByDateRange } from "@/services/transactionAPI";
+import Loading from "@/components/Loading.vue";
 
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
-);
-
-const chartData = ref({ labels: [], datasets: [] });
-const isEmpty = ref(false);
 const transactionStore = useTransactionStore();
-const { viewDate, viewMode } = storeToRefs(transactionStore);
+const { transactions, isLoading, viewDate, viewMode } =
+  storeToRefs(transactionStore);
 
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: true,
-  aspectRatio: 3,
-  scales: {
-    x: { grid: { display: false } },
-    y: {
-      beginAtZero: true,
-      grid: { display: false },
-      ticks: {
-        maxTicksLimit: 3,
-        callback: function (value) {
-          if (value >= 100000000)
-            return (
-              (value / 100000000).toFixed(value % 100000000 === 0 ? 0 : 1) +
-              "억"
-            );
-          else if (value >= 10000)
-            return (value / 10000).toFixed(value % 10000 === 0 ? 0 : 1) + "만";
-          else if (value >= 1000)
-            return (value / 1000).toFixed(value % 1000 === 0 ? 0 : 1) + "천";
-          else if (value >= 100)
-            return (value / 100).toFixed(value % 100 === 0 ? 0 : 1) + "백";
-          else return value.toLocaleString("ko-KR");
-        },
-      },
-    },
-  },
-  plugins: {
-    legend: {
-      position: "bottom",
-      labels: { boxWidth: 12, padding: 16 },
-    },
-  },
-};
+const currentPage = ref(1);
+const pageSize = 5;
+const message = ref("거래 내역이 없습니다.");
+const openDropdownId = ref(null);
 
-const loadChartData = async () => {
-  const labels = [];
-  const incomeData = [];
-  const expenseData = [];
+const totalCount = computed(() => transactions.value.length);
+const totalPages = computed(() => Math.ceil(totalCount.value / pageSize));
 
-  const unit =
-    viewMode.value === "일간"
-      ? "day"
-      : viewMode.value === "주간"
-      ? "week"
-      : "month";
-  const base = viewDate.value;
+const pagedTransactions = computed(() => {
+  const start = (currentPage.value - 1) * pageSize;
+  return transactions.value.slice(start, start + pageSize);
+});
 
-  const oldest = base.subtract(4, unit);
-  const startDate = oldest.startOf(unit).format("YYYY-MM-DD");
-  const endDate = base.endOf(unit).format("YYYY-MM-DD");
-
-  try {
-    const { data } = await fetchTransactionsByDateRange({
-      userId: "1",
-      startDate,
-      endDate,
-      page: 1,
-      limit: 10000,
-    });
-
-    for (let i = 4; i >= 0; i--) {
-      const current = base.subtract(i, unit);
-      const start = current.startOf(unit);
-      const end = current.endOf(unit);
-
-      const label =
-        unit === "day"
-          ? current.format("M/D")
-          : unit === "week"
-          ? `${start.format("M/D")} ~ ${end.format("M/D")}`
-          : current.format("M월");
-
-      labels.push(label);
-
-      const filtered = data.filter((tx) => {
-        const d = dayjs(tx.date);
-        return d.isSameOrAfter(start) && d.isSameOrBefore(end);
-      });
-
-      const income = filtered
-        .filter((t) => t.type === "income")
-        .reduce((sum, t) => sum + t.amount, 0);
-
-      const expense = filtered
-        .filter((t) => t.type === "expense")
-        .reduce((sum, t) => sum + t.amount, 0);
-
-      incomeData.push(income);
-      expenseData.push(expense);
-    }
-
-    chartData.value = {
-      labels,
-      datasets: [
-        {
-          label: "수입",
-          backgroundColor: "#3B82F6",
-          borderRadius: 8,
-          data: incomeData,
-          barThickness: 10,
-          categoryPercentage: 0.6,
-          barPercentage: 0.8,
-        },
-        {
-          label: "지출",
-          backgroundColor: "#EF4444",
-          borderRadius: 8,
-          data: expenseData,
-          barThickness: 10,
-          categoryPercentage: 0.6,
-          barPercentage: 0.8,
-        },
-      ],
-    };
-
-    isEmpty.value =
-      incomeData.every((v) => v === 0) && expenseData.every((v) => v === 0);
-  } catch (err) {
-    console.error("차트 데이터 로딩 실패", err);
-    isEmpty.value = true;
+const goToPage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
   }
 };
 
-watch([viewDate, viewMode], loadChartData, { immediate: true });
-</script>
+const prevPage = () => {
+  if (currentPage.value > 1) currentPage.value--;
+};
 
-<style scoped>
-.card {
-  height: 300px;
-}
-</style>
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) currentPage.value++;
+};
+
+// 드롭다운
+const handleClickOutside = (e) => {
+  if (!e.target.closest(".transaction-dropdown")) {
+    openDropdownId.value = null;
+  }
+};
+
+const toggleDropdown = (id) => {
+  openDropdownId.value = openDropdownId.value === id ? null : id;
+};
+
+const onEdit = (item) => {
+  console.log("수정 요청:", item);
+  // 수정 모달 열기 등의 로직 추가
+};
+
+const onDelete = (item) => {
+  if (confirm("정말 삭제하시겠습니까?")) {
+    transactionStore.deleteTransactionById(item.id).then(() => {
+      message.value = "거래 내역이 삭제되었습니다.";
+      setTimeout(() => {
+        message.value = null;
+      }, 2000);
+    });
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
+
+watch([viewDate, viewMode], () => {
+  currentPage.value = 1;
+});
+</script>

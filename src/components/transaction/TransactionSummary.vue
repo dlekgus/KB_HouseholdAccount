@@ -13,24 +13,35 @@
     <div
       class="bg-light rounded-3 p-3 mb-3 d-flex justify-content-between align-items-center"
     >
-      <span class="text-secondary">수입</span>
-      <span class="fw-bold text-primary">+{{ income.toLocaleString() }}원</span>
+      <span v-if="!isLoading" class="text-secondary">수입</span>
+      <span v-else class="placeholder col-3">&nbsp;</span>
+      <span v-if="!isLoading" class="fw-bold text-primary"
+        >+{{ income.toLocaleString() }}원</span
+      >
+      <span v-else class="placeholder col-2">&nbsp;</span>
     </div>
 
     <div
       class="bg-light rounded-3 p-3 mb-3 d-flex justify-content-between align-items-center"
     >
-      <span class="text-secondary">지출</span>
-      <span class="fw-bold text-danger">-{{ expense.toLocaleString() }}원</span>
+      <span v-if="!isLoading" class="text-secondary">지출</span>
+      <span v-else class="placeholder col-3">&nbsp;</span>
+
+      <span v-if="!isLoading" class="fw-bold text-danger"
+        >-{{ expense.toLocaleString() }}원</span
+      >
+      <span v-else class="placeholder col-5">&nbsp;</span>
     </div>
 
     <div
       class="bg-light rounded-3 p-3 d-flex justify-content-between align-items-center"
     >
-      <span class="text-secondary">합계</span>
-      <span class="fw-bold text-dark"
+      <span v-if="!isLoading" class="text-secondary">합계</span>
+      <span v-else class="placeholder col-3">&nbsp;</span>
+      <span v-if="!isLoading" class="fw-bold text-dark"
         >{{ (income - expense).toLocaleString() }}원</span
       >
+      <span v-else class="placeholder col-4">&nbsp;</span>
     </div>
   </div>
 </template>
@@ -46,7 +57,8 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
 const transactionStore = useTransactionStore();
-const { transactions, viewDate, viewMode } = storeToRefs(transactionStore);
+const { transactions, viewDate, viewMode, isLoading } =
+  storeToRefs(transactionStore);
 
 const getRange = () => {
   const base = viewDate.value;
@@ -86,3 +98,11 @@ const expense = computed(() =>
     .reduce((sum, t) => sum + t.amount, 0)
 );
 </script>
+
+<style scoped>
+.placeholder {
+  background-color: #e9ebee;
+  border-radius: 0.25rem;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+</style>
