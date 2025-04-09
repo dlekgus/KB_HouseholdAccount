@@ -27,14 +27,14 @@
             <div class="row">
               <div class="col-12 col-md-4 mb-3">
                 <small class="text-muted">총 수입</small>
-                <div class="h5 text-success">
+                <div class="h5">
                   <AnimatedNumber :value="periodStat.income" />원
                 </div>
               </div>
               <div class="col-12 col-md-4 mb-3">
                 <small class="text-muted">총 지출</small>
                 <div class="h5">
-                  <AnimatedNumber :value="periodStat.total" />원
+                  <AnimatedNumber :value="periodStat.expense" />원
                 </div>
                 <div class="small" :class="changeRateClass">
                   {{
@@ -48,15 +48,15 @@
                 <small class="text-muted">합계</small>
                 <div
                   class="h5"
-                  :class="{
-                    'text-danger': netDiff < 0,
-                    'text-success': netDiff >= 0,
-                  }"
+                  :class="
+                    periodStat.income - periodStat.expense > 0
+                      ? 'text-success'
+                      : 'text-danger'
+                  "
                 >
-                  <AnimatedNumber :value="Math.abs(netDiff)" />원
-                  <span class="small">
-                    {{ netDiff < 0 ? '지출 초과' : '수입 초과' }}
-                  </span>
+                  <AnimatedNumber
+                    :value="periodStat.income - periodStat.expense"
+                  />원
                 </div>
               </div>
             </div>
@@ -66,7 +66,7 @@
               <div class="col-12 col-md-4 mb-3">
                 <small class="text-muted">평균 일 지출</small>
                 <div class="h5">
-                  <AnimatedNumber :value="periodStat.dailyAvg" />원
+                  {{ periodStat.dailyAvg.toLocaleString() }}원
                 </div>
                 <div class="small" :class="chagedailyRateClass">
                   {{
@@ -161,7 +161,7 @@ watch(period, () => {
 
 const state = reactive({ userTransactions: [] });
 
-const userId = 10;
+const userId = localStorage.getItem('userId');
 const BASE_URI = '/api/transactions';
 // fetch users all data from db
 const fetchUserTransactions = async () => {
@@ -180,7 +180,8 @@ const fetchUserTransactions = async () => {
 
 function updatePeriodStats() {
   const stats = getPeriodStats(period.value, state.userTransactions);
-  periodStat.total = stats.total;
+  periodStat.expense = stats.expense;
+  periodStat.income = stats.income;
   periodStat.dailyAvg = stats.dailyAvg;
   periodStat.topCategory = stats.topCategory;
   periodStat.changeRate = stats.changeRate;
@@ -214,23 +215,37 @@ function getPeriodStats(period, transactions) {
     prevDate
   );
 
+  //총 수입 계산
+  const currentIncome = curIncomeFilter.reduce((sum, t) => sum + t.amount, 0);
+
   // 총 지출 계산
-  const currentTotal = curExpenseFilter.reduce((sum, t) => sum + t.amount, 0);
-  const prevTotal = prevExpeseFilter.reduce((sum, t) => sum + t.amount, 0);
+  const currentExpense = curExpenseFilter.reduce((sum, t) => sum + t.amount, 0);
+  const prevExpense = prevExpeseFilter.reduce((sum, t) => sum + t.amount, 0);
 
   // 일 평균 계산
-  const dailyAvg = getAvg(prevDate, now, currentTotal);
-  const prevDailyAvg = getAvg(compareDate, prevDate, prevTotal);
+  const dailyAvg = getAvg(
+    prevDate,
+    now,
+    currentExpense,
+    curExpenseFilter.length
+  );
+  const prevDailyAvg = getAvg(
+    compareDate,
+    prevDate,
+    prevExpense,
+    prevExpeseFilter.length
+  );
 
   // 증감율 계산
-  const totalChangeRate = getChangeRage(prevTotal, currentTotal);
+  const totalChangeRate = getChangeRage(prevExpense, currentExpense);
   const dailyAvgChangeRate = getChangeRage(prevDailyAvg, dailyAvg);
 
   // 최다 지출 카테고리 계산
   const { categoryMap, topCategory } = getTopCategory(curExpenseFilter);
 
   return {
-    total: currentTotal,
+    expense: currentExpense,
+    income: currentIncome,
     dailyAvg,
     topCategory,
     changeRate: totalChangeRate,
@@ -240,19 +255,17 @@ function getPeriodStats(period, transactions) {
 }
 
 // 일 평균 값 구하기
-function getAvg(prevDate, now, total) {
-  const diffDays = Math.max(
-    1,
-    Math.floor((now - prevDate) / (1000 * 60 * 60 * 24))
-  );
-  return Math.round(total / diffDays);
+function getAvg(prevDate, now, total, days) {
+  console.log(days);
+  const diffDays = Math.max(1, Math.floor((now - prevDate) / days));
+  return Math.round(total / days);
 }
 
-function getChangeRage(prevTotal, curTotal) {
-  if (prevTotal === 0) {
+function getChangeRage(prevExpense, curExpense) {
+  if (prevExpense === 0) {
     return 0;
   }
-  return ((curTotal - prevTotal) / (prevTotal || 1)) * 100;
+  return ((curExpense - prevExpense) / (prevExpense || 1)) * 100;
 }
 
 function getTopCategory(curExpenseFilter) {
