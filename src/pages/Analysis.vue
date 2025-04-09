@@ -215,7 +215,7 @@ const gradeInfo = computed(() => {
 onMounted(async () => {
   await fetchUserTransactions();
   renderCategoryChart(categoryChart.value, periodStat);
-  // renderWeeklyChart(weeklyChart.value, curIncomeFilter, curExpenseFilter);
+  renderWeeklyChart(weeklyChart.value, curIncomeFilter, curExpenseFilter);
 });
 watch(
   () => [store.period], // 바라볼 값들
