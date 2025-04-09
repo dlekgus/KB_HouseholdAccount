@@ -6,13 +6,13 @@
     <!-- ✅ 좌우 2단 분할 -->
     <div class="row">
       <!-- 왼쪽: 총합 + 다가오는 결제 -->
-      <div class="col-lg-6 d-flex flex-column gap-3">
+      <div class="col-lg-5 d-flex flex-column gap-3">
         <FixedExpenseSum :subscriptions="subscriptions" />
         <FixedUpcoming :subscriptions="subscriptions" />
       </div>
 
       <!-- 오른쪽: 구독 목록 -->
-      <div class="col-lg-6">
+      <div class="col-lg-7">
         <FixedExpenseList :subscriptions="subscriptions" />
       </div>
     </div>
