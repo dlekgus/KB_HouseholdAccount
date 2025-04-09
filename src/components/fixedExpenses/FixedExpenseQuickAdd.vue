@@ -15,7 +15,7 @@
   
   <script setup>
   import { ref } from 'vue';
-  import { useFixedExpenseStore } from '@/store/FixedExpenseStore.js';
+  import { useFixedExpenseStore } from '@/stores/FixedExpenseStore.js';
   import FixedExpenseAddModal from '../modal/FixedExpenseAddModal.vue';
   
   const isOpen = ref(false);

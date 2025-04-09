@@ -17,12 +17,14 @@ export const useFixedExpenseStore = defineStore("fixedExpense", () => {
     { boxColor: "#fff7ec", dotColor: "#f2992e" },
     { boxColor: "#f1f9f3", dotColor: "#64c364" },
   ];
+  const userId = localStorage.getItem("userId");
+  if (!userId) return;
 
   const fetchExpenses = async () => {
     state.isLoading = true;
     try {
       const res = await axios.get(BASEURI, {
-        params: { userId: 3 },
+        params: { userId },
       });
       state.fixedExpenses = res.data;
     } catch (err) {

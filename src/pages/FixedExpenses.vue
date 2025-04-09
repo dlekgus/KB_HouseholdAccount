@@ -23,7 +23,7 @@
 
 <script setup>
 import { onMounted, computed } from 'vue';
-import { useFixedExpenseStore } from '@/store/FixedExpenseStore.js';
+import { useFixedExpenseStore } from '@/stores/FixedExpenseStore.js';
 
 
 import FixedExpenseSum from '@/components/fixedExpenses/FixedExpenseSum.vue';

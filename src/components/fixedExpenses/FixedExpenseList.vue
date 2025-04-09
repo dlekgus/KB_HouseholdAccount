@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-  import { useFixedExpenseStore } from '@/store/FixedExpenseStore.js';
+  import { useFixedExpenseStore } from '@/stores/FixedExpenseStore.js';
 import FixedExpenseItem from './FixedExpenseItem.vue';
 
 defineProps({

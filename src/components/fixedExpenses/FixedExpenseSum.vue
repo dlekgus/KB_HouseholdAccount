@@ -12,7 +12,7 @@
 
 <script setup>
 import AnimatedNumber from '@/components/AnimatedNumber.vue';
-import { useFixedExpenseStore } from '@/store/FixedExpenseStore.js';
+import { useFixedExpenseStore } from '@/stores/FixedExpenseStore.js';
 
 import { computed } from 'vue';
 
