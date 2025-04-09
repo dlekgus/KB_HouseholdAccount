@@ -38,6 +38,8 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(['edit', 'delete']);
+
 const showMenu = ref(false);
 
 const toggleMenu = () => {
@@ -45,12 +47,12 @@ const toggleMenu = () => {
 };
 
 const editItem = () => {
-  alert(`수정: ${props.item.name}`);
+  emit('edit', props.item);
   showMenu.value = false;
 };
 
 const deleteItem = () => {
-  alert(`삭제: ${props.item.name}`);
+  emit('delete', props.item);
   showMenu.value = false;
 };
 
