@@ -14,8 +14,10 @@ export default defineConfig({
   },
   server: {
     proxy: {
+
       '/api': {
         target: 'https://kb-json-server.glitch.me',
+
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
