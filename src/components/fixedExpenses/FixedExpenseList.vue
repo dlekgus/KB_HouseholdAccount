@@ -3,7 +3,7 @@
     <h6 class="text-muted mb-3">구독 목록</h6>
     <FixedExpenseItem
       v-for="s in subscriptions"
-      :key="s.name"
+      :key="s.id"
       :item="s"
       @edit="handleEdit"
       @delete="handleDelete"
@@ -12,6 +12,7 @@
 </template>
 
 <script setup>
+  import { useFixedExpenseStore } from '@/stores/FixedExpenseStore.js';
 import FixedExpenseItem from './FixedExpenseItem.vue';
 
 defineProps({
@@ -21,13 +22,17 @@ defineProps({
   },
 });
 
+const store = useFixedExpenseStore();
+
 function handleEdit(item) {
   console.log('✏️ 수정할 항목:', item);
-  // 모달 열기 or 편집 페이지로 이동 등
+  store.openAddModal(); // 모달 열기
+  // 필요 시 store.selectedItem = item; 추가
 }
 
 function handleDelete(item) {
-  console.log('🗑️ 삭제할 항목:', item);
-  // 삭제 로직 실행
+  if (confirm(`정말로 '${item.name}'을(를) 삭제하시겠습니까?`)) {
+    store.deleteExpense(item.id);
+  }
 }
 </script>
