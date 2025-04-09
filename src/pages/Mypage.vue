@@ -104,7 +104,6 @@ import { useUserStore } from '@/stores/userStore';
 const userStore = useUserStore();
 
 const BASEURL = '/api';
-const user = ref(null);
 const showPasswordChangeModal = ref(false);
 const isEditing = ref(false);
 const editedNickname = ref('');
