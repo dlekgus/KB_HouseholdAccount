@@ -1,3 +1,4 @@
+<!-- FixedExpenseAddModal.vue -->
 <template>
   <teleport to="body">
     <transition name="fade">
@@ -19,7 +20,7 @@
             </div>
             <div class="modal-body">
               <form @submit.prevent="submit">
-                <!-- ✅ 카테고리 토글 -->
+                <!-- 카테고리 토글 -->
                 <div class="mb-4">
                   <div class="category-toggle">
                     <button
@@ -35,28 +36,28 @@
                   </div>
                 </div>
 
-                <!-- ✅ 폼 영역 -->
+                <!-- 폼 영역 -->
                 <div class="row">
                   <!-- 좌: 입력 -->
                   <div class="col-md-5" style="margin-top: 25px;">
                     <div class="mb-3">
-                      <label class="form-label">항목명</label>
                       <input
                         v-model="form.name"
                         type="text"
-                        class="form-control form-control-sm"
+                        class="form-control form-control-sm custom-input"
                         required
+                        placeholder="항목명을 입력하세요."
                       />
                     </div>
 
                     <div class="mb-3">
-                      <label class="form-label">금액</label>
                       <input
                         v-model="displayPrice"
                         type="text"
-                        class="form-control form-control-sm"
+                        class="form-control form-control-sm custom-input price-input"
                         @input="onPriceInput"
                         required
+                        placeholder="금액을 입력하세요."
                       />
                     </div>
 
@@ -64,7 +65,7 @@
                       <label class="form-label">결제일</label>
                       <select
                         v-model.number="form.dueDate"
-                        class="form-select form-select-sm " 
+                        class="form-select form-select-sm"
                       >
                         <option v-for="n in 31" :key="n" :value="n">{{ n }}일</option>
                       </select>
@@ -179,14 +180,12 @@ const submit = async () => {
 .fade-leave-active {
   transition: opacity 0.3s;
 }
-
-
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
 }
 
-/* 카테고리 토글 스타일 */
+/* 카테고리 토글 */
 .category-toggle {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -195,7 +194,6 @@ const submit = async () => {
   overflow: hidden;
   height: 49px;
 }
-
 .toggle-button {
   padding: 12px 0;
   background: white;
@@ -205,13 +203,24 @@ const submit = async () => {
   transition: all 0.3s ease-in-out;
   font-size: 16px;
 }
-
 .toggle-button.active {
   background: #4f2ee8;
   color: white;
 }
 
-/* 아이콘 그리드 */
+/* 인풋 포커스 및 스타일 */
+.custom-input {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  transition: border-color 0.2s ease-in-out;
+}
+.custom-input:focus {
+  border-color: #6f42c1; /* 보라색 */
+  box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+}
+
+/* 아이콘 */
 .icon-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -219,7 +228,6 @@ const submit = async () => {
   gap: 10px;
   margin-top: 10px;
 }
-
 .icon-box {
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -228,11 +236,9 @@ const submit = async () => {
   cursor: pointer;
   transition: all 0.2s;
 }
-
 .icon-box:hover {
   background-color: #f9f9f9;
 }
-
 .icon-box.selected {
   background-color: #e0e7ff;
 }
