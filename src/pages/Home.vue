@@ -10,7 +10,6 @@ import TransactionModal from '@/components/modal/TransactionModal.vue';
 const showModal = ref(false);
 </script>
 
-
 <template>
   <div>
     <HomeLayout>

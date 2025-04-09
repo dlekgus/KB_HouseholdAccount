@@ -4,7 +4,7 @@
     tabindex="-1"
     style="background-color: rgba(0, 0, 0, 0.5)"
   >
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <!-- 헤더 -->
         <div class="modal-header">
@@ -23,7 +23,7 @@
               type="button"
               class="btn"
               :class="type === '지출' ? 'btn-primary' : 'btn-outline-primary'"
-              @click="type = '지출'"
+              @click="setType('지출')"
             >
               지출
             </button>
@@ -31,7 +31,7 @@
               type="button"
               class="btn"
               :class="type === '수입' ? 'btn-primary' : 'btn-outline-primary'"
-              @click="type = '수입'"
+              @click="setType('수입')"
             >
               수입
             </button>
@@ -43,18 +43,36 @@
 
           <div class="mb-3">
             <input
-              type="number"
-              v-model="amount"
-              class="form-control"
+              type="text"
+              v-model="formattedAmount"
+              class="form-control amount-input"
               placeholder="금액을 입력하세요"
             />
           </div>
 
+          <!-- 금액 추가 버튼 -->
+          <div class="amount-button-group">
+            <button
+              v-for="unit in [1000, 10000, 50000, 100000, 1000000]"
+              :key="unit"
+              type="button"
+              class="btn custom-amount-btn"
+              @click="addAmount(unit)"
+            >
+              +{{ unit.toLocaleString() }}
+            </button>
+          </div>
+
           <div class="mb-3">
             <select v-model="category" class="form-select">
-              <option value="식비">식비</option>
-              <option value="교통비">교통비</option>
-              <!-- 필요시 추가 -->
+              <option value="카테고리" disabled>카테고리</option>
+              <option
+                v-for="(item, index) in currentCategoryList"
+                :key="index"
+                :value="item"
+              >
+                {{ item }}
+              </option>
             </select>
           </div>
 
@@ -87,19 +105,106 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const emit = defineEmits(['close']);
 
 const type = ref('지출');
 const date = ref('');
 const amount = ref('');
-const category = ref('식비');
+const category = ref('카테고리');
 const memo = ref('');
 
+// 금액 입력란
+const formattedAmount = computed({
+  get() {
+    if (!amount.value) return '';
+    return Number(amount.value).toLocaleString() + '원';
+  },
+  set(val) {
+    // ',', '원' 제거하고 숫자만 추출
+    const raw = val.replace(/[^\d]/g, '');
+    amount.value = raw ? Number(raw) : '';
+  },
+});
+
+// 금액 입력 버튼
+const addAmount = (unit) => {
+  const current = Number(amount.value) || 0;
+  amount.value = current + unit;
+};
+
+// 카테고리 리스트
+const expenseCategories = [
+  '식비',
+  '교통비',
+  '주거비',
+  '문화생활',
+  '의료비',
+  '기타',
+];
+const incomeCategories = ['급여', '용돈', '판매수익', '이자소득', '기타'];
+
+// 현재 카테고리 리스트
+const currentCategoryList = computed(() => {
+  return type.value === '지출' ? expenseCategories : incomeCategories;
+});
+
+// 버튼 누를 때 타입과 카테고리 초기화
+const setType = (newType) => {
+  type.value = newType;
+  category.value = '카테고리';
+};
+
 const save = () => {
-  // 저장 로직 작성
-  console.log({ type, date, amount, category, memo });
+  if (category.value === '카테고리') {
+    alert('카테고리를 선택해주세요.');
+    return;
+  }
+
+  console.log({
+    type: type.value,
+    date: date.value,
+    amount: amount.value,
+    category: category.value,
+    memo: memo.value,
+  });
   emit('close');
 };
+
+// 초기값 설정
+setType('지출');
 </script>
+
+<style scoped>
+.amount-input {
+  font-size: 15px;
+}
+
+.amount-button-group {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 4px;
+  margin-top: -4px;
+  margin-bottom: 16px;
+  overflow-x: auto; /* 혹시라도 작을 땐 가로 스크롤 가능 */
+}
+
+.custom-amount-btn {
+  font-size: xx-small;
+  padding: 4px 8px;
+  min-width: auto;
+  flex: 1; /* 버튼들이 가로 너비 비슷하게 나눠짐 */
+  border: 1px solid #4318d1;
+  color: #4318d1;
+  background-color: white;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.custom-amount-btn:hover {
+  background-color: #4318d1;
+  color: white;
+}
+</style>
