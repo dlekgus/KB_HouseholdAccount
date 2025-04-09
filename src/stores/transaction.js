@@ -1,7 +1,10 @@
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 import dayjs from "dayjs";
-import { fetchTransactionsByDateRange } from "@/services/transactionAPI";
+import {
+  fetchTransactionsByDateRange,
+  deleteTransaction,
+} from "@/services/transactionAPI";
 
 export const useTransactionStore = defineStore("transactions", () => {
   const viewDate = ref(dayjs());
@@ -53,6 +56,15 @@ export const useTransactionStore = defineStore("transactions", () => {
     isLoading.value = false;
   };
 
+  const deleteTransactionById = async (id) => {
+    try {
+      await deleteTransaction(id);
+      transactions.value = transactions.value.filter((tx) => tx.id !== id);
+    } catch (err) {
+      console.error("삭제 실패", err);
+    }
+  };
+
   watch([viewDate, viewMode], fetchTransactions, { immediate: true });
 
   return {
@@ -63,5 +75,6 @@ export const useTransactionStore = defineStore("transactions", () => {
     transactions,
     isLoading,
     fetchTransactions,
+    deleteTransactionById,
   };
 });
