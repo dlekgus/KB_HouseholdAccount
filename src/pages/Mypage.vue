@@ -16,7 +16,11 @@
         <div class="info">
           <div class="user-name">
             <template v-if="isEditing">
-              <input type="text" v-model="editedNickname" />
+              <input
+                type="text"
+                v-model="editedNickname"
+                class="form-control"
+              />
             </template>
             <template v-else>
               {{ nickname }}
@@ -28,9 +32,16 @@
         <div class="btn-modi">
           <button
             class="btn btn-primary pointer"
-            @click="isEditing ? saveNickname() : modiNickname()"
+            @click="isEditing ? updateNickname() : modiNickname()"
           >
             {{ isEditing ? '완료' : '수정' }}
+          </button>
+          <button
+            v-show="isEditing"
+            class="btn btn-primary cancel pointer"
+            @click="isEditing = false"
+          >
+            취소
           </button>
         </div>
       </template>
@@ -75,8 +86,8 @@
             :userId="user.id"
             @close="showPasswordChangeModal = false"
           />
-          <button class="btn btn-logout">로그아웃</button>
-          <button class="btn btn-out">회원 탈퇴</button>
+          <button class="btn btn-logout" @click="logout">로그아웃</button>
+          <button class="btn btn-out" @click="deleteUser">회원 탈퇴</button>
         </div>
       </template>
     </MypageLayout>
@@ -87,14 +98,18 @@
 import MypageLayout from '@/components/layouts/MypageLayout.vue';
 import PasswordChangeModal from '@/components/modal/PasswordChangeModal.vue';
 import { computed, ref, onMounted } from 'vue';
-import axios from 'axios';
+import router from '@/router';
+import { useUserStore } from '@/stores/userStore';
+
+const userStore = useUserStore();
+
 
 const BASEURL = '/api';
 const user = ref(null);
+
 const showPasswordChangeModal = ref(false);
 const isEditing = ref(false);
 const editedNickname = ref('');
-const id = 1;
 
 const alarmLabels = {
   pushAlarm: '푸시 알림',
@@ -106,47 +121,63 @@ const modiNickname = () => {
   isEditing.value = true;
 };
 
-const saveNickname = async () => {
+const updateNickname = async () => {
   try {
-    const updatedUser = {
-      ...user.value,
-      nickname: editedNickname.value,
-    };
-
-    const response = await axios.put(
-      `${BASEURL}users/${user.value.id}`,
-      updatedUser
-    );
-
-    if (response.status === 200) {
-      user.value.nickname = editedNickname.value;
+    if (editedNickname.value.length >= 2) {
+      await userStore.changeNickname(editedNickname.value);
       isEditing.value = false;
+      alert('닉네임 변경');
     } else {
-      alert('닉네임 수정에 실패했습니다.');
+      alert('두글자 이상 입력하세요!');
     }
   } catch (error) {
-    console.error('닉네임 수정 오류:', error);
-    alert('서버 오류로 수정할 수 없습니다.');
+    alert('닉네임 변경 실패');
   }
 };
 
+const logout = () => {
+  const confirmLogout = confirm('정말 로그아웃하시겠습니까?');
+  if (!confirmLogout) return;
+  userStore.logout();
+  router.push('/');
+};
+
+const deleteUser = async () => {
+  const confirmLogout = confirm('정말 회원 탈퇴하시겠습니까?');
+  if (!confirmLogout) return;
+  userStore.deleteUser();
+  router.push('/');
+};
+
 onMounted(async () => {
+  const storedId = localStorage.getItem('userId');
+  console.log('✅ storedId:', storedId);
+
+  if (!storedId) {
+    console.warn('⚠️ userId가 없음 → 로그인 페이지로 이동');
+    router.push('/login');
+    return;
+  }
+
   try {
-    const response = await axios.get(`${BASEURL}users/${id}`);
-    user.value = response.data;
-    // editedNickname.value = user.value.nickname;
-  } catch (err) {
-    console.error('유저 정보 로드 실패:', err);
+    await userStore.fetchUser(storedId);
+    console.log('👤 불러온 유저 정보:', userStore.user);
+  } catch (e) {
+    console.error('❌ fetchUser 실패:', e);
   }
 });
 
+const user = computed(() => userStore.user);
 // 옵셔널 체이닝을 이용해 null 방지
 const email = computed(() => user.value?.email || '');
-const nickname = computed(() => user.value?.nickname || '');
+const nickname = computed(() => userStore.user?.nickname || '');
 const joinDate = computed(() => user.value?.joinDate || '');
 </script>
 
 <style scoped>
+.cancel {
+  margin-left: 0.5rem;
+}
 .switch-setting {
   display: flex;
   justify-content: space-between;
