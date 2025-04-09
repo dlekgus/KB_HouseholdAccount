@@ -21,7 +21,9 @@ export const useFixedExpenseStore = defineStore("fixedExpense", () => {
   const fetchExpenses = async () => {
     state.isLoading = true;
     try {
-      const res = await axios.get(BASEURI);
+      const res = await axios.get(BASEURI, {
+        params: { userId: 3 },
+      });
       state.fixedExpenses = res.data;
     } catch (err) {
       alert("조회 실패: " + err);
