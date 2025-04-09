@@ -19,14 +19,14 @@
       <div class="col-12 col-md-8">
         <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title text-muted">전 {{ period }}개월 대비</h5>
+            <h5 class="card-title text-muted">
+              전{{ period === 1 ? '' : ` ${period}개` }}월 대비
+            </h5>
             <div class="row">
               <div class="col-12 col-md-4 mb-3">
                 <small class="text-muted">총 지출</small>
                 <div class="h5">
-                  {{
-                    !periodStat.total ? 0 : periodStat.total.toLocaleString()
-                  }}원
+                  <AnimatedNumber :value="periodStat.total" />원
                 </div>
                 <div class="small" :class="changeRateClass">
                   {{
@@ -39,11 +39,7 @@
               <div class="col-12 col-md-4 mb-3">
                 <small class="text-muted">평균 일 지출</small>
                 <div class="h5">
-                  {{
-                    !periodStat.dailyAvg
-                      ? 0
-                      : periodStat.dailyAvg.toLocaleString()
-                  }}원
+                  <AnimatedNumber :value="periodStat.dailyAvg" />원
                 </div>
                 <div class="small" :class="chagedailyRateClass">
                   {{
@@ -114,37 +110,13 @@
 
 <script setup>
 import { onMounted, ref, computed, reactive, watch } from 'vue';
-import {
-  Chart,
-  DoughnutController,
-  ArcElement,
-  BarElement,
-  BarController,
-  CategoryScale,
-  LinearScale,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-
+import { renderCategoryChart, renderWeeklyChart } from '@/composables/useChart';
+import AnimatedNumber from '@/components/AnimatedNumber.vue';
 import axios from 'axios';
-
-Chart.register(
-  DoughnutController,
-  ArcElement,
-  BarElement,
-  BarController,
-  CategoryScale,
-  LinearScale,
-  Tooltip,
-  Legend
-);
 
 const categoryChart = ref(null);
 const weeklyChart = ref(null);
 
-let categoryChartInstance = null;
-let weeklyChartInstance = null;
-// ✅ 상태 변수
 const period = ref(1);
 const periodStat = reactive({
   expense: 0,
@@ -159,12 +131,10 @@ const periodStat = reactive({
 watch(period, () => {
   updatePeriodStats();
 });
-const currentData = ref([]);
-const previousData = ref([]);
 
 const state = reactive({ userTransactions: [] });
 
-const userId = 3;
+const userId = 5;
 const BASE_URI = '/api/transactions';
 // fetch users all data from db
 const fetchUserTransactions = async () => {
@@ -261,18 +231,12 @@ function getTopCategory(currentFiltered) {
     total += t.amount;
   });
 
-  // 퍼센트로 변환
-  Object.keys(categoryMap).forEach((category) => {
-    const percentage = (categoryMap[category] / total) * 100;
-    categoryMap[category] = Number(percentage.toFixed(2)); // 소수점 2자리
-  });
-
   // 가장 높은 비중의 카테고리 계산
   let topCategory = '데이터 없음';
   let max = 0;
-  for (const [category, percent] of Object.entries(categoryMap)) {
-    if (percent > max) {
-      max = percent;
+  for (const [category, amount] of Object.entries(categoryMap)) {
+    if (amount > max) {
+      max = amount;
       topCategory = category;
     }
   }
@@ -329,98 +293,17 @@ const changeRateClass = computed(() => rateClass(periodStat.changeRate));
 const chagedailyRateClass = computed(() =>
   rateClass(periodStat.dailyAvgChangeRate)
 );
-
-const renderCategoryChart = () => {
-  if (categoryChartInstance) categoryChartInstance.destroy(); // 이전 차트 제거
-
-  const labels = Object.keys(periodStat.category);
-  const data = Object.values(periodStat.category);
-  const isEmpty = labels.length === 0 || data.reduce((a, b) => a + b, 0) === 0;
-  const backgroundColors = generateColors(labels.length);
-  categoryChartInstance = new Chart(categoryChart.value, {
-    type: 'doughnut',
-    data: {
-      labels: isEmpty ? ['데이터 없음'] : labels,
-      datasets: [
-        {
-          data: isEmpty ? [1] : data,
-          backgroundColor: isEmpty
-            ? ['#d3d3d3'] // 회색
-            : backgroundColors, // 동적으로 색상 생성 함수
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '65%',
-    },
-  });
-};
-
-const renderWeeklyChart = () => {
-  if (weeklyChartInstance) weeklyChartInstance.destroy();
-
-  weeklyChartInstance = new Chart(weeklyChart.value, {
-    type: 'bar',
-    data: {
-      labels: ['월', '화', '수', '목', '금', '토', '일'],
-      datasets: [
-        {
-          label: '지출',
-          data: [12000, 15000, 9000, 11000, 17000, 23000, 20000],
-          backgroundColor: '#6610f2',
-          barThickness: 10,
-          borderRadius: {
-            topLeft: 8,
-            topRight: 8,
-          },
-          borderSkipped: false,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        x: {
-          grid: { display: false },
-        },
-        y: {
-          grid: { display: false },
-          beginAtZero: true,
-        },
-      },
-    },
-  });
-};
-
 onMounted(async () => {
   await fetchUserTransactions();
-  renderCategoryChart();
-  renderWeeklyChart();
+  renderCategoryChart(categoryChart.value, periodStat);
+  renderWeeklyChart(weeklyChart.value, periodStat);
 });
 
 watch(period, async () => {
   await fetchUserTransactions(); // period 변경 시 데이터 재조회
-  renderCategoryChart();
-  renderWeeklyChart();
+  renderCategoryChart(categoryChart.value, periodStat);
+  renderWeeklyChart(weeklyChart.value, periodStat);
 });
-
-const generateColors = (count) => {
-  const colors = [
-    '#FF6384',
-    '#36A2EB',
-    '#FFCE56',
-    '#4BC0C0',
-    '#9966FF',
-    '#FF9F40',
-    '#28a745',
-    '#0d6efd',
-    '#ffc107',
-  ];
-  return Array.from({ length: count }, (_, i) => colors[i % colors.length]);
-};
 </script>
 
 <style scoped>
