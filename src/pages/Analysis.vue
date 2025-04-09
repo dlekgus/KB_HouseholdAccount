@@ -29,7 +29,11 @@
                   }}원
                 </div>
                 <div class="small" :class="changeRateClass">
-                  {{ formattedChangeRate }}
+                  {{
+                    formattedChangeRate === '0.0%'
+                      ? '이전 데이터 없음'
+                      : formattedChangeRate
+                  }}
                 </div>
               </div>
               <div class="col-12 col-md-4 mb-3">
@@ -42,11 +46,15 @@
                   }}원
                 </div>
                 <div class="small" :class="chagedailyRateClass">
-                  {{ formattedDailyRate }}
+                  {{
+                    formattedDailyRate === '0.0%'
+                      ? '이전 데이터 없음'
+                      : formattedDailyRate
+                  }}
                 </div>
               </div>
               <div class="col-12 col-md-4">
-                <small class="text-muted">최다 지출 항목</small>
+                <small class="text-muted">최다 지출 카테고리</small>
                 <div class="h5">
                   {{ !periodStat.topCategory ? '' : periodStat.topCategory }}
                 </div>
@@ -156,7 +164,7 @@ const previousData = ref([]);
 
 const state = reactive({ userTransactions: [] });
 
-const userId = 2;
+const userId = 3;
 const BASE_URI = '/api/transactions';
 // fetch users all data from db
 const fetchUserTransactions = async () => {
@@ -202,15 +210,19 @@ function getPeriodStats(period, transactions) {
     return t.type === 'expense' && txDate >= compareDate && txDate < prevDate;
   });
 
-  // 총합 계산
+  // 총 지출 계산
   const currentTotal = currentFiltered.reduce((sum, t) => sum + t.amount, 0);
   const prevTotal = prevFiltered.reduce((sum, t) => sum + t.amount, 0);
 
+  // 일 평균 계산
   const dailyAvg = getAvg(prevDate, now, currentTotal);
   const prevDailyAvg = getAvg(compareDate, prevDate, prevTotal);
+
+  // 증감율 계산
   const totalChangeRate = getChangeRage(prevTotal, currentTotal);
   const dailyAvgChangeRate = getChangeRage(prevDailyAvg, dailyAvg);
 
+  // 최다 지출 카테고리 계산
   const { categoryMap, topCategory } = getTopCategory(currentFiltered);
 
   return {
@@ -443,6 +455,6 @@ const generateColors = (count) => {
 
 canvas {
   width: 100% !important;
-  height: 200px !important;
+  height: 400px !important;
 }
 </style>
