@@ -20,31 +20,59 @@
         <div class="card h-100">
           <div class="card-body">
             <h5 class="card-title text-muted">
-              전{{ period === 1 ? '' : ` ${period}개` }}월 대비
+              <!-- 전{{ period === 1 ? '' : ` ${period}개` }}월 대비 -->
+              수입 지출 통계
             </h5>
 
             <!-- 첫 번째 줄: 총 지출, 평균 일 지출, 최다 카테고리 -->
             <div class="row">
-              <div class="col-12 col-md-4 mb-3">
-                <small class="text-muted">총 수입</small>
+              <div class="col-12 col-md-3 mb-3">
+                <small class="text-muted"
+                  >총 수입
+                  <span
+                    :class="
+                      parseFloat(periodStat.diffIncome.replace('%', '')) > 0
+                        ? 'text-success'
+                        : 'text-danger'
+                    "
+                    >{{ periodStat.diffIncome }}</span
+                  >
+                </small>
                 <div class="h5">
                   <AnimatedNumber :value="periodStat.income" />원
                 </div>
-              </div>
-              <div class="col-12 col-md-4 mb-3">
-                <small class="text-muted">총 지출</small>
-                <div class="h5">
-                  <AnimatedNumber :value="periodStat.expense" />원
-                </div>
-                <div class="small" :class="changeRateClass">
+                <div class="small">
                   {{
-                    formattedChangeRate === '0.0%'
+                    periodStat.prevIncome === 0
                       ? '이전 데이터 없음'
-                      : formattedChangeRate
+                      : `지난달 ${periodStat.prevIncome.toLocaleString()}원`
                   }}
                 </div>
               </div>
-              <div class="col-12 col-md-4 mb-3">
+              <div class="col-12 col-md-3 mb-3">
+                <small class="text-muted"
+                  >총 지출
+                  <span
+                    :class="
+                      parseFloat(periodStat.diffIncome.replace('%', '')) < 0
+                        ? 'text-success'
+                        : 'text-danger'
+                    "
+                    >{{ periodStat.diffExpense }}</span
+                  >
+                </small>
+                <div class="h5">
+                  <AnimatedNumber :value="periodStat.expense" />원
+                </div>
+                <div class="small">
+                  {{
+                    periodStat.prevExpense === 0
+                      ? '이전 데이터 없음'
+                      : `지난달 ${periodStat.prevExpense.toLocaleString()}원`
+                  }}
+                </div>
+              </div>
+              <div class="col-12 col-md-3 mb-3">
                 <small class="text-muted">합계</small>
                 <div
                   class="h5"
@@ -59,24 +87,7 @@
                   />원
                 </div>
               </div>
-            </div>
-
-            <!-- 두 번째 줄: 수입, 수입 - 지출 합계 -->
-            <div class="row">
-              <div class="col-12 col-md-4 mb-3">
-                <small class="text-muted">평균 일 지출</small>
-                <div class="h5">
-                  {{ periodStat.dailyAvg.toLocaleString() }}원
-                </div>
-                <div class="small" :class="chagedailyRateClass">
-                  {{
-                    formattedDailyRate === '0.0%'
-                      ? '이전 데이터 없음'
-                      : formattedDailyRate
-                  }}
-                </div>
-              </div>
-              <div class="col-12 col-md-4">
+              <div class="col-12 col-md-3">
                 <small class="text-muted">최다 지출 카테고리</small>
                 <div class="h5">
                   {{ !periodStat.topCategory ? '' : periodStat.topCategory }}
@@ -148,10 +159,11 @@ const period = ref(1);
 const periodStat = reactive({
   expense: 0,
   income: 0,
-  dailyAvg: 0,
   topCategory: '데이터 없음',
-  changeRate: 0,
-  dailyAvgChangeRate: 0,
+  prevIncome: 0,
+  prevExpense: 0,
+  diffExpense: '',
+  diffIncome: '',
   category: {},
 });
 
@@ -182,10 +194,11 @@ function updatePeriodStats() {
   const stats = getPeriodStats(period.value, state.userTransactions);
   periodStat.expense = stats.expense;
   periodStat.income = stats.income;
-  periodStat.dailyAvg = stats.dailyAvg;
   periodStat.topCategory = stats.topCategory;
-  periodStat.changeRate = stats.changeRate;
-  periodStat.dailyAvgChangeRate = stats.dailyAvgChangeRate;
+  periodStat.prevExpense = stats.prevExpense;
+  periodStat.prevIncome = stats.prevIncome;
+  periodStat.diffIncome = stats.diffIncome;
+  periodStat.diffExpense = stats.diffExpense;
   periodStat.category = stats.category;
 }
 
@@ -215,59 +228,48 @@ function getPeriodStats(period, transactions) {
     prevDate
   );
 
+  // 이전 기간
+  const prevIncomeFilter = getFiltered(
+    transactions,
+    'income',
+    compareDate,
+    prevDate
+  );
+
   //총 수입 계산
   const currentIncome = curIncomeFilter.reduce((sum, t) => sum + t.amount, 0);
+  const prevIncome = prevIncomeFilter.reduce((sum, t) => sum + t.amount, 0);
 
   // 총 지출 계산
   const currentExpense = curExpenseFilter.reduce((sum, t) => sum + t.amount, 0);
   const prevExpense = prevExpeseFilter.reduce((sum, t) => sum + t.amount, 0);
 
-  // 일 평균 계산
-  const dailyAvg = getAvg(
-    prevDate,
-    now,
-    currentExpense,
-    curExpenseFilter.length
-  );
-  const prevDailyAvg = getAvg(
-    compareDate,
-    prevDate,
-    prevExpense,
-    prevExpeseFilter.length
-  );
-
-  // 증감율 계산
-  const totalChangeRate = getChangeRage(prevExpense, currentExpense);
-  const dailyAvgChangeRate = getChangeRage(prevDailyAvg, dailyAvg);
-
+  const diffExpense = getDiffRate(prevExpense, currentExpense);
+  const diffIncome = getDiffRate(prevIncome, currentIncome);
   // 최다 지출 카테고리 계산
   const { categoryMap, topCategory } = getTopCategory(curExpenseFilter);
 
   return {
     expense: currentExpense,
     income: currentIncome,
-    dailyAvg,
     topCategory,
-    changeRate: totalChangeRate,
-    dailyAvgChangeRate,
     category: categoryMap,
+    prevExpense,
+    prevIncome,
+    diffExpense,
+    diffIncome,
   };
 }
 
-// 일 평균 값 구하기
-function getAvg(prevDate, now, total, days) {
-  console.log(days);
-  const diffDays = Math.max(1, Math.floor((now - prevDate) / days));
-  return Math.round(total / days);
-}
-
-function getChangeRage(prevExpense, curExpense) {
-  if (prevExpense === 0) {
-    return 0;
+function getDiffRate(prev, cur) {
+  let diffRate;
+  if (prev === 0) {
+    diffRate = cur === 0 ? 0 : 100;
+  } else {
+    diffRate = ((cur - prev) / Math.abs(prev)) * 100;
   }
-  return ((curExpense - prevExpense) / (prevExpense || 1)) * 100;
+  return (diffRate > 0 ? '+' : '') + diffRate.toFixed(1) + '%';
 }
-
 function getTopCategory(curExpenseFilter) {
   let total = 0;
   const categoryMap = {};
@@ -307,39 +309,37 @@ const borderColor = computed(() => {
 });
 
 const gradeInfo = computed(() => {
-  const val = periodStat.changeRate;
-  if (val <= 0)
-    return { grade: 'A', message: '절약 잘했어요!', color: 'text-success' };
-  if (val <= 25)
-    return { grade: 'B', message: '양호한 소비입니다.', color: 'text-primary' };
-  if (val <= 50)
-    return { grade: 'C', message: '주의가 필요해요.', color: 'text-warning' };
+  const val = (periodStat.expense / periodStat.income) * 100;
+  let grade = '';
+  let flag = '';
+  let color = '';
+  if (val <= 30) {
+    grade = 'A';
+    flag = '30%';
+    color = 'text-success';
+  } else if (val <= 50) {
+    grade = 'B';
+    flag = '50%';
+    color = 'text-primary';
+  } else if (val <= 80) {
+    grade = 'C';
+    flag = '80%';
+    color = 'text-warning';
+  } else {
+    grade = 'D';
+    flag = '80%';
+    color = 'text-danger';
+  }
   return {
-    grade: 'D',
-    message: '수입보다 더 많이 썼어요!',
-    color: 'text-danger',
+    grade,
+    message:
+      grade === 'D'
+        ? `수입에서 ${flag}이상 지출했어요!`
+        : `수입에서 ${flag}정도 지출했어요!`,
+    color,
   };
 });
 
-function formatRate(rate) {
-  const sign = rate > 0 ? '+' : '';
-  return `${sign}${rate.toFixed(1)}%`;
-}
-
-function rateClass(rate) {
-  if (rate > 0) return 'text-danger';
-  if (rate < 0) return 'text-success';
-  return 'text-muted';
-}
-const formattedChangeRate = computed(() => formatRate(periodStat.changeRate));
-const formattedDailyRate = computed(() =>
-  formatRate(periodStat.dailyAvgChangeRate)
-);
-
-const changeRateClass = computed(() => rateClass(periodStat.changeRate));
-const chagedailyRateClass = computed(() =>
-  rateClass(periodStat.dailyAvgChangeRate)
-);
 onMounted(async () => {
   await fetchUserTransactions();
   renderCategoryChart(categoryChart.value, periodStat);
@@ -362,7 +362,7 @@ watch(period, async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 3rem;
+  margin: auto;
 }
 .score-circle .score {
   font-size: 1.5rem;
