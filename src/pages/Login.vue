@@ -90,6 +90,9 @@
 import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/userStore';
+
+const userStore = useUserStore();
 
 const router = useRouter();
 
@@ -114,7 +117,10 @@ const login = async () => {
 
     if (res.data.length > 0) {
       // 로그인 성공
-      console.log('✅ 로그인 성공:', res.data[0]);
+      const loggedInUser = res.data[0];
+      userStore.setUser(loggedInUser);
+      localStorage.setItem('userId', loggedInUser.id);
+
       errorMessage.value = '';
       router.push('/home');
     } else {

@@ -76,7 +76,7 @@
             @close="showPasswordChangeModal = false"
           />
           <button class="btn btn-logout">로그아웃</button>
-          <button class="btn btn-out">회원 탈퇴</button>
+          <button class="btn btn-out" @click="deleteUser">회원 탈퇴</button>
         </div>
       </template>
     </MypageLayout>
@@ -88,13 +88,15 @@ import MypageLayout from '@/components/layouts/MypageLayout.vue';
 import PasswordChangeModal from '@/components/modal/PasswordChangeModal.vue';
 import { computed, ref, onMounted } from 'vue';
 import axios from 'axios';
+import router from '@/router';
+import { useUserStore } from '@/stores/userStore';
 
-const BASEURL = 'http://localhost:3000/';
-const user = ref(null);
+const userStore = useUserStore();
+
+const BASEURL = '/api';
 const showPasswordChangeModal = ref(false);
 const isEditing = ref(false);
 const editedNickname = ref('');
-const id = 1;
 
 const alarmLabels = {
   pushAlarm: '푸시 알림',
@@ -130,15 +132,42 @@ const saveNickname = async () => {
   }
 };
 
-onMounted(async () => {
+const deleteUser = async () => {
+  const userId = user.value.id;
+
+  if (!confirm('정말 탈퇴하시겠습니까?')) return;
+
   try {
-    const response = await axios.get(`${BASEURL}users/${id}`);
-    user.value = response.data;
-    // editedNickname.value = user.value.nickname;
-  } catch (err) {
-    console.error('유저 정보 로드 실패:', err);
+    await axios.delete(`${BASEURL}users/${userId}`);
+
+    //로컬 정보 초기화
+    localStorage.removeItem('userId');
+    user.value = null;
+    router.push('/');
+  } catch (error) {
+    console.log(error, '탈퇴 실패');
+  }
+};
+
+onMounted(async () => {
+  const storedId = localStorage.getItem('userId');
+  console.log('✅ storedId:', storedId);
+
+  if (!storedId) {
+    console.warn('⚠️ userId가 없음 → 로그인 페이지로 이동');
+    router.push('/login');
+    return;
+  }
+
+  try {
+    await userStore.fetchUser(storedId);
+    console.log('👤 불러온 유저 정보:', userStore.user);
+  } catch (e) {
+    console.error('❌ fetchUser 실패:', e);
   }
 });
+
+const user = computed(() => userStore.user);
 
 // 옵셔널 체이닝을 이용해 null 방지
 const email = computed(() => user.value?.email || '');
