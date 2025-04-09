@@ -20,9 +20,10 @@ const showModal = ref(false);
       <template v-slot:recent-history>
         <RecentHistory></RecentHistory>
       </template>
+
       <template v-slot:this-month-history>
-        <ThisMonthHistory></ThisMonthHistory>
-      </template>
+        <ThisMonthHistory></ThisMonthHistory
+      ></template>
 
       <template v-slot:footer>
         <Footer />
