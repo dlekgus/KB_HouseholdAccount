@@ -131,6 +131,9 @@ Chart.register(
 
 const categoryChart = ref(null);
 const weeklyChart = ref(null);
+
+let categoryChartInstance = null;
+let weeklyChartInstance = null;
 // ✅ 상태 변수
 const period = ref(1);
 const periodStat = reactive({
@@ -140,6 +143,7 @@ const periodStat = reactive({
   topCategory: '',
   changeRate: 0,
   dailyAvgChangeRate: 0,
+  category: {},
 });
 
 watch(period, () => {
@@ -150,7 +154,7 @@ const previousData = ref([]);
 
 const state = reactive({ userTransactions: [] });
 
-const userId = 3;
+const userId = 2;
 const BASE_URI = '/api/transactions';
 // fetch users all data from db
 const fetchUserTransactions = async () => {
@@ -159,7 +163,6 @@ const fetchUserTransactions = async () => {
     if (response.status === 200) {
       state.userTransactions = response.data;
       updatePeriodStats();
-      //   calcMonthlySpending(state.userTransactions);
     } else {
       alert('데이터 조회 실패');
     }
@@ -175,6 +178,7 @@ function updatePeriodStats() {
   periodStat.topCategory = stats.topCategory;
   periodStat.changeRate = stats.changeRate;
   periodStat.dailyAvgChangeRate = stats.dailyAvgChangeRate;
+  periodStat.category = stats.category;
 }
 
 function getPeriodStats(period, transactions) {
@@ -214,22 +218,7 @@ function getPeriodStats(period, transactions) {
   );
   const prevDailyAvg = Math.round(prevTotal / prevDiffDays);
 
-  // 카테고리별 계산
-  let categoryMap = {};
-  currentFiltered.forEach((t) => {
-    if (!categoryMap[t.category]) categoryMap[t.category] = 0;
-    categoryMap[t.category] += t.amount;
-  });
-
-  let topCategory = '';
-  let max = 0;
-  for (const [category, amount] of Object.entries(categoryMap)) {
-    if (amount > max) {
-      max = amount;
-      topCategory = category;
-    }
-  }
-
+  const { categoryMap, topCategory } = getTopCategory(currentFiltered);
   // 증가율 계산
   const totalChangeRate = ((currentTotal - prevTotal) / (prevTotal || 1)) * 100;
   const dailyAvgChangeRate =
@@ -241,9 +230,38 @@ function getPeriodStats(period, transactions) {
     topCategory,
     changeRate: totalChangeRate,
     dailyAvgChangeRate,
+    category: categoryMap,
   };
 }
 
+function getTopCategory(currentFiltered) {
+  let total = 0;
+  const categoryMap = {};
+
+  currentFiltered.forEach((t) => {
+    if (!categoryMap[t.category]) categoryMap[t.category] = 0;
+    categoryMap[t.category] += t.amount;
+    total += t.amount;
+  });
+
+  // 퍼센트로 변환
+  Object.keys(categoryMap).forEach((category) => {
+    const percentage = (categoryMap[category] / total) * 100;
+    categoryMap[category] = Number(percentage.toFixed(2)); // 소수점 2자리
+  });
+
+  // 가장 높은 비중의 카테고리 계산
+  let topCategory = '';
+  let max = 0;
+  for (const [category, percent] of Object.entries(categoryMap)) {
+    if (percent > max) {
+      max = percent;
+      topCategory = category;
+    }
+  }
+
+  return { categoryMap, topCategory };
+}
 // 기간 선택 함수
 function selectPeriod(months) {
   period.value = months;
@@ -295,29 +313,29 @@ const chagedailyRateClass = computed(() =>
   rateClass(periodStat.dailyAvgChangeRate)
 );
 
-function getChangeRate(current, prev) {
-  const currTotal = current.reduce((a, b) => a + b, 0);
-  const prevTotal = prev.reduce((a, b) => a + b, 0);
-  const diff = currTotal - prevTotal;
-  return (diff / (prevTotal || 1)) * 100; // 숫자만 반환
-}
-
 const rate = computed(() => {
   const expense = currentData.value[0];
   const income = previousData.value[0];
   return Math.round((expense / (income || 1)) * 100);
 });
 
-onMounted(() => {
-  fetchUserTransactions();
-  new Chart(categoryChart.value, {
+const renderCategoryChart = () => {
+  if (categoryChartInstance) categoryChartInstance.destroy(); // 이전 차트 제거
+
+  const labels = Object.keys(periodStat.category);
+  const data = Object.values(periodStat.category);
+  const isEmpty = labels.length === 0 || data.reduce((a, b) => a + b, 0) === 0;
+  const backgroundColors = generateColors(labels.length);
+  categoryChartInstance = new Chart(categoryChart.value, {
     type: 'doughnut',
     data: {
-      labels: ['식비', '교통', '기타'],
+      labels: isEmpty ? ['데이터 없음'] : labels,
       datasets: [
         {
-          data: [56, 30, 25],
-          backgroundColor: ['#28a745', '#0d6efd', '#ffc107'],
+          data: isEmpty ? [1] : data,
+          backgroundColor: isEmpty
+            ? ['#d3d3d3'] // 회색
+            : backgroundColors, // 동적으로 색상 생성 함수
         },
       ],
     },
@@ -327,7 +345,12 @@ onMounted(() => {
       cutout: '65%',
     },
   });
-  new Chart(weeklyChart.value, {
+};
+
+const renderWeeklyChart = () => {
+  if (weeklyChartInstance) weeklyChartInstance.destroy();
+
+  weeklyChartInstance = new Chart(weeklyChart.value, {
     type: 'bar',
     data: {
       labels: ['월', '화', '수', '목', '금', '토', '일'],
@@ -340,8 +363,6 @@ onMounted(() => {
           borderRadius: {
             topLeft: 8,
             topRight: 8,
-            bottomLeft: 0,
-            bottomRight: 0,
           },
           borderSkipped: false,
         },
@@ -352,20 +373,43 @@ onMounted(() => {
       maintainAspectRatio: false,
       scales: {
         x: {
-          grid: {
-            display: false,
-          },
+          grid: { display: false },
         },
         y: {
-          grid: {
-            display: false,
-          },
+          grid: { display: false },
           beginAtZero: true,
         },
       },
     },
   });
+};
+
+onMounted(async () => {
+  await fetchUserTransactions();
+  renderCategoryChart();
+  renderWeeklyChart();
 });
+
+watch(period, async () => {
+  await fetchUserTransactions(); // period 변경 시 데이터 재조회
+  renderCategoryChart();
+  renderWeeklyChart();
+});
+
+const generateColors = (count) => {
+  const colors = [
+    '#FF6384',
+    '#36A2EB',
+    '#FFCE56',
+    '#4BC0C0',
+    '#9966FF',
+    '#FF9F40',
+    '#28a745',
+    '#0d6efd',
+    '#ffc107',
+  ];
+  return Array.from({ length: count }, (_, i) => colors[i % colors.length]);
+};
 </script>
 
 <style scoped>
