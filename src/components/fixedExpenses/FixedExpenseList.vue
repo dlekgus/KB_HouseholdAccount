@@ -1,28 +1,19 @@
 <template>
   <div class="card shadow-sm p-4">
     <h6 class="text-muted mb-3">구독 목록</h6>
-    <div v-for="s in subscriptions" :key="s.name"
-      class="d-flex justify-content-between align-items-center py-3 border-bottom">
-      <div class="d-flex align-items-center gap-3">
-
-        <div :style="getBoxStyle(s.boxColor)" class="rounded-4 d-flex align-items-center justify-content-center me-3"
-          style="width: 40px; height: 40px;">
-          <span :style="getDotStyle(s.dotColor)" class="rounded-circle"></span>
-        </div>
-        <div>
-          <div class="fw-semibold">{{ s.name }}</div>
-          <div class="text-muted small">매월 {{ s.day }}일</div>
-        </div>
-      </div>
-      <div class="d-flex align-items-center gap-2">
-        <span class="fw-bold">{{ s.price.toLocaleString() }}원</span>
-        <i class="bi bi-three-dots-vertical"></i>
-      </div>
-    </div>
+    <FixedExpenseItem
+      v-for="s in subscriptions"
+      :key="s.name"
+      :item="s"
+      @edit="handleEdit"
+      @delete="handleDelete"
+    />
   </div>
 </template>
 
 <script setup>
+import FixedExpenseItem from './FixedExpenseItem.vue';
+
 defineProps({
   subscriptions: {
     type: Array,
@@ -30,19 +21,13 @@ defineProps({
   },
 });
 
-// 각 박스 배경 스타일 계산
-function getBoxStyle(color) {
-  return {
-    backgroundColor: color || '#fcecec',
-  };
+function handleEdit(item) {
+  console.log('✏️ 수정할 항목:', item);
+  // 모달 열기 or 편집 페이지로 이동 등
 }
 
-// 동그라미 색상 스타일 계산
-function getDotStyle(color) {
-  return {
-    width: '10px',
-    height: '10px',
-    backgroundColor: color || '#e74c3c',
-  };
+function handleDelete(item) {
+  console.log('🗑️ 삭제할 항목:', item);
+  // 삭제 로직 실행
 }
 </script>
