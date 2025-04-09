@@ -94,4 +94,9 @@ const handleDelete = (item) => {
   transition: left 0.3s ease;
   border-radius: 2px;
 }
+.custom-scroll-select {
+  height: auto;
+  max-height: 150px; /* 눈에 보이지는 않지만 강제 제한 */
+  overflow-y: auto;  /* 스크롤 처리 */
+}
 </style>
