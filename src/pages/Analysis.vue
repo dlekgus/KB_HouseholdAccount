@@ -69,7 +69,9 @@
               borderStyle: 'solid',
             }"
           >
-            <span class="score" :class="gradeInfo.color">{{ rate }}</span>
+            <span class="score" :class="gradeInfo.color">{{
+              gradeInfo.grade
+            }}</span>
           </div>
           <div class="mt-2" :class="gradeInfo.color">
             <div class="fw-bold">{{ gradeInfo.grade }} 등급</div>
@@ -140,7 +142,7 @@ const periodStat = reactive({
   expense: 0,
   income: 0,
   dailyAvg: 0,
-  topCategory: '',
+  topCategory: '데이터 없음',
   changeRate: 0,
   dailyAvgChangeRate: 0,
   category: {},
@@ -204,25 +206,12 @@ function getPeriodStats(period, transactions) {
   const currentTotal = currentFiltered.reduce((sum, t) => sum + t.amount, 0);
   const prevTotal = prevFiltered.reduce((sum, t) => sum + t.amount, 0);
 
-  // 현재 일평균
-  const currDiffDays = Math.max(
-    1,
-    Math.floor((now - prevDate) / (1000 * 60 * 60 * 24))
-  );
-  const dailyAvg = Math.round(currentTotal / currDiffDays);
-
-  // 이전 일평균
-  const prevDiffDays = Math.max(
-    1,
-    Math.floor((prevDate - compareDate) / (1000 * 60 * 60 * 24))
-  );
-  const prevDailyAvg = Math.round(prevTotal / prevDiffDays);
+  const dailyAvg = getAvg(prevDate, now, currentTotal);
+  const prevDailyAvg = getAvg(compareDate, prevDate, prevTotal);
+  const totalChangeRate = getChangeRage(prevTotal, currentTotal);
+  const dailyAvgChangeRate = getChangeRage(prevDailyAvg, dailyAvg);
 
   const { categoryMap, topCategory } = getTopCategory(currentFiltered);
-  // 증가율 계산
-  const totalChangeRate = ((currentTotal - prevTotal) / (prevTotal || 1)) * 100;
-  const dailyAvgChangeRate =
-    ((dailyAvg - prevDailyAvg) / (prevDailyAvg || 1)) * 100;
 
   return {
     total: currentTotal,
@@ -232,6 +221,22 @@ function getPeriodStats(period, transactions) {
     dailyAvgChangeRate,
     category: categoryMap,
   };
+}
+
+// 일 평균 값 구하기
+function getAvg(prevDate, now, total) {
+  const diffDays = Math.max(
+    1,
+    Math.floor((now - prevDate) / (1000 * 60 * 60 * 24))
+  );
+  return Math.round(total / diffDays);
+}
+
+function getChangeRage(prevTotal, curTotal) {
+  if (prevTotal === 0) {
+    return 0;
+  }
+  return ((curTotal - prevTotal) / (prevTotal || 1)) * 100;
 }
 
 function getTopCategory(currentFiltered) {
@@ -251,7 +256,7 @@ function getTopCategory(currentFiltered) {
   });
 
   // 가장 높은 비중의 카테고리 계산
-  let topCategory = '';
+  let topCategory = '데이터 없음';
   let max = 0;
   for (const [category, percent] of Object.entries(categoryMap)) {
     if (percent > max) {
@@ -279,12 +284,12 @@ const borderColor = computed(() => {
 });
 
 const gradeInfo = computed(() => {
-  const val = periodStat.total;
-  if (val <= 70)
+  const val = periodStat.changeRate;
+  if (val <= 0)
     return { grade: 'A', message: '절약 잘했어요!', color: 'text-success' };
-  if (val <= 90)
+  if (val <= 25)
     return { grade: 'B', message: '양호한 소비입니다.', color: 'text-primary' };
-  if (val <= 110)
+  if (val <= 50)
     return { grade: 'C', message: '주의가 필요해요.', color: 'text-warning' };
   return {
     grade: 'D',
@@ -312,12 +317,6 @@ const changeRateClass = computed(() => rateClass(periodStat.changeRate));
 const chagedailyRateClass = computed(() =>
   rateClass(periodStat.dailyAvgChangeRate)
 );
-
-const rate = computed(() => {
-  const expense = currentData.value[0];
-  const income = previousData.value[0];
-  return Math.round((expense / (income || 1)) * 100);
-});
 
 const renderCategoryChart = () => {
   if (categoryChartInstance) categoryChartInstance.destroy(); // 이전 차트 제거
