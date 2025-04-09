@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
-import { computed } from 'vue';
+import dayjs from 'dayjs';
+import { constrainPoint } from '@fullcalendar/core/internal';
 
 const BASE_URL = '/api';
 
@@ -8,6 +9,33 @@ export const useTransactionStore = defineStore('transaction', {
   state: () => ({
     transactions: [],
   }),
+
+  getters: {
+    currentMonthIncome: (state) => {
+      const now = new Date();
+      const currentMonth = dayjs(now).format('YYYY-MM'); // 'YYYY-MM'
+      const filtered = state.transactions.filter((tx) => {
+        const matched =
+          tx.type === 'income' && tx.date.startsWith(currentMonth);
+        if (matched) return matched;
+      });
+
+      return filtered.reduce((sum, tx) => sum + tx.amount, 0);
+    },
+
+    // 이번 달 지출
+    currentMonthExpense: (state) => {
+      const now = new Date();
+      const currentMonth = now.toISOString().slice(0, 7); // 'YYYY-MM'
+
+      return state.transactions
+        .filter(
+          (tx) => tx.type === 'expense' && tx.date.startsWith(currentMonth)
+        )
+        .reduce((sum, tx) => sum + tx.amount, 0);
+    },
+  },
+
   actions: {
     async fetchByUser(userId) {
       try {
