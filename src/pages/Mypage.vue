@@ -89,7 +89,7 @@ import PasswordChangeModal from '@/components/modal/PasswordChangeModal.vue';
 import { computed, ref, onMounted } from 'vue';
 import axios from 'axios';
 
-const BASEURL = 'http://localhost:3000/';
+const BASEURL = '/api';
 const user = ref(null);
 const showPasswordChangeModal = ref(false);
 const isEditing = ref(false);

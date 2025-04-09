@@ -4,7 +4,7 @@
     tabindex="-1"
     style="background-color: rgba(0, 0, 0, 0.5)"
   >
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <!-- 헤더 -->
         <div class="modal-header">

@@ -4,7 +4,7 @@
       "id": "1",
       "email": "ggim@dreamwiz.com",
       "password": "1234512345",
-      "nickname": "ss",
+      "nickname": "",
       "joinDate": "2024-04-17"
     },
     {
@@ -75,6 +75,12 @@
       "nickname": "q",
       "email": "q",
       "password": "q"
+    },
+    {
+      "id": "b12e",
+      "nickname": "111",
+      "email": "111",
+      "password": "111"
     }
   ],
   "transactions": [
