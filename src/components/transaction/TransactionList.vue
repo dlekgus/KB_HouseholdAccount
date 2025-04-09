@@ -1,10 +1,8 @@
 <template>
-  <div
-    class="card border rounded-4 shadow-sm bg-white mt-4 overflow-hidden position-relative"
-  >
+  <div class="card border rounded-4 shadow-sm bg-white mt-4 position-relative">
     <div
       v-if="isLoading"
-      class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+      class="position-absolute rounded-4 top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
       style="background-color: rgba(0, 0, 0, 0.3); z-index: 10"
     >
       <Loading />
@@ -19,9 +17,10 @@
         <tr>
           <th class="ps-4 p-3" style="width: 15%">날짜</th>
           <th class="p-3" style="width: 15%">카테고리</th>
-          <th class="p-3" style="width: 20%">내용</th>
-          <th class="p-3" style="width: 35%">메모</th>
-          <th class="text-end pe-4 p-3" style="width: 15%">금액</th>
+          <th class="p-3" style="width: 15%">내용</th>
+          <th class="p-3" style="width: 30%">메모</th>
+          <th class="text-end pe-4 p-3" style="width: 20%">금액</th>
+          <th class="p-3" style="width: 5%"></th>
         </tr>
       </thead>
       <tbody>
@@ -35,22 +34,53 @@
           </td>
           <td class="fw-semibold p-3">{{ item.title }}</td>
           <td class="text-secondary small p-3">{{ item.memo }}</td>
-          <td
-            class="text-end pe-4 fw-semibold p-3"
-            :class="
-              item.amount > 0
-                ? item.type === 'income'
-                  ? 'text-primary'
-                  : 'text-danger'
-                : ''
-            "
-          >
-            {{ item.amount > 0 ? (item.type === "income" ? "+" : "-") : ""
-            }}{{ item.amount.toLocaleString() }}원
+          <td class="text-end pe-4 fw-semibold p-3">
+            <span
+              :class="
+                item.amount > 0
+                  ? item.type === 'income'
+                    ? 'text-primary'
+                    : 'text-danger'
+                  : ''
+              "
+            >
+              {{ item.amount > 0 ? (item.type === "income" ? "+" : "-") : "" }}
+              {{ item.amount.toLocaleString() }}원
+            </span>
+          </td>
+          <td>
+            <div class="transaction-dropdown position-relative z-index-1">
+              <button
+                class="btn btn-sm border-0 bg-transparent"
+                @click.stop="toggleDropdown(item.id)"
+              >
+                ⋮
+              </button>
+
+              <ul
+                v-if="openDropdownId === item.id"
+                class="dropdown-menu show position-absolute end-0 mt-1"
+                style="display: block"
+              >
+                <li>
+                  <button class="dropdown-item" @click="onEdit(item)">
+                    수정
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="dropdown-item text-danger"
+                    @click="onDelete(item)"
+                  >
+                    삭제
+                  </button>
+                </li>
+              </ul>
+            </div>
           </td>
         </tr>
         <tr v-if="pagedTransactions.length === 0">
-          <td colspan="5" class="text-center text-muted p-3">
+          <td colspan="6" class="text-center text-muted p-3">
             {{ message || "거래 내역이 없습니다." }}
           </td>
         </tr>
@@ -59,7 +89,7 @@
       <!-- tfoot -->
       <tfoot>
         <tr>
-          <td colspan="5" class="px-4 py-2">
+          <td colspan="6" class="px-4 py-2">
             <div class="d-flex justify-content-between align-items-center">
               <span class="text-secondary small">총 {{ totalCount }}건</span>
               <nav>
@@ -118,7 +148,7 @@ function getColor(category) {
 </script>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
 import { useTransactionStore } from "@/stores/transaction";
 import { storeToRefs } from "pinia";
 import Loading from "@/components/Loading.vue";
@@ -130,6 +160,7 @@ const { transactions, isLoading, viewDate, viewMode } =
 const currentPage = ref(1);
 const pageSize = 5;
 const message = ref("거래 내역이 없습니다.");
+const openDropdownId = ref(null);
 
 const totalCount = computed(() => transactions.value.length);
 const totalPages = computed(() => Math.ceil(totalCount.value / pageSize));
@@ -152,6 +183,41 @@ const prevPage = () => {
 const nextPage = () => {
   if (currentPage.value < totalPages.value) currentPage.value++;
 };
+
+// 드롭다운
+const handleClickOutside = (e) => {
+  if (!e.target.closest(".transaction-dropdown")) {
+    openDropdownId.value = null;
+  }
+};
+
+const toggleDropdown = (id) => {
+  openDropdownId.value = openDropdownId.value === id ? null : id;
+};
+
+const onEdit = (item) => {
+  console.log("수정 요청:", item);
+  // 수정 모달 열기 등의 로직 추가
+};
+
+const onDelete = (item) => {
+  if (confirm("정말 삭제하시겠습니까?")) {
+    transactionStore.deleteTransactionById(item.id).then(() => {
+      message.value = "거래 내역이 삭제되었습니다.";
+      setTimeout(() => {
+        message.value = null;
+      }, 2000);
+    });
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
 
 watch([viewDate, viewMode], () => {
   currentPage.value = 1;
