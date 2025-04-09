@@ -148,7 +148,6 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
 import { useFixedExpenseStore } from '@/stores/FixedExpenseStore.js';
 import { reactive } from 'vue';
 import axios from 'axios';
@@ -206,8 +205,7 @@ const iconList = [
         style: 'color : #74C0FC;',
     },
 ];
-defineProps({ modelValue: Boolean });
-const emit = defineEmits(['update:modelValue', 'added']);
+
 
 const form = reactive({
     name: '',

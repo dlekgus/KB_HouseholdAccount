@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script>
+<script >
 import { useUserStore } from '@/stores/userStore';
 import { useTransactionStore } from '@/stores/transactionStore';
 
