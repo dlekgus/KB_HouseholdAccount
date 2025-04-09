@@ -1,5 +1,5 @@
 <template>
-  <div class="card shadow-sm p-4 h-85 d-flex flex-column">
+  <div class="card shadow-sm p-4 d-flex flex-column" style="height: 250px;">
     <h6 class="text-muted mb-3">다가오는 결제</h6>
     <div class="scroll-area flex-grow-1">
       <div
