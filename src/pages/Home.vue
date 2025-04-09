@@ -10,7 +10,6 @@ import TransactionModal from '@/components/modal/TransactionModal.vue';
 const showModal = ref(false);
 </script>
 
-
 <template>
   <div>
     <HomeLayout>
@@ -18,11 +17,12 @@ const showModal = ref(false);
         <Calendar />
       </template>
 
+      <template v-slot:this-month-history>
+        <ThisMonthHistory></ThisMonthHistory
+      ></template>
+
       <template v-slot:recent-history>
         <RecentHistory></RecentHistory>
-      </template>
-      <template v-slot:this-month-history>
-        <ThisMonthHistory></ThisMonthHistory>
       </template>
 
       <template v-slot:footer>

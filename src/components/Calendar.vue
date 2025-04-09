@@ -124,19 +124,19 @@ onMounted(async () => {
 }
 
 .tototal.plus {
-  color: rgb(252, 96, 122);
+  color: rgb(0, 185, 68);
 }
 
 .tototal.minus {
-  color: rgb(117, 117, 255);
+  color: rgb(255, 174, 1);
 }
 
 .dayCellAmount.expense {
-  color: rgb(0, 0, 255);
+  color: red;
 }
 
 .dayCellAmount.income {
-  color: red;
+  color: rgb(0, 0, 255);
 }
 
 /* 헤더 고정 (2025년 4월, 버튼 등) */
@@ -150,7 +150,7 @@ onMounted(async () => {
 /* 요일 행 고정 (일~토) */
 .fc .fc-scrollgrid thead {
   position: sticky;
-  top: 48px; /* 필요시 값 조정 */
+  /* top: 48px; 필요시 값 조정 */
   background-color: white;
   z-index: 9;
 }
@@ -204,5 +204,83 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   justify-content: start;
+}
+
+/* 👉 반응형 처리 */
+@media (max-width: 768px) {
+  .fc-daygrid-day-frame {
+    position: relative;
+  }
+  .day-number {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-weight: normal;
+    font-size: 10px;
+  }
+
+  .dayCellAmount {
+    font-size: 9px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: normal;
+  }
+
+  .tototal {
+    font-size: 8.5px;
+    font-weight: 600;
+    /* color: gray; */
+  }
+
+  .tototal.plus {
+    color: rgb(0, 185, 68);
+  }
+
+  .tototal.minus {
+    color: rgb(255, 174, 1);
+  }
+
+  .calendar-wrapper {
+    height: 100%;
+    overflow-y: auto; /* 💡 필요 시 추가 */
+  }
+
+  /* 일요일 헤더: 빨간색 */
+  .fc .fc-col-header-cell:nth-child(1) .fc-col-header-cell-cushion {
+    color: red !important;
+  }
+
+  /* 토요일 헤더: 파란색 */
+  .fc .fc-col-header-cell:nth-child(7) .fc-col-header-cell-cushion {
+    color: blue !important;
+  }
+
+  /* FullCalendar 버튼 전체 색상 변경 */
+  .fc .fc-button {
+    background-color: #4318d1 !important;
+    border-color: #4318d1 !important;
+    color: white !important; /* 텍스트는 흰색으로 보이게 */
+  }
+
+  /* 버튼 hover 시 색상 */
+  .fc .fc-button:hover {
+    background-color: #3310a3 !important;
+    border-color: #3310a3 !important;
+  }
+
+  .fc-daygrid-day-number,
+  .fc-col-header-cell-cushion {
+    text-decoration: none;
+  }
+
+  /* 캘린더 셀 높이 제한 */
+  .fc .fc-daygrid-day-frame {
+    height: 60px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+  }
 }
 </style>
