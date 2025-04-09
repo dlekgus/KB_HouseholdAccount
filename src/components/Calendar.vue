@@ -1,5 +1,5 @@
 <template>
-  <FullCalendar :options="calendarOptions" />
+  <FullCalendar v-if="calendarOptions" :options="calendarOptions" />
 </template>
 
 <script setup>
@@ -37,65 +37,66 @@ const dailyTotals = computed(() => {
   return totals;
 });
 
-const calendarOptions = ref({
-  plugins: [dayGridPlugin, interactionPlugin],
-  initialView: 'dayGridMonth',
-  locale: koLocale,
-  events: calendarEvents,
-  dayCellContent: (arg) => {
-    const dateStr = arg.date.toISOString().split('T')[0];
-    const totals = dailyTotals.value[dateStr];
-    const day = arg.date.getDate();
-
-    let html = `<div class="day-number">${day}</div><br/>`;
-    if (totals) {
-      if (totals.expense)
-        html += `<div class="dayCellAmount expense">- ${totals.expense.toLocaleString()}원</div>`;
-      if (totals.income)
-        html += `<div class='dayCellAmount income'>+ ${totals.income.toLocaleString()}원</div>`;
-
-      const todayTotal = totals.income - totals.expense;
-      const sign = todayTotal > 0 ? '+' : '';
-      const totalClass = todayTotal > 0 ? 'plus' : 'minus';
-      html += `<div class='dayCellAmount tototal ${totalClass}'>${sign}${todayTotal.toLocaleString()}원</div>`;
-    }
-
-    return { html };
-  },
-
-  headerToolbar: {
-    start: 'title',
-    center: '',
-    end: 'today prev,next',
-  },
-  dateClick: (info) => {
-    console.log('날짜 클릭:', info.dateStr);
-  },
-  titleFormat: { year: 'numeric', month: 'long' },
-
-  events: [],
-
-  dayCellDidMount: (arg) => {
-    const day = arg.date.getDay(); // 0:일, 1:월, ..., 6:토
-    const dayNumberElement = arg.el.querySelector('.fc-daygrid-day-number');
-    dayNumberElement.innerHTML = dayNumberElement.innerHTML.replace('일', '');
-    if (dayNumberElement) {
-      if (day === 0) {
-        dayNumberElement.style.color = 'red'; // 일요일
-      } else if (day === 6) {
-        dayNumberElement.style.color = 'blue'; // 토요일
-      } else {
-        dayNumberElement.style.color = 'black'; // 월~금
-      }
-    }
-  },
-});
-
+const calendarOptions = ref(null); // 초기엔 null로 설정
 onMounted(async () => {
   const userId = userStore.user?.id || localStorage.getItem('userId');
   if (!userId) return;
 
   await transactionStore.fetchByUser(userId);
+
+  // fetch 이후에 options 초기화
+  calendarOptions.value = {
+    plugins: [dayGridPlugin, interactionPlugin],
+    initialView: 'dayGridMonth',
+    locale: koLocale,
+    events: [],
+    dayCellContent: (arg) => {
+      const dateStr = arg.date.toISOString().split('T')[0];
+      const totals = dailyTotals.value[dateStr];
+      const day = arg.date.getDate();
+
+      let html = `<div class="day-number">${day}</div><br/>`;
+      if (totals) {
+        if (totals.expense)
+          html += `<div class="dayCellAmount expense">- ${totals.expense.toLocaleString()}원</div>`;
+        if (totals.income)
+          html += `<div class='dayCellAmount income'>+ ${totals.income.toLocaleString()}원</div>`;
+
+        const todayTotal = totals.income - totals.expense;
+        const sign = todayTotal > 0 ? '+' : '';
+        const totalClass = todayTotal > 0 ? 'plus' : 'minus';
+        html += `<div class='dayCellAmount tototal ${totalClass}'>${sign}${todayTotal.toLocaleString()}원</div>`;
+      }
+
+      return { html };
+    },
+    headerToolbar: {
+      start: 'title',
+      center: '',
+      end: 'today prev,next',
+    },
+    dateClick: (info) => {
+      console.log('날짜 클릭:', info.dateStr);
+    },
+    titleFormat: { year: 'numeric', month: 'long' },
+    dayCellDidMount: (arg) => {
+      const day = arg.date.getDay();
+      const dayNumberElement = arg.el.querySelector('.fc-daygrid-day-number');
+      if (dayNumberElement) {
+        dayNumberElement.innerHTML = dayNumberElement.innerHTML.replace(
+          '일',
+          ''
+        );
+        if (day === 0) {
+          dayNumberElement.style.color = 'red';
+        } else if (day === 6) {
+          dayNumberElement.style.color = 'blue';
+        } else {
+          dayNumberElement.style.color = 'black';
+        }
+      }
+    },
+  };
 });
 </script>
 

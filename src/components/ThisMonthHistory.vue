@@ -4,7 +4,7 @@
     <div class="card">수입</div>
   </div>
 </template>
-
+<!-- 
 <script>
 import { useUserStore } from '@/stores/userStore';
 import { useTransactionStore } from '@/stores/transactionStore';
@@ -18,4 +18,4 @@ onMounted(async () => {
 
   await transactionStore.fetchByUser(userId);
 });
-</script>
+</script> -->
