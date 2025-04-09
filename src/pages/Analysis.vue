@@ -6,7 +6,7 @@
         v-for="m in [1, 3, 6, 12]"
         :key="m"
         class="btn"
-        :class="period === m ? 'btn-primary' : 'btn-outline-primary'"
+        :class="period === m ? 'btn-primary' : 'btn-secondary'"
         @click="selectPeriod(m)"
       >
         {{ m }}개월
@@ -334,8 +334,8 @@ const gradeInfo = computed(() => {
     grade,
     message:
       grade === 'D'
-        ? `수입에서 ${flag}이상 지출했어요!`
-        : `수입에서 ${flag}정도 지출했어요!`,
+        ? `수입의 ${flag}이상 지출했어요!`
+        : `수입의 ${flag}정도 지출했어요!`,
     color,
   };
 });
@@ -382,7 +382,10 @@ watch(period, async () => {
 .border-danger {
   border-color: #d32f2f;
 }
-
+.btn-secondary {
+  --bs-btn-bg: #a5abaf;
+  --bs-btn-border-color: #a5abaf;
+}
 canvas {
   width: 100% !important;
   height: 400px !important;
