@@ -206,12 +206,12 @@ const addAmount = (unit) => {
 };
 
 const expenseCategories = [
-  '식비',
-  '교통비',
-  '주거비',
-  '문화생활',
-  '의료비',
-  '기타',
+  "식비",
+  "교통비",
+  "주거비",
+  "문화",
+  "의료비",
+  "기타",
 ];
 const incomeCategories = ['급여', '용돈', '판매수익', '이자소득', '기타'];
 const currentCategoryList = computed(() =>

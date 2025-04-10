@@ -229,14 +229,7 @@ const visiblePages = computed(() => {
 // 카테고리 필터 및 검색어
 const selectedCategory = ref("");
 const searchKeyword = ref("");
-const categoryOptions = [
-  "식비",
-  "교통비",
-  "주거비",
-  "문화생활",
-  "의료비",
-  "기타",
-];
+const categoryOptions = ["식비", "교통비", "주거비", "문화", "의료비", "기타"];
 
 // 필터된 거래
 const filteredTransactions = computed(() => {
@@ -244,7 +237,6 @@ const filteredTransactions = computed(() => {
     const matchesCategory = selectedCategory.value
       ? item.category === selectedCategory.value
       : true;
-    console.log(item);
 
     const matchesKeyword = searchKeyword.value
       ? item.title.includes(searchKeyword.value) ||

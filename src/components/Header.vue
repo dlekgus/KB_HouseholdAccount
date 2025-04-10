@@ -38,7 +38,7 @@
           </li>
           <li v-else class="nav-item">
             <router-link
-              :to="mypage"
+              :to="'/mypage'"
               class="nav-link-custom"
               :class="{ active: isActive('/mypage') }"
             >
@@ -71,7 +71,8 @@ const isActive = (path) => route.path === path;
 const userImage = ref("");
 onMounted(() => {
   userImage.value =
-    localStorage.getItem("userImage") || "https://picsum.photos/50/50";
+    localStorage.getItem("userImage") ||
+    "https://velog.velcdn.com/images/chanmi125/post/18a3256c-dbaf-4f5e-952e-c694496e25ad/image.svg";
 });
 
 const goToMypage = () => {
