@@ -142,7 +142,11 @@ export const useAnalysisStore = defineStore('analysis', () => {
   function getDiffRate(prev, cur) {
     let diffRate;
     if (prev === 0) {
-      diffRate = cur === 0 ? 0 : 100;
+      if (cur === 0) {
+        diffRate = 0;
+      } else {
+        return '--%';
+      }
     } else {
       diffRate = ((cur - prev) / Math.abs(prev)) * 100;
     }

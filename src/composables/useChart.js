@@ -205,6 +205,10 @@ export const renderWeeklyChart = (ctx, incomes, expenses, periodMonths) => {
           labels: {
             boxWidth: 12,
             boxHeight: 12, // 정사각형 레이블 아이콘
+            font: {
+              size: 14, // 텍스트 크기
+            },
+            color: '#000', // 글자색 (검정)
           },
         },
       },
