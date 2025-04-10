@@ -26,6 +26,7 @@ export const useFixedExpenseStore = defineStore("fixedExpense", () => {
       const res = await axios.get(BASEURI, {
         params: { userId },
       });
+
       state.fixedExpenses = res.data;
     } catch (err) {
       alert("조회 실패: " + err);
@@ -61,13 +62,15 @@ export const useFixedExpenseStore = defineStore("fixedExpense", () => {
   );
 
   const isAddModalOpen = ref(false);
-
-  const openAddModal = () => {
+  const selectedItem = ref(null); // 선택된 아이템 저장
+  const openAddModal = (item = null) => {
     isAddModalOpen.value = true;
+    selectedItem.value = item; // 아이템 젅달 받으면 설정..?
   };
 
   const closeAddModal = () => {
     isAddModalOpen.value = false;
+    selectedItem.value = null;
   };
 
   return {

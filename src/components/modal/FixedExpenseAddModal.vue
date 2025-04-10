@@ -24,37 +24,37 @@
 
                 <!-- 폼 영역 -->
                 <!-- <div class="row"> -->
-                  <!-- 좌: 입력 -->
-                  <!-- <div class="col-md-8" style="margin-top: 4px;"> -->
-                    <div class="mb-3">
-                      <input v-model="form.name" type="text" class="form-control form-control-sm custom-input" required
-                        placeholder="항목명을 입력하세요." />
-                    </div>
+                <!-- 좌: 입력 -->
+                <!-- <div class="col-md-8" style="margin-top: 4px;"> -->
+                <div class="mb-3">
+                  <input v-model="form.name" type="text" class="form-control form-control-sm custom-input" required
+                    placeholder="항목명을 입력하세요." />
+                </div>
 
-                    <div class="mb-3 position-relative price-wrapper">
-                      <input v-model="displayPrice" type="text" class="form-control form-control-sm price-input"
-                        @input="onPriceInput" required placeholder="금액을 입력하세요." />
-                      <span class="unit-text">원</span>
-                    </div>
+                <div class="mb-3 position-relative price-wrapper">
+                  <input v-model="displayPrice" type="text" class="form-control form-control-sm price-input"
+                    @input="onPriceInput" required placeholder="금액을 입력하세요." />
+                  <span class="unit-text">원</span>
+                </div>
 
 
-                    <div class="mb-3">
-                      <label class="form-label"></label>
-                      <v-select v-model="form.dueDate" :options="dayOptions" :reduce="day => day"
-                        placeholder="날짜를 선택하세요" class="custom-select" />
-                    </div>
-                  <!-- </div> -->
+                <div class="mb-3">
+                  <label class="form-label"></label>
+                  <v-select v-model="form.dueDate" :options="dayOptions" :reduce="day => day" placeholder="날짜를 선택하세요"
+                    class="custom-select" />
+                </div>
+                <!-- </div> -->
 
-                  <!-- 우: 아이콘 -->
-                  <!-- <div class="col-md-4 scroll-area flex-grow-1" style="margin-bottom: 40px;"> -->
-                    <label class="form-label"></label>
-                    <div class="icon-grid">
-                      <div v-for="icon in iconList" :key="icon.label" class="icon-box"
-                        :class="{ selected: form.icon?.label === icon.label }" @click="toggleIcon(icon)">
-                        <i :class="icon.class" :style="icon.style" class="fa-lg"></i>
-                      </div>
-                    </div>
-                  <!-- </div> -->
+                <!-- 우: 아이콘 -->
+                <!-- <div class="col-md-4 scroll-area flex-grow-1" style="margin-bottom: 40px;"> -->
+                <label class="form-label"></label>
+                <div class="icon-grid">
+                  <div v-for="icon in iconList" :key="icon.label" class="icon-box"
+                    :class="{ selected: form.icon?.label === icon.label }" @click="toggleIcon(icon)">
+                    <i :class="icon.class" :style="icon.style" class="fa-lg"></i>
+                  </div>
+                </div>
+                <!-- </div> -->
                 <!-- </div> -->
 
                 <div class="modal-footer">
@@ -75,12 +75,13 @@
 <script setup>
 import { reactive, ref, watch } from 'vue';
 import { useFixedExpenseStore } from '@/stores/FixedExpenseStore.js';
+import { storeToRefs } from 'pinia';
 
 defineProps({ modelValue: Boolean });
 const emit = defineEmits(['update:modelValue', 'added']);
 const store = useFixedExpenseStore();
 const userId = localStorage.getItem('userId');
-
+const { selectedItem } = storeToRefs(store); // 
 const categoryOptions = ['구독', '고정지출'];
 const dayOptions = Array.from({ length: 31 }, (_, i) => i + 1); // [1,2,...31] -> v-Select
 const iconList = [
@@ -104,18 +105,37 @@ const form = reactive({
 const ret = () => {
   emit('update:modelValue', false);
   displayPrice.value = '';
-  form.dueDate = '';
   form.name = '';
+  form.dueDate = 1;
+  form.price = 0;
+  form.icon = null;
+  selectedItem.value = null; // 
+};
 
-}
 
 const displayPrice = ref('');
 
 watch(
-  () => form.price,
-  (val) => {
-    displayPrice.value = Number(val).toLocaleString();
-  }
+  () => selectedItem,
+  (item) => {
+    if (item && typeof item === 'object') {
+      form.name = item.name || '';
+      form.price = item.price || 0;
+      form.dueDate = item.dueDate || '';
+      form.category = item.category || categoryOptions[0];
+      form.icon = item.icon || null;
+      displayPrice.value = Number(item.price || 0).toLocaleString();
+    } else {
+      // item이 null인 경우 초기화
+      form.name = '';
+      form.price = 0;
+      form.dueDate = '';
+      form.category = categoryOptions[0];
+      form.icon = null;
+      displayPrice.value = '';
+    }
+  },
+  { immediate: true }
 );
 
 
@@ -153,7 +173,6 @@ const submit = async () => {
 </script>
 
 <style scoped>
-
 .scroll-area {
   max-height: 300px;
   overflow-y: auto;
@@ -283,19 +302,22 @@ const submit = async () => {
   cursor: pointer;
   transition: all 0.2s;
 }
+
 @media(max-width:800px) {
   .icon-box {
     border-radius: 8px;
     width: 50px;
     height: 50px;
   }
-  .icon-grid{
-    
+
+  .icon-grid {
+
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(1, auto);
 
   }
 }
+
 .icon-box:hover {
   background-color: #f9f9f9;
 }
