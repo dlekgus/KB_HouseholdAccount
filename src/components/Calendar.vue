@@ -40,7 +40,7 @@ const dailyTotals = computed(() => {
 // ✅ 캘린더 옵션
 const calendarOptions = ref({
   plugins: [dayGridPlugin, interactionPlugin],
-  initialView: "dayGridMonth",
+  initialView: 'dayGridMonth',
   locale: koLocale,
   events: [],
   headerToolbar: {
@@ -76,29 +76,17 @@ const calendarOptions = ref({
     return { html };
   },
 
-  headerToolbar: {
-    start: "title",
-    center: "",
-    end: "today prev,next",
-  },
-  dateClick: (info) => {
-    console.log('날짜 클릭:', info.dateStr);
-  },
-  titleFormat: { year: 'numeric', month: 'long' },
-
-  events: [],
-
+  // ✅ 일요일/토요일 색상 처리
   dayCellDidMount: (arg) => {
-    const day = arg.date.getDay(); // 0:일, 1:월, ..., 6:토
-    const dayNumberElement = arg.el.querySelector(".fc-daygrid-day-number");
-    dayNumberElement.innerHTML = dayNumberElement.innerHTML.replace("일", "");
+    const day = arg.date.getDay(); // 0:일, 6:토
+    const dayNumberElement = arg.el.querySelector('.fc-daygrid-day-number');
     if (dayNumberElement) {
       if (day === 0) {
-        dayNumberElement.style.color = "red"; // 일요일
+        dayNumberElement.style.color = 'red';
       } else if (day === 6) {
-        dayNumberElement.style.color = "blue"; // 토요일
+        dayNumberElement.style.color = 'blue';
       } else {
-        dayNumberElement.style.color = "black"; // 월~금
+        dayNumberElement.style.color = 'black';
       }
     }
   },
