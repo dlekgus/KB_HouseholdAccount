@@ -130,7 +130,7 @@
 
     <!-- 차트 -->
     <div class="row mt-4 g-4">
-      <div class="col-12 col-md-6">
+      <div class="col-12 col-md-4">
         <div class="card h-100">
           <div class="card-body">
             <h6 class="card-title">카테고리별 지출</h6>
@@ -139,10 +139,16 @@
         </div>
       </div>
 
-      <div class="col-12 col-md-6">
+      <div class="col-12 col-md-8">
         <div class="card h-100">
           <div class="card-body">
-            <h6 class="card-title">요일별 지출</h6>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 class="card-title mb-0">기간별 통계 차트</h6>
+              <span class="text-muted" id="chart-period-label"
+                >데이터 없음</span
+              >
+              <!-- 또는 <select> 요소 사용도 가능 -->
+            </div>
             <canvas ref="weeklyChart"></canvas>
           </div>
         </div>
@@ -162,13 +168,8 @@ const weeklyChart = ref(null);
 
 // ✅ Pinia 스토어 가져오기
 const store = useAnalysisStore();
-const {
-  periodStat,
-  fetchUserTransactions,
-  selectPeriod,
-  curExpenseFilter,
-  curIncomeFilter,
-} = store;
+const { pepriod, periodStat, fetchUserTransactions, selectPeriod, filters } =
+  store;
 
 const borderColor = computed(() => {
   const colorMap = {
@@ -215,7 +216,13 @@ const gradeInfo = computed(() => {
 onMounted(async () => {
   await fetchUserTransactions();
   renderCategoryChart(categoryChart.value, periodStat);
-  renderWeeklyChart(weeklyChart.value, curIncomeFilter, curExpenseFilter);
+
+  renderWeeklyChart(
+    weeklyChart.value,
+    filters.curIncomeFilter,
+    filters.curExpenseFilter,
+    store.period
+  );
 });
 watch(
   () => [store.period], // 바라볼 값들
@@ -224,7 +231,12 @@ watch(
       renderCategoryChart(categoryChart.value, store.periodStat);
     }
     if (weeklyChart.value) {
-      renderWeeklyChart(weeklyChart.value, curIncomeFilter, curExpenseFilter);
+      renderWeeklyChart(
+        weeklyChart.value,
+        filters.curIncomeFilter,
+        filters.curExpenseFilter,
+        store.period
+      );
     }
   }
 );

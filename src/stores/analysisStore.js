@@ -16,8 +16,10 @@ export const useAnalysisStore = defineStore('analysis', () => {
     category: {},
   });
 
-  let curExpenseFilter = reactive([]);
-  let curIncomeFilter = reactive([]);
+  const filters = reactive({
+    curExpenseFilter: [],
+    curIncomeFilter: [],
+  });
   let userTransactions = reactive([]);
 
   const userId = localStorage.getItem('userId');
@@ -26,7 +28,6 @@ export const useAnalysisStore = defineStore('analysis', () => {
   const fetchUserTransactions = async () => {
     try {
       const response = await axios.get(`${BASE_URI}?userId=${userId}`);
-      console.log(response);
       if (response.status === 200) {
         userTransactions.value = response.data;
         updatePeriodStats();
@@ -63,8 +64,18 @@ export const useAnalysisStore = defineStore('analysis', () => {
     prevDate.setMonth(now.getMonth() - period);
     compareDate.setMonth(prevDate.getMonth() - period);
 
-    curExpenseFilter = getFiltered(transactions, 'expense', prevDate, now);
-    curIncomeFilter = getFiltered(transactions, 'income', prevDate, now);
+    filters.curExpenseFilter = getFiltered(
+      transactions,
+      'expense',
+      prevDate,
+      now
+    );
+    filters.curIncomeFilter = getFiltered(
+      transactions,
+      'income',
+      prevDate,
+      now
+    );
 
     const prevExpenseFilter = getFiltered(
       transactions,
@@ -79,8 +90,11 @@ export const useAnalysisStore = defineStore('analysis', () => {
       prevDate
     );
 
-    const currentIncome = curIncomeFilter.reduce((sum, t) => sum + t.amount, 0);
-    const currentExpense = curExpenseFilter.reduce(
+    const currentIncome = filters.curIncomeFilter.reduce(
+      (sum, t) => sum + t.amount,
+      0
+    );
+    const currentExpense = filters.curExpenseFilter.reduce(
       (sum, t) => sum + t.amount,
       0
     );
@@ -89,7 +103,9 @@ export const useAnalysisStore = defineStore('analysis', () => {
 
     const diffExpense = getDiffRate(prevExpense, currentExpense);
     const diffIncome = getDiffRate(prevIncome, currentIncome);
-    const { categoryMap, topCategory } = getTopCategory(curExpenseFilter);
+    const { categoryMap, topCategory } = getTopCategory(
+      filters.curExpenseFilter
+    );
 
     return {
       expense: currentExpense,
@@ -140,9 +156,7 @@ export const useAnalysisStore = defineStore('analysis', () => {
   return {
     period,
     periodStat,
-    userTransactions,
-    curExpenseFilter,
-    curIncomeFilter,
+    filters,
     fetchUserTransactions,
     selectPeriod,
   };
