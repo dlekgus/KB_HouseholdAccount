@@ -124,7 +124,7 @@ export const useTransactionStore = defineStore("transactions", () => {
       return;
     }
 
-    if (updatedData.userId && updatedData.userId !== currentUserId) {
+    if (updatedData.userId && updatedData.userId != currentUserId) {
       alert("현재 사용자와 다른 사용자의 거래는 수정할 수 없습니다.");
       return;
     }
@@ -134,7 +134,6 @@ export const useTransactionStore = defineStore("transactions", () => {
       const index = transactions.value.findIndex((tx) => tx.id === id);
       if (index !== -1) {
         transactions.value[index] = res.data;
-        console.log("수정된 거래:", res.data);
       }
     } catch (err) {
       console.error("수정 실패", err);
