@@ -8,10 +8,7 @@
 
       <template v-slot:profile-area>
         <div class="user-image">
-          <img
-            src="https://velog.velcdn.com/images/chanmi125/post/18a3256c-dbaf-4f5e-952e-c694496e25ad/image.svg"
-            alt=""
-          />
+          <img class="rounded-circle" :src="userImage" alt="" />
         </div>
         <div class="info">
           <div class="user-name">
@@ -34,7 +31,7 @@
             class="btn btn-primary pointer"
             @click="isEditing ? updateNickname() : modiNickname()"
           >
-            {{ isEditing ? '완료' : '수정' }}
+            {{ isEditing ? "완료" : "수정" }}
           </button>
           <button
             v-show="isEditing"
@@ -66,7 +63,8 @@
               type="checkbox"
               role="switch"
               :id="key"
-              :checked="user[key]"
+              :checked="true"
+              disabled
             />
           </span>
         </div>
@@ -95,24 +93,25 @@
 </template>
 
 <script setup>
-import MypageLayout from '@/components/layouts/MypageLayout.vue';
-import PasswordChangeModal from '@/components/modal/PasswordChangeModal.vue';
-import { computed, ref, onMounted } from 'vue';
-import router from '@/router';
-import { useUserStore } from '@/stores/userStore';
+import MypageLayout from "@/components/layouts/MypageLayout.vue";
+import PasswordChangeModal from "@/components/modal/PasswordChangeModal.vue";
+import { computed, ref, onMounted } from "vue";
+import router from "@/router";
+import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
 
-const BASEURL = '/api';
+const BASEURL = "/api";
 
 const showPasswordChangeModal = ref(false);
 const isEditing = ref(false);
-const editedNickname = ref('');
+const editedNickname = ref("");
+const userImage = ref("");
 
 const alarmLabels = {
-  pushAlarm: '푸시 알림',
-  emailAlarm: '이메일 알림',
-  payAlarm: '결제 예정 알림',
+  //   pushAlarm: "푸시 알림",
+  //   emailAlarm: "이메일 알림",
+  payAlarm: "결제 예정 알림",
 };
 
 const modiNickname = () => {
@@ -124,58 +123,58 @@ const updateNickname = async () => {
     if (editedNickname.value.length >= 2) {
       await userStore.changeNickname(editedNickname.value);
       isEditing.value = false;
-      alert('닉네임 변경');
+      alert("닉네임 변경");
     } else {
-      alert('두글자 이상 입력하세요!');
+      alert("두글자 이상 입력하세요!");
     }
   } catch (error) {
-    alert('닉네임 변경 실패');
+    alert("닉네임 변경 실패");
   }
 };
 
 const logout = () => {
-  const confirmLogout = confirm('정말 로그아웃하시겠습니까?');
+  const confirmLogout = confirm("정말 로그아웃하시겠습니까?");
   if (!confirmLogout) return;
   userStore.logout();
-  router.push('/');
+  router.push("/");
 };
 
 const deleteUser = async () => {
-  const confirmLogout = confirm('정말 회원 탈퇴하시겠습니까?');
+  const confirmLogout = confirm("정말 회원 탈퇴하시겠습니까?");
   if (!confirmLogout) return;
   userStore.deleteUser();
-  router.push('/');
+  router.push("/");
 };
 
 onMounted(async () => {
-  const storedId = localStorage.getItem('userId');
-  console.log('✅ storedId:', storedId);
+  const storedId = localStorage.getItem("userId");
+  userImage.value =
+    localStorage.getItem("userImage") ||
+    "https://velog.velcdn.com/images/chanmi125/post/18a3256c-dbaf-4f5e-952e-c694496e25ad/image.svg";
+  console.log("✅ storedId:", storedId);
 
   if (!storedId) {
-    console.warn('⚠️ userId가 없음 → 로그인 페이지로 이동');
-    router.push('/login');
+    console.warn("⚠️ userId가 없음 → 로그인 페이지로 이동");
+    router.push("/login");
     return;
   }
 
   try {
     await userStore.fetchUser(storedId);
-    console.log('👤 불러온 유저 정보:', userStore.user);
+    console.log("👤 불러온 유저 정보:", userStore.user);
   } catch (e) {
-    console.error('❌ fetchUser 실패:', e);
+    console.error("❌ fetchUser 실패:", e);
   }
 });
 
 const user = computed(() => userStore.user);
 // 옵셔널 체이닝을 이용해 null 방지
-const email = computed(() => user.value?.email || '');
-const nickname = computed(() => userStore.user?.nickname || '');
-const joinDate = computed(() => user.value?.joinDate || '');
+const email = computed(() => user.value?.email || "");
+const nickname = computed(() => userStore.user?.nickname || "");
+const joinDate = computed(() => user.value?.joinDate || "");
 </script>
 
 <style scoped>
-.cancel {
-  margin-left: 0.5rem;
-}
 .switch-setting {
   display: flex;
   justify-content: space-between;
@@ -183,16 +182,20 @@ const joinDate = computed(() => user.value?.joinDate || '');
   width: 100%;
   margin-bottom: 0.5rem;
 }
+
 .btn-modi {
   margin-left: auto;
 }
+
 .user-image {
-  background-color: rgb(212, 212, 212);
-  border-radius: 50px;
-  height: 70px;
-  width: 70px;
-  margin-right: 0.75rem;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  margin-right: 1rem;
+  overflow: hidden;
+  background-color: #f3f4f6;
 }
+
 .user-image img {
   width: 100%;
   height: 100%;
@@ -204,35 +207,56 @@ const joinDate = computed(() => user.value?.joinDate || '');
   flex-direction: column;
   justify-content: center;
 }
+
 .user-name {
-  font-size: small;
-  margin-bottom: 0.1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
 }
+
 .user-email {
-  font-size: 8px;
-  margin-bottom: 0.1rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.15rem;
 }
+
 .user-join-date {
-  font-size: 8px;
-  margin-bottom: 0.1rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
 }
+
 .btn {
   text-align: left;
   font-size: small;
   cursor: pointer;
 }
+
+.btn-modi .btn {
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 8px;
+}
+
 .btn-logout {
   background-color: #fef2f2;
   color: red;
   border: 0;
 }
+
 .btn-passwordChange {
   background-color: #f3f4f6;
 }
+
 .btn-out {
   color: #6b7280;
   font-size: x-small;
 }
+
+.cancel {
+  margin-left: 0.5rem;
+}
+
 .pointer {
   cursor: pointer;
 }

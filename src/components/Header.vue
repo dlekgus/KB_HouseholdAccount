@@ -1,44 +1,108 @@
 <template>
-  <nav class="navbar navbar-expand-sm bg-light navbar-light">
-    <span class="navbar-brand ps-2">KB 가계부</span>
-    <button
-      class="navbar-toggler"
-      type="button"
-      @click="isNavShow = !isNavShow"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div
-      :class="
-        isNavShow ? 'collapse navbar-collapse show' : 'collapse navbar-collapse'
-      "
-    >
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <router-link class="nav-link" to="/home">Home</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link class="nav-link" to="/details">details</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link class="nav-link" to="/fixedExpenses"
-            >fixedExpenses</router-link
-          >
-        </li>
-        <li class="nav-item">
-          <router-link class="nav-link" to="/analysis">통계</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link class="nav-link" to="/mypage">Mypage</router-link>
-        </li>
-      </ul>
+  <nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-2">
+    <div class="container-fluid">
+      <router-link to="/home" class="navbar-brand fw-bold text-primary">
+        KB가계부
+      </router-link>
+
+      <button
+        class="navbar-toggler"
+        type="button"
+        @click="isNavShow = !isNavShow"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div :class="['collapse navbar-collapse', { show: isNavShow }]">
+        <ul class="navbar-nav ms-auto d-flex align-items-center gap-3">
+          <li class="nav-item" v-for="item in navItems" :key="item.path">
+            <router-link
+              :to="item.path"
+              class="nav-link-custom"
+              :class="{ active: isActive(item.path) }"
+            >
+              {{ item.label }}
+            </router-link>
+          </li>
+          <li v-if="!isNavShow" class="nav-item ms-3">
+            <img
+              :src="userImage"
+              alt="프로필"
+              class="profile-image"
+              @click="goToMypage"
+            />
+          </li>
+          <li v-else class="nav-item">
+            <router-link
+              :to="mypage"
+              class="nav-link-custom"
+              :class="{ active: isActive('/mypage') }"
+            >
+              마이페이지
+            </router-link>
+          </li>
+        </ul>
+      </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
 const isNavShow = ref(false);
+const route = useRoute();
+const router = useRouter();
+
+const navItems = [
+  { label: "홈", path: "/home" },
+  { label: "내역", path: "/details" },
+  { label: "고정지출", path: "/fixedExpenses" },
+  { label: "통계", path: "/analysis" },
+];
+
+const isActive = (path) => route.path === path;
+
+const userImage = ref("");
+onMounted(() => {
+  userImage.value =
+    localStorage.getItem("userImage") || "https://via.placeholder.com/36";
+});
+
+const goToMypage = () => {
+  router.push("/mypage");
+};
 </script>
 
-<style scoped></style>
+<style scoped>
+.nav-link-custom {
+  font-weight: bolder;
+  font-size: 0.95rem;
+  color: #a892e9;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.nav-link-custom.active {
+  color: #4318d1;
+}
+
+.nav-link-custom:hover {
+  color: #7349e5;
+}
+
+.profile-image {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+  box-shadow: 0 0 0 2px #e0e0e0;
+}
+
+.profile-image:hover {
+  box-shadow: 0 0 0 2px #4318d1;
+}
+</style>

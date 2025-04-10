@@ -77,12 +77,10 @@ onBeforeUnmount(() => {
 });
 
 const editItem = () => {
-  isOpen.value=true;
   store.openAddModal(props.item); //
+  isOpen.value=true;
   console.log(props.item)  
-  setTimeout(() => {
-    showMenu.value = false;
-  }, 0); // 다음 tick에서 닫히게 함
+
 };
 
 const deleteItem = () => {

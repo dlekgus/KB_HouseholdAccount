@@ -100,7 +100,7 @@ const loadChartData = async () => {
       : viewMode.value === "주간"
       ? "week"
       : "month";
-  const base = viewDate.value;
+  const base = dayjs(viewDate.value).startOf(unit);
 
   const oldest = base.subtract(4, unit);
   const startDate = oldest.startOf(unit).format("YYYY-MM-DD");
@@ -108,15 +108,15 @@ const loadChartData = async () => {
 
   try {
     const { data } = await fetchTransactionsByDateRangeAPI({
-      userId: "1",
+      userId: localStorage.getItem("userId"),
       startDate,
       endDate,
       page: 1,
       limit: 10000,
     });
 
-    for (let i = 4; i >= 0; i--) {
-      const current = base.subtract(i, unit);
+    for (let i = 0; i < 5; i++) {
+      const current = base.subtract(4 - i, unit);
       const start = current.startOf(unit);
       const end = current.endOf(unit);
 

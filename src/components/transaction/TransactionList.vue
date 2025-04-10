@@ -127,9 +127,19 @@
                   >
                     <button class="page-link" @click="prevPage">‹</button>
                   </li>
-                  <li class="page-item active">
-                    <span class="page-link">{{ currentPage }}</span>
+
+                  <!-- 페이지 번호 목록 -->
+                  <li
+                    v-for="page in visiblePages"
+                    :key="page"
+                    class="page-item"
+                    :class="{ active: currentPage === page }"
+                  >
+                    <button class="page-link" @click="goToPage(page)">
+                      {{ page }}
+                    </button>
                   </li>
+
                   <li
                     class="page-item"
                     :class="{ disabled: currentPage === totalPages }"
@@ -194,6 +204,27 @@ const openDropdownId = ref(null);
 
 const selectedTransaction = ref(null);
 const isModalOpen = ref(false);
+
+// 페이징
+const visiblePages = computed(() => {
+  const total = totalPages.value;
+  const current = currentPage.value;
+  const windowSize = 5;
+
+  let start = Math.max(1, current - Math.floor(windowSize / 2));
+  let end = start + windowSize - 1;
+
+  if (end > total) {
+    end = total;
+    start = Math.max(1, end - windowSize + 1);
+  }
+
+  const pages = [];
+  for (let i = start; i <= end; i++) {
+    pages.push(i);
+  }
+  return pages;
+});
 
 // 카테고리 필터 및 검색어
 const selectedCategory = ref("");

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useTransactionStore } from '@/stores/transactionStore';
 
 import Calendar from '@/components/Calendar.vue';
@@ -8,16 +8,33 @@ import RecentHistory from '@/components/RecentHistory.vue';
 import ThisMonthHistory from '@/components/ThisMonthHistory.vue';
 import Footer from '@/components/Footer.vue';
 import TransactionModal from '@/components/modal/TransactionModal.vue';
+import UpcomingToast from '@/components/UpcomingToast.vue';
 import TransactionDetailModal from '@/components/modal/TransactionDetailModal.vue'; // ✅ 모달 컴포넌트
 
 // ✅ 상태
 const showModal = ref(false);
-const showDetailModal = ref(false);
+const seenFixedToast = ref(false);
 const selectedDate = ref('');
-
+const showDetailModal = ref(false);
 const transactionStore = useTransactionStore();
 
+onMounted(() => {
+  const fixedToast = localStorage.getItem('fixedToast');
+  if (fixedToast) {
+    seenFixedToast.value = false;
+  } else {
+    seenFixedToast.value = true;
+    localStorage.setItem('fixedToast', 'true');
+  }
+});
+const handleDayClick = (dateStr) => {
+  console.log('📅 클릭된 날짜:', dateStr); // ✅ 디버깅용 콘솔 확인
+  selectedDate.value = dateStr;
+  showDetailModal.value = true;
+};
+
 const transactionsByDate = computed(() => {
+  if (!transactionStore.transactions) return {}; // ✅ 안전장치
   const result = {};
   for (const tx of transactionStore.transactions) {
     if (!result[tx.date]) result[tx.date] = [];
@@ -25,17 +42,11 @@ const transactionsByDate = computed(() => {
   }
   return result;
 });
-
-// ✅ 날짜 클릭 핸들러
-const handleDayClick = (dateStr) => {
-  console.log('📅 클릭된 날짜:', dateStr); // 확인용 로그
-  selectedDate.value = dateStr;
-  showDetailModal.value = true;
-};
 </script>
 
 <template>
   <div>
+    <UpcomingToast v-if="seenFixedToast" />
     <HomeLayout>
       <template v-slot:calendar>
         <Calendar @day-click="handleDayClick" />
@@ -63,7 +74,7 @@ const handleDayClick = (dateStr) => {
     </HomeLayout>
 
     <TransactionDetailModal
-      v-if="showDetailModal"
+      v-if="showDetailModal && selectedDate && transactionsByDate"
       :date="selectedDate"
       :transactions="transactionsByDate[selectedDate] || []"
       @close="showDetailModal = false"

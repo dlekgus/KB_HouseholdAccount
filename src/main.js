@@ -1,5 +1,5 @@
-import './assets/main.css';
-import 'bootstrap/dist/css/bootstrap.css';
+import "./assets/main.css";
+import "bootstrap/dist/css/bootstrap.css";
 
 import { createApp } from "vue";
 import { createPinia } from "pinia";
@@ -13,4 +13,4 @@ const pinia = createPinia();
 app.use(pinia);
 app.component("v-select", vSelect);
 app.use(router);
-app.mount('#app');
+app.mount("#app");

@@ -48,21 +48,20 @@
     <!-- 거래 목록 -->
     <TransactionMobileList v-if="isMobile" />
     <TransactionList v-else />
-
-    <!-- 플로팅 추가 버튼 -->
-    <button
-      class="fab btn btn-primary rounded-circle position-fixed"
-      @click="showTransactionModal = true"
-    >
-      +
-    </button>
-
-    <!-- 거래 추가 모달 -->
-    <TransactionModal
-      v-if="showTransactionModal"
-      @close="showTransactionModal = false"
-    />
   </div>
+  <!-- 플로팅 추가 버튼 -->
+  <button
+    class="add-button btn btn-outline position-fixed"
+    @click="showTransactionModal = true"
+  >
+    <i data-v-983013db="" class="fa-solid fa-plus"></i>
+  </button>
+
+  <!-- 거래 추가 모달 -->
+  <TransactionModal
+    v-if="showTransactionModal"
+    @close="showTransactionModal = false"
+  />
 </template>
 
 <script setup>
@@ -138,9 +137,13 @@ const nextDate = () => {
 };
 </script>
 
-<style scoped>
-.fab {
-  bottom: 20px;
+<style>
+.add-button {
+  background-color: #4318d1;
+  color: white;
+  font-weight: bolder;
+  font-size: large;
+  bottom: 80px;
   right: 20px;
 }
 </style>
