@@ -43,3 +43,4 @@ const expense = transactionStore.currentMonthExpense;
   margin-bottom: 3rem;
 }
 </style>
+>>>>>>> main
