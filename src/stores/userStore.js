@@ -26,6 +26,7 @@ export const useUserStore = defineStore("user", {
       this.user = null;
       localStorage.removeItem("userId");
       localStorage.removeItem("userImage");
+      localStorage.removeItem("fixedToast");
     },
     async deleteUser() {
       //현재 로그인된 유저 정보가 없으면 함수 종료

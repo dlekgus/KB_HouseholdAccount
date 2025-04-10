@@ -1,17 +1,30 @@
 <script setup>
-import { ref } from 'vue';
-import Calendar from '@/components/Calendar.vue';
-import HomeLayout from '@/components/layouts/HomeLayout.vue';
-import RecentHistory from '@/components/RecentHistory.vue';
-import ThisMonthHistory from '@/components/ThisMonthHistory.vue';
-import Footer from '@/components/Footer.vue';
-import TransactionModal from '@/components/modal/TransactionModal.vue';
+import { ref, onMounted } from "vue";
+import Calendar from "@/components/Calendar.vue";
+import HomeLayout from "@/components/layouts/HomeLayout.vue";
+import RecentHistory from "@/components/RecentHistory.vue";
+import ThisMonthHistory from "@/components/ThisMonthHistory.vue";
+import Footer from "@/components/Footer.vue";
+import TransactionModal from "@/components/modal/TransactionModal.vue";
+import UpcomingToast from "@/components/UpcomingToast.vue";
 
 const showModal = ref(false);
+const seenFixedToast = ref(false);
+
+onMounted(() => {
+  const fixedToast = localStorage.getItem("fixedToast");
+  if (fixedToast) {
+    seenFixedToast.value = false;
+  } else {
+    seenFixedToast.value = true;
+    localStorage.setItem("fixedToast", "true");
+  }
+});
 </script>
 
 <template>
   <div>
+    <UpcomingToast v-if="seenFixedToast" />
     <HomeLayout>
       <template v-slot:calendar>
         <Calendar />

@@ -303,18 +303,20 @@ const save = async () => {
 
 <style scoped>
 .amount-input {
-  font-size: 15px;
-  padding-right: 36px;
+  font-family: var(--bs-body-font-family);
+  font-size: 1rem;
+  padding-right: 2rem;
 }
 .amount-button-group {
+  font-family: var(--bs-body-font-family);
   display: flex;
   justify-content: space-between;
-  gap: 4px;
+  gap: 0.25rem;
   overflow-x: auto;
 }
 .custom-amount-btn {
   font-size: 0.75rem;
-  padding: 4px 8px;
+  padding: 0.25rem 0.5rem;
   border: 1px solid #4318d1;
   color: #4318d1;
   background-color: white;

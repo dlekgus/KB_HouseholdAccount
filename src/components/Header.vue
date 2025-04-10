@@ -24,13 +24,22 @@
               {{ item.label }}
             </router-link>
           </li>
-          <li class="nav-item">
+          <li v-if="!isNavShow" class="nav-item ms-3">
             <img
               :src="userImage"
               alt="프로필"
               class="profile-image"
               @click="goToMypage"
             />
+          </li>
+          <li v-else class="nav-item">
+            <router-link
+              :to="mypage"
+              class="nav-link-custom"
+              :class="{ active: isActive('/mypage') }"
+            >
+              마이페이지
+            </router-link>
           </li>
         </ul>
       </div>
@@ -68,7 +77,7 @@ const goToMypage = () => {
 
 <style scoped>
 .nav-link-custom {
-  font-weight: bold;
+  font-weight: bolder;
   font-size: 0.95rem;
   color: #a892e9;
   text-decoration: none;
