@@ -63,7 +63,8 @@
               type="checkbox"
               role="switch"
               :id="key"
-              :checked="user[key]"
+              :checked="true"
+              disabled
             />
           </span>
         </div>
@@ -108,8 +109,8 @@ const editedNickname = ref("");
 const userImage = ref("");
 
 const alarmLabels = {
-  pushAlarm: "푸시 알림",
-  emailAlarm: "이메일 알림",
+  //   pushAlarm: "푸시 알림",
+  //   emailAlarm: "이메일 알림",
   payAlarm: "결제 예정 알림",
 };
 
@@ -174,9 +175,6 @@ const joinDate = computed(() => user.value?.joinDate || "");
 </script>
 
 <style scoped>
-.cancel {
-  margin-left: 0.5rem;
-}
 .switch-setting {
   display: flex;
   justify-content: space-between;
@@ -184,16 +182,20 @@ const joinDate = computed(() => user.value?.joinDate || "");
   width: 100%;
   margin-bottom: 0.5rem;
 }
+
 .btn-modi {
   margin-left: auto;
 }
+
 .user-image {
-  background-color: rgb(212, 212, 212);
-  border-radius: 50px;
-  height: 70px;
-  width: 70px;
-  margin-right: 0.75rem;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  margin-right: 1rem;
+  overflow: hidden;
+  background-color: #f3f4f6;
 }
+
 .user-image img {
   width: 100%;
   height: 100%;
@@ -205,35 +207,56 @@ const joinDate = computed(() => user.value?.joinDate || "");
   flex-direction: column;
   justify-content: center;
 }
+
 .user-name {
-  font-size: small;
-  margin-bottom: 0.1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
 }
+
 .user-email {
-  font-size: 8px;
-  margin-bottom: 0.1rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.15rem;
 }
+
 .user-join-date {
-  font-size: 8px;
-  margin-bottom: 0.1rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
 }
+
 .btn {
   text-align: left;
   font-size: small;
   cursor: pointer;
 }
+
+.btn-modi .btn {
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 8px;
+}
+
 .btn-logout {
   background-color: #fef2f2;
   color: red;
   border: 0;
 }
+
 .btn-passwordChange {
   background-color: #f3f4f6;
 }
+
 .btn-out {
   color: #6b7280;
   font-size: x-small;
 }
+
+.cancel {
+  margin-left: 0.5rem;
+}
+
 .pointer {
   cursor: pointer;
 }
