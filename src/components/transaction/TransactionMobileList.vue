@@ -70,6 +70,14 @@
         </div>
       </div>
     </div>
+
+    <!-- 수정 모달 -->
+    <TransactionModal
+      v-if="isModalOpen"
+      :transaction="selectedTransaction"
+      @close="isModalOpen = false"
+      @updated="refreshTransactions"
+    />
   </div>
 </template>
 
@@ -78,11 +86,14 @@ import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import dayjs from "dayjs";
 import { useTransactionStore } from "@/stores/transaction";
 import { storeToRefs } from "pinia";
+import TransactionModal from "@/components/modal/TransactionModal.vue";
 
 const transactionStore = useTransactionStore();
 const { transactions } = storeToRefs(transactionStore);
 
 const openDropdownId = ref(null);
+const selectedTransaction = ref(null);
+const isModalOpen = ref(false);
 
 const groupedByDate = computed(() => {
   const grouped = {};
@@ -119,7 +130,8 @@ const toggleDropdown = (id) => {
 };
 
 const onEdit = (item) => {
-  console.log("수정 요청:", item);
+  selectedTransaction.value = { ...item };
+  isModalOpen.value = true;
 };
 
 const onDelete = (item) => {
@@ -128,6 +140,10 @@ const onDelete = (item) => {
       console.log("삭제됨:", item.id);
     });
   }
+};
+
+const refreshTransactions = async () => {
+  await transactionStore.fetchTransactions();
 };
 </script>
 
