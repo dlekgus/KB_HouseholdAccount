@@ -34,13 +34,20 @@
       </div>
     </div>
   </div>
+  <FixedExpenseAddModal v-model="isOpen" @added="handleAdded" />
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useFixedExpenseStore } from '@/stores/FixedExpenseStore';
+import FixedExpenseAddModal from '../modal/FixedExpenseAddModal.vue';
 
+const isOpen = ref(false);
 const store = useFixedExpenseStore();
+
+const handleAdded = () => {
+  store.fetchExpenses(); // 새로고침해서 리스트 최신화
+};
 
 const props = defineProps({
   item: {
@@ -70,7 +77,8 @@ onBeforeUnmount(() => {
 });
 
 const editItem = () => {
-  alert(`✏️ 수정: ${props.item.name}`);
+  isOpen.value=true;
+  store.openAddModal();
   setTimeout(() => {
     showMenu.value = false;
   }, 0); // 다음 tick에서 닫히게 함
