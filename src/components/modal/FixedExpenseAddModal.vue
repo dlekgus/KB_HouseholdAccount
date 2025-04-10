@@ -146,7 +146,8 @@ const submit = async () => {
   await store.addExpense(payload, () => {
     alert('항목이 추가되었습니다!');
     emit('added');
-    emit('update:modelValue', false);
+    // emit('update:modelValue', false);
+    ret();
   });
 };
 </script>

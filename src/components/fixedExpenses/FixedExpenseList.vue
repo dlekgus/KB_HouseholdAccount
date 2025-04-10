@@ -44,8 +44,14 @@ const store = useFixedExpenseStore();
 const activeCategory = ref('구독');
 
 const filtered = computed(() =>
-  store.fixedExpenses.filter((item) => item.category === activeCategory.value)
+  store.fixedExpenses.filter((item) => {
+    let randomPair = store.colorPairs[Math.floor(Math.random() * store.colorPairs.length)];
+    item.boxColor = randomPair.boxColor;
+    item.dotColor = randomPair.dotColor;
+    return item.category === activeCategory.value; // 필터 조건
+  })
 );
+
 
 </script>
 
