@@ -8,7 +8,9 @@ const userStore = useUserStore();
 onMounted(() => {
   let storedId = localStorage.getItem("userId");
   if (storedId) {
-    userStore.fetchUser(storedId);
+    userStore.fetchUser(storedId).catch((error) => {
+      userStore.logout();
+    });
   } else {
     return;
   }
