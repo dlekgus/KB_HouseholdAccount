@@ -23,9 +23,9 @@
                 <hr />
 
                 <!-- 폼 영역 -->
-                <div class="row">
+                <!-- <div class="row"> -->
                   <!-- 좌: 입력 -->
-                  <div class="col-md-8" style="margin-top: 4px;">
+                  <!-- <div class="col-md-8" style="margin-top: 4px;"> -->
                     <div class="mb-3">
                       <input v-model="form.name" type="text" class="form-control form-control-sm custom-input" required
                         placeholder="항목명을 입력하세요." />
@@ -43,10 +43,10 @@
                       <v-select v-model="form.dueDate" :options="dayOptions" :reduce="day => day"
                         placeholder="날짜를 선택하세요" class="custom-select" />
                     </div>
-                  </div>
+                  <!-- </div> -->
 
                   <!-- 우: 아이콘 -->
-                  <div class="col-md-4 " style="margin-bottom: 40px;">
+                  <!-- <div class="col-md-4 scroll-area flex-grow-1" style="margin-bottom: 40px;"> -->
                     <label class="form-label"></label>
                     <div class="icon-grid">
                       <div v-for="icon in iconList" :key="icon.label" class="icon-box"
@@ -54,8 +54,8 @@
                         <i :class="icon.class" :style="icon.style" class="fa-lg"></i>
                       </div>
                     </div>
-                  </div>
-                </div>
+                  <!-- </div> -->
+                <!-- </div> -->
 
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary">저장</button>
@@ -153,17 +153,26 @@ const submit = async () => {
 
 <style scoped>
 
+.scroll-area {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
 .custom-select {
   max-height: 40px;
   font-size: 14px;
 }
-.custom-select :hover{
+
+.custom-select :hover {
   cursor: pointer;
 }
+
 .vs__dropdown-menu {
   max-height: 40px;
   overflow-y: auto;
 }
+
 /*  전체 row 간격 줄이기 */
 .row {
   margin-top: 10px;
@@ -259,10 +268,10 @@ const submit = async () => {
 /* 아이콘 */
 .icon-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(4, auto);
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(1, auto);
   gap: 10px;
-  margin-top: 0px;
+  margin-bottom: 15px;
 }
 
 .icon-box {
@@ -273,7 +282,19 @@ const submit = async () => {
   cursor: pointer;
   transition: all 0.2s;
 }
+@media(max-width:800px) {
+  .icon-box {
+    border-radius: 8px;
+    width: 50px;
+    height: 50px;
+  }
+  .icon-grid{
+    
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(1, auto);
 
+  }
+}
 .icon-box:hover {
   background-color: #f9f9f9;
 }
