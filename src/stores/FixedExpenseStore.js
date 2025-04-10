@@ -1,10 +1,10 @@
 // src/stores/fixedExpenseStore.js
-import { defineStore } from "pinia";
-import axios from "axios";
-import { reactive, computed, ref } from "vue";
+import { defineStore } from 'pinia';
+import axios from 'axios';
+import { reactive, computed, ref } from 'vue';
 
-export const useFixedExpenseStore = defineStore("fixedExpense", () => {
-  const BASEURI = "api/subscriptions";
+export const useFixedExpenseStore = defineStore('fixedExpense', () => {
+  const BASEURI = 'api/subscriptions';
 
   const state = reactive({
     fixedExpenses: [],
@@ -12,12 +12,12 @@ export const useFixedExpenseStore = defineStore("fixedExpense", () => {
   });
 
   const colorPairs = [
-    { boxColor: "#fcecec", dotColor: "#e74c3c" },
-    { boxColor: "#f1f9fa", dotColor: "#52a8c9" },
-    { boxColor: "#fff7ec", dotColor: "#f2992e" },
-    { boxColor: "#f1f9f3", dotColor: "#64c364" },
+    { boxColor: '#fcecec', dotColor: '#e74c3c' },
+    { boxColor: '#f1f9fa', dotColor: '#52a8c9' },
+    { boxColor: '#fff7ec', dotColor: '#f2992e' },
+    { boxColor: '#f1f9f3', dotColor: '#64c364' },
   ];
-  const userId = localStorage.getItem("userId");
+  const userId = localStorage.getItem('userId');
   if (!userId) return;
 
   const fetchExpenses = async () => {
@@ -28,7 +28,7 @@ export const useFixedExpenseStore = defineStore("fixedExpense", () => {
       });
       state.fixedExpenses = res.data;
     } catch (err) {
-      alert("조회 실패: " + err);
+      alert('조회 실패: ' + err);
     } finally {
       state.isLoading = false;
     }
@@ -42,7 +42,7 @@ export const useFixedExpenseStore = defineStore("fixedExpense", () => {
         callback?.();
       }
     } catch (err) {
-      alert("추가 실패: " + err);
+      alert('추가 실패: ' + err);
     }
   };
 
@@ -52,7 +52,7 @@ export const useFixedExpenseStore = defineStore("fixedExpense", () => {
       const index = state.fixedExpenses.findIndex((e) => e.id === id);
       if (index !== -1) state.fixedExpenses.splice(index, 1);
     } catch (err) {
-      alert("삭제 실패: " + err);
+      alert('삭제 실패: ' + err);
     }
   };
 
