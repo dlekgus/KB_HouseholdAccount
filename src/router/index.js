@@ -1,48 +1,48 @@
-import Analysis from '@/pages/Analysis.vue';
-import Details from '@/pages/Details.vue';
-import FixedExpenses from '@/pages/FixedExpenses.vue';
-import Home from '@/pages/Home.vue';
-import Mypage from '@/pages/Mypage.vue';
-import Login from '@/pages/Login.vue';
-import Signup from '@/pages/Signup.vue';
+import Analysis from "@/pages/Analysis.vue";
+import Details from "@/pages/Details.vue";
+import FixedExpenses from "@/pages/FixedExpenses.vue";
+import Home from "@/pages/Home.vue";
+import Mypage from "@/pages/Mypage.vue";
+import Login from "@/pages/Login.vue";
+import Signup from "@/pages/Signup.vue";
 
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from "vue-router";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'Login',
+      path: "/",
+      name: "Login",
       component: Login,
     },
     {
-      path: '/signup',
-      name: 'Signup',
+      path: "/signup",
+      name: "Signup",
       component: Signup,
     },
     {
-      path: '/home',
-      name: 'home',
+      path: "/home",
+      name: "home",
       component: Home,
     },
     {
-      path: '/details',
-      name: 'details',
+      path: "/details",
+      name: "details",
       component: Details,
     },
     {
-      path: '/fixedExpenses',
-      name: 'fixedExpenses',
+      path: "/fixedExpenses",
+      name: "fixedExpenses",
       component: FixedExpenses,
     },
     {
-      path: '/analysis',
-      name: 'analysis',
+      path: "/analysis",
+      name: "analysis",
       component: Analysis,
     },
     {
-      path: '/mypage',
-      name: 'mypage',
+      path: "/mypage",
+      name: "mypage",
       component: Mypage,
     },
   ],

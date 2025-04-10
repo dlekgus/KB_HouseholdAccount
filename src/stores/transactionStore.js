@@ -59,5 +59,14 @@ export const useTransactionStore = defineStore('transaction', {
         console.error('거래내역 로드 실패:', err);
       }
     },
+
+    async addTransaction(transaction) {
+      try {
+        const res = await axios.post(`${BASE_URL}/transactions`, transaction);
+        this.transactions.push(res.data); // 응답 데이터를 반영 (반응성 유지)
+      } catch (err) {
+        console.error('거래내역 저장 실패:', err);
+      }
+    },
   },
 });

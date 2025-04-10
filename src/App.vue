@@ -10,5 +10,5 @@ import { reactive } from 'vue';
 </template>
 
 <style lang="scss">
-@import '@/assets/main.scss';
+@use "@/assets/main.scss";
 </style>
