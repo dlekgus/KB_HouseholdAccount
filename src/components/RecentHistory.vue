@@ -5,19 +5,27 @@
       <router-link class="btn" to="/details">전체보기</router-link>
     </div>
 
-    <div v-for="tx in recentHistory" :key="tx.id" class="card">
-      <span>{{ tx.date }}</span>
-      <strong :style="{ color: tx.type === 'income' ? 'red' : 'blue' }"
-        >{{ tx.type === 'income' ? '+' : '-' }}
-        {{ tx.amount.toLocaleString() }}원</strong
-      >
-      <div>{{ tx.category }}</div>
+    <div
+      v-for="tx in recentHistory"
+      :key="tx.id"
+      class="card"
+      :style="{ backgroundColor: tx.type === 'income' ? '#FEF2F2' : '#EFF6FF' }"
+    >
+      <span class="date">{{ tx.date }}</span>
+
+      <div class="content">
+        <strong>{{ tx.category }}</strong>
+
+        <strong :style="{ color: tx.type === 'income' ? 'red' : 'blue' }"
+          >{{ tx.type === 'income' ? '+' : '-' }}
+          {{ tx.amount.toLocaleString() }}원</strong
+        >
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import router from '@/router';
 import { useTransactionStore } from '@/stores/transactionStore';
 import { computed } from 'vue';
 import { onMounted } from 'vue';
@@ -34,6 +42,11 @@ const recentHistory = computed(() => transactionStore.recentTransactions);
 </script>
 
 <style scoped>
+.content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 .btn {
   color: blue;
 }
@@ -51,5 +64,8 @@ const recentHistory = computed(() => transactionStore.recentTransactions);
 }
 .container {
   margin-bottom: 3rem;
+}
+.date {
+  color: rgb(160, 159, 159);
 }
 </style>
