@@ -1,8 +1,12 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-2">
     <div class="container-fluid">
-      <router-link to="/home" class="navbar-brand fw-bold text-primary">
-        KB가계부
+      <router-link to="/home" class="navbar-brand">
+        <img
+          src="@/assets/images/logo.png"
+          alt="KB가계부 로고"
+          style="height: 36px"
+        />
       </router-link>
 
       <button
@@ -67,7 +71,7 @@ const isActive = (path) => route.path === path;
 const userImage = ref("");
 onMounted(() => {
   userImage.value =
-    localStorage.getItem("userImage") || "https://via.placeholder.com/36";
+    localStorage.getItem("userImage") || "https://picsum.photos/50/50";
 });
 
 const goToMypage = () => {
