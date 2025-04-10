@@ -29,13 +29,21 @@ export const useTransactionStore = defineStore('transaction', {
     // 이번 달 지출
     currentMonthExpense: (state) => {
       const now = new Date();
-      const currentMonth = now.toISOString().slice(0, 7); // 'YYYY-MM'
+      const currentMonth = dayjs(now).format('YYYY-MM'); // 'YYYY-MM'
 
       return state.transactions
         .filter(
           (tx) => tx.type === 'expense' && tx.date.startsWith(currentMonth)
         )
         .reduce((sum, tx) => sum + tx.amount, 0);
+    },
+
+    // 최근 거래 내역
+
+    recentTransactions: (state) => {
+      return [...state.transactions]
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 3);
     },
   },
 
