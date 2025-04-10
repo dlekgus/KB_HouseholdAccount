@@ -6,7 +6,9 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">구독 고정지출 추가</h5>
+              <h5 class="modal-title">
+                {{ selectedItem ? '구독 고정지출 수정' : '구독 고정지출 추가' }}
+              </h5>
               <button type="button" class="btn-close" @click="$emit('update:modelValue', false)"></button>
             </div>
             <div class="modal-body">
@@ -21,32 +23,20 @@
                   </div>
                 </div>
                 <hr />
-
-                <!-- 폼 영역 -->
-                <!-- <div class="row"> -->
-                <!-- 좌: 입력 -->
-                <!-- <div class="col-md-8" style="margin-top: 4px;"> -->
                 <div class="mb-3">
                   <input v-model="form.name" type="text" class="form-control form-control-sm custom-input" required
                     placeholder="항목명을 입력하세요." />
                 </div>
-
                 <div class="mb-3 position-relative price-wrapper">
                   <input v-model="displayPrice" type="text" class="form-control form-control-sm price-input"
                     @input="onPriceInput" required placeholder="금액을 입력하세요." />
                   <span class="unit-text">원</span>
                 </div>
-
-
                 <div class="mb-3">
                   <label class="form-label"></label>
                   <v-select v-model="form.dueDate" :options="dayOptions" :reduce="day => day" placeholder="날짜를 선택하세요"
                     class="custom-select" />
                 </div>
-                <!-- </div> -->
-
-                <!-- 우: 아이콘 -->
-                <!-- <div class="col-md-4 scroll-area flex-grow-1" style="margin-bottom: 40px;"> -->
                 <label class="form-label"></label>
                 <div class="icon-grid">
                   <div v-for="icon in iconList" :key="icon.label" class="icon-box"
@@ -54,11 +44,10 @@
                     <i :class="icon.class" :style="icon.style" class="fa-lg"></i>
                   </div>
                 </div>
-                <!-- </div> -->
-                <!-- </div> -->
-
                 <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary">저장</button>
+                  <button type="submit" class="btn btn-primary">
+                    {{ selectedItem ? '수정' : '저장' }}
+                  </button>
                   <button type="button" class="btn btn-secondary" @click="ret">
                     닫기
                   </button>
@@ -76,8 +65,10 @@
 import { reactive, ref, watch } from 'vue';
 import { useFixedExpenseStore } from '@/stores/FixedExpenseStore.js';
 import { storeToRefs } from 'pinia';
+import axios from 'axios';
 
 defineProps({ modelValue: Boolean });
+
 const emit = defineEmits(['update:modelValue', 'added']);
 const store = useFixedExpenseStore();
 const userId = localStorage.getItem('userId');
@@ -102,43 +93,38 @@ const form = reactive({
   category: categoryOptions[0],
   icon: null,
 });
+
 const ret = () => {
-  emit('update:modelValue', false);
   displayPrice.value = '';
   form.name = '';
-  form.dueDate = 1;
+  form.dueDate = '';
   form.price = 0;
   form.icon = null;
-  selectedItem.value = null; // 
+  selectedItem.value = ''; // 
+  emit('update:modelValue', false);
 };
 
 
 const displayPrice = ref('');
 
-watch(
-  () => selectedItem,
-  (item) => {
-    if (item && typeof item === 'object') {
-      form.name = item.name || '';
-      form.price = item.price || 0;
-      form.dueDate = item.dueDate || '';
-      form.category = item.category || categoryOptions[0];
-      form.icon = item.icon || null;
-      displayPrice.value = Number(item.price || 0).toLocaleString();
-    } else {
-      // item이 null인 경우 초기화
-      form.name = '';
-      form.price = 0;
-      form.dueDate = '';
-      form.category = categoryOptions[0];
-      form.icon = null;
-      displayPrice.value = '';
-    }
-  },
-  { immediate: true }
-);
-
-
+watch(() => selectedItem.value, (newItem) => {
+  if (newItem) {
+    form.name = newItem.name;
+    form.price = newItem.price;
+    form.dueDate = newItem.dueDate;
+    form.category = newItem.category;
+    form.icon = newItem.icon;
+    displayPrice.value = Number(newItem.price).toLocaleString();
+  }
+  else {
+    form.name = '';
+    form.price = 0;
+    form.dueDate = 1;
+    form.category = categoryOptions[0];
+    form.icon = null;
+    displayPrice.value = '';
+  }
+}, { immediate: true });
 
 const onPriceInput = (e) => {
   const onlyNumber = e.target.value.replace(/[^0-9]/g, '');
@@ -157,18 +143,40 @@ const toggleIcon = (icon) => {
   }
 };
 
+
 const submit = async () => {
   const payload = {
     ...form,
     userId,
   };
+  const submit = async () => {
+    const payload = {
+      ...form,
+      userId,
+    };
+  };
+  if (selectedItem.value) {
+    await store.updateExpense(selectedItem.value.id, payload, () => {
+      alert("수정 완료!");
+      emit('added'); // 리스트 갱신용
+      ret(); // 모달 닫기
+    });
 
-  await store.addExpense(payload, () => {
-    alert('항목이 추가되었습니다!');
-    emit('added');
-    // emit('update:modelValue', false);
-    ret();
-  });
+  } else {
+    // ➕ 추가
+    await store.addExpense(payload, () => {
+      alert('항목이 추가되었습니다!');
+      emit('added');
+      ret();
+    });
+  }
+
+  // await store.addExpense(payload, () => {
+  //   alert('항목이 추가되었습니다!');
+  //   emit('added');
+  //   emit('update:modelValue', false);
+  //   ret();
+  // });
 };
 </script>
 
