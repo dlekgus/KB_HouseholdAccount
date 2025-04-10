@@ -24,11 +24,25 @@
 
 <script setup>
 import { useTransactionStore } from '@/stores/transactionStore';
+import { watch, ref, transformVNodeArgs } from 'vue';
 
 const transactionStore = useTransactionStore();
+const income = ref(0);
+const expense = ref(0);
 
-const income = transactionStore.currentMonthIncome;
-const expense = transactionStore.currentMonthExpense;
+watch(
+  () => transactionStore.transactions,
+  (newVal) => {
+    if (!newVal.length) return; // 아직 안 불러왔거나 데이터 없음
+
+    income.value = transactionStore.currentMonthIncome;
+    expense.value = transactionStore.currentMonthExpense;
+  },
+  {
+    immediate: true, // mounted 직후 1회 실행
+    deep: false, // shallow 비교면 충분 (배열 참조만 바뀌면 감지됨)
+  }
+);
 </script>
 
 <style scoped>
