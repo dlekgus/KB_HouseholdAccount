@@ -1,100 +1,65 @@
+<!-- FixedExpenseAddModal.vue -->
 <template>
   <teleport to="body">
     <transition name="fade">
-      <div
-        v-if="modelValue"
-        class="modal fade show d-block"
-        tabindex="-1"
-        style="background-color: rgba(0, 0, 0, 0.5)"
-      >
+      <div v-if="modelValue" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5)">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">고정 지출 추가</h5>
-              <button
-                type="button"
-                class="btn-close"
-                @click="$emit('update:modelValue', false)"
-              ></button>
+              <h5 class="modal-title">구독 고정지출 추가</h5>
+              <button type="button" class="btn-close" @click="$emit('update:modelValue', false)"></button>
             </div>
             <div class="modal-body">
               <form @submit.prevent="submit">
-                <!-- ✅ 카테고리 토글 -->
-                <div class="mb-4">
+                <!-- 카테고리 토글 -->
+                <div class="mb-4" style="margin-top: 4px;">
                   <div class="category-toggle">
-                    <button
-                      v-for="option in categoryOptions"
-                      :key="option"
-                      type="button"
-                      class="toggle-button"
-                      :class="{ active: form.category === option }"
-                      @click="form.category = option"
-                    >
+                    <button v-for="option in categoryOptions" :key="option" type="button" class="toggle-button"
+                      :class="{ active: form.category === option }" @click="form.category = option">
                       {{ option }}
                     </button>
                   </div>
                 </div>
+                <hr />
 
-                <!-- ✅ 폼 영역 -->
-                <div class="row">
-                  <!-- 좌: 입력 -->
-                  <div class="col-md-5" style="margin-top: 25px;">
-                    <div class="mb-3">
-                      <label class="form-label">항목명</label>
-                      <input
-                        v-model="form.name"
-                        type="text"
-                        class="form-control form-control-sm"
-                        required
-                      />
-                    </div>
+                <!-- 폼 영역 -->
+                <!-- <div class="row"> -->
+                <!-- 좌: 입력 -->
+                <!-- <div class="col-md-8" style="margin-top: 4px;"> -->
+                <div class="mb-3">
+                  <input v-model="form.name" type="text" class="form-control form-control-sm custom-input" required
+                    placeholder="항목명을 입력하세요." />
+                </div>
 
-                    <div class="mb-3">
-                      <label class="form-label">금액</label>
-                      <input
-                        v-model="displayPrice"
-                        type="text"
-                        class="form-control form-control-sm"
-                        @input="onPriceInput"
-                        required
-                      />
-                    </div>
+                <div class="mb-3 position-relative price-wrapper">
+                  <input v-model="displayPrice" type="text" class="form-control form-control-sm price-input"
+                    @input="onPriceInput" required placeholder="금액을 입력하세요." />
+                  <span class="unit-text">원</span>
+                </div>
 
-                    <div class="mb-3">
-                      <label class="form-label">결제일</label>
-                      <select
-                        v-model.number="form.dueDate"
-                        class="form-select form-select-sm " 
-                      >
-                        <option v-for="n in 31" :key="n" :value="n">{{ n }}일</option>
-                      </select>
-                    </div>
-                  </div>
 
-                  <!-- 우: 아이콘 -->
-                  <div class="col-md-7" style="margin-bottom: 40px;">
-                    <label class="form-label"></label>
-                    <div class="icon-grid">
-                      <div
-                        v-for="icon in iconList"
-                        :key="icon.label"
-                        class="icon-box"
-                        :class="{ selected: form.icon?.label === icon.label }"
-                        @click="toggleIcon(icon)"
-                      >
-                        <i :class="icon.class" :style="icon.style" class="fa-lg"></i>
-                      </div>
-                    </div>
+                <div class="mb-3">
+                  <label class="form-label"></label>
+                  <v-select v-model="form.dueDate" :options="dayOptions" :reduce="day => day" placeholder="날짜를 선택하세요"
+                    class="custom-select" />
+                </div>
+                <!-- </div> -->
+
+                <!-- 우: 아이콘 -->
+                <!-- <div class="col-md-4 scroll-area flex-grow-1" style="margin-bottom: 40px;"> -->
+                <label class="form-label"></label>
+                <div class="icon-grid">
+                  <div v-for="icon in iconList" :key="icon.label" class="icon-box"
+                    :class="{ selected: form.icon?.label === icon.label }" @click="toggleIcon(icon)">
+                    <i :class="icon.class" :style="icon.style" class="fa-lg"></i>
                   </div>
                 </div>
+                <!-- </div> -->
+                <!-- </div> -->
 
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary">저장</button>
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    @click="$emit('update:modelValue', false)"
-                  >
+                  <button type="button" class="btn btn-secondary" @click="ret">
                     닫기
                   </button>
                 </div>
@@ -110,14 +75,15 @@
 <script setup>
 import { reactive, ref, watch } from 'vue';
 import { useFixedExpenseStore } from '@/stores/FixedExpenseStore.js';
+import { storeToRefs } from 'pinia';
 
 defineProps({ modelValue: Boolean });
 const emit = defineEmits(['update:modelValue', 'added']);
 const store = useFixedExpenseStore();
 const userId = localStorage.getItem('userId');
-
+const { selectedItem } = storeToRefs(store); // 
 const categoryOptions = ['구독', '고정지출'];
-
+const dayOptions = Array.from({ length: 31 }, (_, i) => i + 1); // [1,2,...31] -> v-Select
 const iconList = [
   { label: 'music', class: 'fa-solid fa-headphones', style: 'color: #002feb;' },
   { label: 'youtube', class: 'fa-brands fa-youtube', style: 'color: #e61700;' },
@@ -136,20 +102,51 @@ const form = reactive({
   category: categoryOptions[0],
   icon: null,
 });
+const ret = () => {
+  emit('update:modelValue', false);
+  displayPrice.value = '';
+  form.name = '';
+  form.dueDate = 1;
+  form.price = 0;
+  form.icon = null;
+  selectedItem.value = null; // 
+};
 
-const displayPrice = ref('0');
+
+const displayPrice = ref('');
 
 watch(
-  () => form.price,
-  (val) => {
-    displayPrice.value = Number(val).toLocaleString();
-  }
+  () => selectedItem,
+  (item) => {
+    if (item && typeof item === 'object') {
+      form.name = item.name || '';
+      form.price = item.price || 0;
+      form.dueDate = item.dueDate || '';
+      form.category = item.category || categoryOptions[0];
+      form.icon = item.icon || null;
+      displayPrice.value = Number(item.price || 0).toLocaleString();
+    } else {
+      // item이 null인 경우 초기화
+      form.name = '';
+      form.price = 0;
+      form.dueDate = '';
+      form.category = categoryOptions[0];
+      form.icon = null;
+      displayPrice.value = '';
+    }
+  },
+  { immediate: true }
 );
+
+
 
 const onPriceInput = (e) => {
   const onlyNumber = e.target.value.replace(/[^0-9]/g, '');
   form.price = Number(onlyNumber);
-  displayPrice.value = Number(onlyNumber).toLocaleString();
+  if (displayPrice.value == 0) displayPrice.value = '';
+  else {
+    displayPrice.value = Number(onlyNumber).toLocaleString();
+  }
 };
 
 const toggleIcon = (icon) => {
@@ -169,31 +166,89 @@ const submit = async () => {
   await store.addExpense(payload, () => {
     alert('항목이 추가되었습니다!');
     emit('added');
-    emit('update:modelValue', false);
+    // emit('update:modelValue', false);
+    ret();
   });
 };
 </script>
 
 <style scoped>
+.scroll-area {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.custom-select {
+  max-height: 40px;
+  font-size: 14px;
+}
+
+.custom-select :hover {
+  cursor: pointer;
+}
+
+.vs__dropdown-menu {
+  max-height: 40px;
+  overflow-y: auto;
+}
+
+/*  전체 row 간격 줄이기 */
+.row {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 268px;
+}
+
+/* 입력창 간 여백 최소화 */
+.mb-3 {
+  margin-top: 25px;
+}
+
+::placeholder {
+  color: rgb(184, 180, 180);
+  font-size: 15px;
+}
+
+.price-wrapper {
+  position: relative;
+}
+
+.unit-text {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+
+.price-input {
+  font-size: 15px;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s;
 }
-
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
 }
 
-/* 카테고리 토글 스타일 */
+/* 카테고리 토글 */
 .category-toggle {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border: 2px solid #4f2ee8;
-  border-radius: 12px;
+  border: 1px solid #4f2ee8;
+  border-radius: 9px;
   overflow: hidden;
-  height: 49px;
+  height: 48px;
+  text-align: center;
+  font-size: 10%;
 }
 
 .toggle-button {
@@ -211,13 +266,32 @@ const submit = async () => {
   color: white;
 }
 
-/* 아이콘 그리드 */
+.toggle-button:hover {
+  background: #4f2ee8;
+  color: white;
+}
+
+/* 인풋 포커스 및 스타일 */
+.custom-input {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.custom-input:focus {
+  border-color: #6f42c1;
+  /* 보라색 */
+  box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+}
+
+/* 아이콘 */
 .icon-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(4, auto);
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(1, auto);
   gap: 10px;
-  margin-top: 10px;
+  margin-bottom: 15px;
 }
 
 .icon-box {
@@ -227,6 +301,21 @@ const submit = async () => {
   text-align: center;
   cursor: pointer;
   transition: all 0.2s;
+}
+
+@media(max-width:800px) {
+  .icon-box {
+    border-radius: 8px;
+    width: 50px;
+    height: 50px;
+  }
+
+  .icon-grid {
+
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(1, auto);
+
+  }
 }
 
 .icon-box:hover {

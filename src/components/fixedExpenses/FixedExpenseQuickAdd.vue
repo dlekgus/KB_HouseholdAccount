@@ -26,14 +26,14 @@
   <style scoped>
   .floating-add-btn {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background-color: #4f2ee8;
+    bottom: 76px;
+    right: 20px;
+    background-color: #2306a7;
     color: white;
     border: none;
-    border-radius: 50%;
-    width: 56px;
-    height: 56px;
+    border-radius: 10%;
+    width: 46px;
+    height: 46px;
     font-size: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     z-index: 999;
@@ -44,7 +44,7 @@
   }
   
   .floating-add-btn:hover {
-    background-color: #3a1ec6;
+    background-color: #4f3abc;
   }
   </style>
   

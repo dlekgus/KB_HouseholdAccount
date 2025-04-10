@@ -6,7 +6,7 @@
     <!-- ✅ 좌우 2단 분할 -->
     <div class="row">
       <!-- 왼쪽: 총합 + 다가오는 결제 -->
-      <div class="col-lg-5 d-flex flex-column gap-3">
+      <div class="col-lg-5 d-flex flex-column gap-3" style="margin-bottom: 20px;">
         <FixedExpenseSum :subscriptions="subscriptions" />
         <FixedUpcoming :subscriptions="subscriptions" />
       </div>
