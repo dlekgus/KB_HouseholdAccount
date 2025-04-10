@@ -33,7 +33,7 @@ dayjs.extend(isSameOrBefore);
 
 import { useTransactionStore } from "@/stores/transaction";
 import { storeToRefs } from "pinia";
-import { fetchTransactionsByDateRange } from "@/services/transactionAPI";
+import { fetchTransactionsByDateRangeAPI } from "@/services/transactionAPI";
 import ChartSkeleton from "../skeleton/ChartSkeleton.vue";
 
 ChartJS.register(
@@ -107,7 +107,7 @@ const loadChartData = async () => {
   const endDate = base.endOf(unit).format("YYYY-MM-DD");
 
   try {
-    const { data } = await fetchTransactionsByDateRange({
+    const { data } = await fetchTransactionsByDateRangeAPI({
       userId: "1",
       startDate,
       endDate,

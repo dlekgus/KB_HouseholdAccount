@@ -1,6 +1,8 @@
 import api from "./api";
 
-export const fetchTransactionsByDateRange = async ({
+const userId = localStorage.getItem("userId");
+
+export const fetchTransactionsByDateRangeAPI = async ({
   userId,
   startDate,
   endDate,
@@ -20,25 +22,14 @@ export const fetchTransactionsByDateRange = async ({
   });
 };
 
-export const addTransaction = async (data) => {
-  const { userId } = "1";
+export const addTransactionAPI = async (data) => {
   return api.post("/transactions", { ...data, userId });
 };
 
-export const updateTransaction = async (id, updates) => {
-  const { userId } = "1";
-  const { data: existing } = await api.get(`/transactions/${id}`);
-  if (existing.userId !== userId) {
-    throw new Error("권한이 없습니다.");
-  }
+export const updateTransactionAPI = async (id, updates) => {
   return api.patch(`/transactions/${id}`, updates);
 };
 
-export const deleteTransaction = async (id) => {
-  const { userId } = "1";
-  const { data: existing } = await api.get(`/transactions/${id}`);
-  if (existing.userId !== userId) {
-    throw new Error("권한이 없습니다.");
-  }
+export const deleteTransactionAPI = async (id) => {
   return api.delete(`/transactions/${id}`);
 };
