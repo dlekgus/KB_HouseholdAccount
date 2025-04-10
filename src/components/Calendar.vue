@@ -7,12 +7,8 @@ import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import koLocale from '@fullcalendar/core/locales/ko';
-<<<<<<< HEAD
-import { ref, onMounted, watch, computed } from 'vue';
-=======
 import dayjs from 'dayjs';
-import { ref, onMounted } from 'vue';
->>>>>>> main
+import { ref, onMounted, watch, computed } from 'vue';
 import { useTransactionStore } from '@/stores/transactionStore';
 import { useUserStore } from '@/stores/userStore';
 
@@ -99,7 +95,8 @@ const calendarOptions = ref({
 // ✅ 거래내역 반응형 감지 후 다시 그리기
 watch(
   () => transactionStore.transactions,
-  () => {
+  (newVal) => {
+    console.log('📦 거래 내역:', newVal); // 🔍 확인용
     calendarRef.value?.getApi()?.render();
   }
 );

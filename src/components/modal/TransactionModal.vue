@@ -167,8 +167,10 @@ const save = async () => {
     return;
   }
 
+  console.log('🧪 저장 전 amount:', amount.value, typeof amount.value);
+
   const transactionData = {
-    type: type.value,
+    type: type.value === '수입' ? 'income' : 'expense',
     date: date.value,
     amount: Number(amount.value),
     category: category.value,

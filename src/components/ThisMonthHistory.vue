@@ -10,25 +10,11 @@
   </div>
 </template>
 
-<<<<<<< HEAD
-<!-- <script>
-import { useUserStore } from '@/stores/userStore';
-=======
 <script setup>
->>>>>>> main
 import { useTransactionStore } from '@/stores/transactionStore';
 
 const transactionStore = useTransactionStore();
 
-<<<<<<< HEAD
-onMounted(async () => {
-  const userId = userStore.user?.id || localStorage.getItem('userId');
-  if (!userId) return;
-
-  await transactionStore.fetchByUser(userId);
-});
-</script> -->
-=======
 const income = transactionStore.currentMonthIncome;
 const expense = transactionStore.currentMonthExpense;
 </script>
