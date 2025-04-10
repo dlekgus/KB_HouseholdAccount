@@ -32,9 +32,7 @@
               </div>
 
               <div class="flex-grow-1">
-                <div class="fw-bold">
-                  {{ item.type === 'income' ? '수입' : '지출' }}
-                </div>
+                <div class="fw-bold">{{ item.title }}</div>
                 <div class="text-muted small">{{ item.memo }}</div>
               </div>
 
