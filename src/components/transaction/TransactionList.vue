@@ -8,6 +8,28 @@
       <Loading />
     </div>
 
+    <!-- 필터 영역 -->
+    <div
+      class="d-flex flex-wrap justify-content-between gap-2 p-3 border-bottom"
+    >
+      <div>
+        <select v-model="selectedCategory" class="form-select form-select-sm">
+          <option value="">전체 카테고리</option>
+          <option v-for="(cat, idx) in categoryOptions" :key="idx" :value="cat">
+            {{ cat }}
+          </option>
+        </select>
+      </div>
+      <div class="flex-grow-1 mx-2">
+        <input
+          type="text"
+          v-model="searchKeyword"
+          class="form-control form-control-sm"
+          placeholder="검색어를 입력해주세요"
+        />
+      </div>
+    </div>
+
     <!-- 거래 내역 테이블 -->
     <table
       class="table mb-0 align-middle table-fixed"
@@ -17,8 +39,8 @@
         <tr>
           <th class="ps-4 p-3" style="width: 15%">날짜</th>
           <th class="p-3" style="width: 15%">카테고리</th>
-          <th class="p-3" style="width: 15%">내용</th>
-          <th class="p-3" style="width: 30%">메모</th>
+          <th class="p-3" style="width: 20%">내용</th>
+          <th class="p-3" style="width: 25%">메모</th>
           <th class="text-end pe-4 p-3" style="width: 20%">금액</th>
           <th class="p-3" style="width: 5%"></th>
         </tr>
@@ -86,7 +108,6 @@
         </tr>
       </tbody>
 
-      <!-- tfoot -->
       <tfoot>
         <tr>
           <td colspan="6" class="px-4 py-2">
@@ -130,6 +151,14 @@
         </tr>
       </tfoot>
     </table>
+
+    <!-- 거래 수정 모달 -->
+    <TransactionModal
+      v-if="isModalOpen"
+      :transaction="selectedTransaction"
+      @close="isModalOpen = false"
+      @updated="fetchTransactions"
+    />
   </div>
 </template>
 
@@ -152,6 +181,7 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
 import { useTransactionStore } from "@/stores/transaction";
 import { storeToRefs } from "pinia";
 import Loading from "@/components/Loading.vue";
+import TransactionModal from "@/components/modal/TransactionModal.vue";
 
 const transactionStore = useTransactionStore();
 const { transactions, isLoading, viewDate, viewMode } =
@@ -162,12 +192,43 @@ const pageSize = 5;
 const message = ref("거래 내역이 없습니다.");
 const openDropdownId = ref(null);
 
-const totalCount = computed(() => transactions.value.length);
+const selectedTransaction = ref(null);
+const isModalOpen = ref(false);
+
+// 카테고리 필터 및 검색어
+const selectedCategory = ref("");
+const searchKeyword = ref("");
+const categoryOptions = [
+  "식비",
+  "교통비",
+  "주거비",
+  "문화생활",
+  "의료비",
+  "기타",
+];
+
+// 필터된 거래
+const filteredTransactions = computed(() => {
+  return transactions.value.filter((item) => {
+    const matchesCategory = selectedCategory.value
+      ? item.category === selectedCategory.value
+      : true;
+    console.log(item);
+
+    const matchesKeyword = searchKeyword.value
+      ? item.title.includes(searchKeyword.value) ||
+        item.memo.includes(searchKeyword.value)
+      : true;
+    return matchesCategory && matchesKeyword;
+  });
+});
+
+const totalCount = computed(() => filteredTransactions.value.length);
 const totalPages = computed(() => Math.ceil(totalCount.value / pageSize));
 
 const pagedTransactions = computed(() => {
   const start = (currentPage.value - 1) * pageSize;
-  return transactions.value.slice(start, start + pageSize);
+  return filteredTransactions.value.slice(start, start + pageSize);
 });
 
 const goToPage = (page) => {
@@ -184,7 +245,6 @@ const nextPage = () => {
   if (currentPage.value < totalPages.value) currentPage.value++;
 };
 
-// 드롭다운
 const handleClickOutside = (e) => {
   if (!e.target.closest(".transaction-dropdown")) {
     openDropdownId.value = null;
@@ -196,8 +256,8 @@ const toggleDropdown = (id) => {
 };
 
 const onEdit = (item) => {
-  console.log("수정 요청:", item);
-  // 수정 모달 열기 등의 로직 추가
+  selectedTransaction.value = { ...item };
+  isModalOpen.value = true;
 };
 
 const onDelete = (item) => {
@@ -209,6 +269,10 @@ const onDelete = (item) => {
       }, 2000);
     });
   }
+};
+
+const fetchTransactions = async () => {
+  await transactionStore.fetchTransactions();
 };
 
 onMounted(() => {
