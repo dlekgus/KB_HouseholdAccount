@@ -119,6 +119,8 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { useUserStore } from '@/stores/userStore';
+const userStore = useUserStore();
 
 const router = useRouter();
 
@@ -173,6 +175,10 @@ const signup = async () => {
     });
 
     console.log('✅ 회원가입 성공:', response.data);
+
+    // 회원가입 성공 후에 이 코드 추가!
+    userStore.setUser(response.data); // Pinia에 유저 저장
+    localStorage.setItem('userId', response.data.id); // ✅ 로컬에도 저장
 
     // 입력값 초기화
     nickname.value = '';
