@@ -136,9 +136,7 @@ const onEdit = (item) => {
 
 const onDelete = (item) => {
   if (confirm("정말 삭제하시겠습니까?")) {
-    transactionStore.deleteTransactionById(item.id).then(() => {
-      console.log("삭제됨:", item.id);
-    });
+    transactionStore.deleteTransactionById(item.id);
   }
 };
 

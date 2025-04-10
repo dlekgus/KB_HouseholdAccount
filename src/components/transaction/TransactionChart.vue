@@ -50,7 +50,7 @@ const isEmpty = ref(false);
 const isLoading = ref(true);
 
 const transactionStore = useTransactionStore();
-const { viewDate, viewMode } = storeToRefs(transactionStore);
+const { viewDate, viewMode, chartRefreshKey } = storeToRefs(transactionStore);
 
 const chartOptions = {
   responsive: true,
@@ -179,7 +179,9 @@ const loadChartData = async () => {
   isLoading.value = false;
 };
 
-watch([viewDate, viewMode], loadChartData, { immediate: true });
+watch([viewDate, viewMode, chartRefreshKey], loadChartData, {
+  immediate: true,
+});
 </script>
 
 <style scoped>
