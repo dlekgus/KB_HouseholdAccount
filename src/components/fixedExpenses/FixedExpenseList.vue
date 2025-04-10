@@ -1,8 +1,34 @@
 <template>
   <div class="card shadow-sm p-4">
-    <h6 class="text-muted mb-3">구독 목록</h6>
+    <!-- 상단 필터 탭 -->
+    <div class="category-tabs mb-4 position-relative">
+      <div
+        class="tab"
+        :class="{ selected: activeCategory === '구독' }"
+        @click="activeCategory = '구독'"
+      >
+        구독
+      </div>
+      <div
+        class="tab"
+        :class="{ selected: activeCategory === '고정지출' }"
+        @click="activeCategory = '고정지출'"
+      >
+        고정지출
+      </div>
+
+      <!-- 움직이는 세로 막대 -->
+      <div
+        class="vertical-bar"
+        :style="{
+          left: activeCategory === '구독' ? '0%' : '50%',
+        }"
+      />
+    </div>
+
+    <!-- 필터링된 리스트 -->
     <FixedExpenseItem
-      v-for="s in subscriptions"
+      v-for="s in filtered"
       :key="s.id"
       :item="s"
       @edit="handleEdit"
@@ -12,27 +38,65 @@
 </template>
 
 <script setup>
-  import { useFixedExpenseStore } from '@/stores/FixedExpenseStore.js';
+import { ref, computed } from 'vue';
 import FixedExpenseItem from './FixedExpenseItem.vue';
-
-defineProps({
-  subscriptions: {
-    type: Array,
-    required: true,
-  },
-});
+import { useFixedExpenseStore } from '@/stores/FixedExpenseStore';
 
 const store = useFixedExpenseStore();
+const activeCategory = ref('구독');
 
-function handleEdit(item) {
-  console.log('✏️ 수정할 항목:', item);
-  store.openAddModal(); // 모달 열기
-  // 필요 시 store.selectedItem = item; 추가
-}
+const filtered = computed(() =>
+  store.fixedExpenses.filter((item) => item.category === activeCategory.value)
+);
 
-function handleDelete(item) {
-  if (confirm(`정말로 '${item.name}'을(를) 삭제하시겠습니까?`)) {
+const handleEdit = (item) => {
+  store.openAddModal();
+};
+
+const handleDelete = (item) => {
+  if (confirm(`'${item.name}' 삭제하시겠습니까?`)) {
     store.deleteExpense(item.id);
   }
-}
+};
 </script>
+
+<style scoped>
+.category-tabs {
+  display: flex;
+  position: relative;
+  height: 48px;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 16px;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  line-height: 48px;
+  cursor: pointer;
+  position: relative;
+  font-weight: 500;
+  color: #666;
+  transition: color 0.3s;
+}
+
+.tab.selected {
+  color: #5e3bee;
+  font-weight: 700;
+}
+
+.vertical-bar {
+  position: absolute;
+  bottom: 0;
+  width: 50%;
+  height: 3px;
+  background-color: #5e3bee;
+  transition: left 0.3s ease;
+  border-radius: 2px;
+}
+.custom-scroll-select {
+  height: auto;
+  max-height: 150px; /* 눈에 보이지는 않지만 강제 제한 */
+  overflow-y: auto;  /* 스크롤 처리 */
+}
+</style>
