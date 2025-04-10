@@ -18,6 +18,7 @@ export const useTransactionStore = defineStore("transactions", () => {
   const viewMode = ref("월간");
   const transactions = ref([]);
   const isLoading = ref(false);
+  const chartRefreshKey = ref(0);
 
   const getUserId = () => {
     return userStore.user?.id || localStorage.getItem("userId");
@@ -29,6 +30,10 @@ export const useTransactionStore = defineStore("transactions", () => {
 
   const setViewMode = (mode) => {
     viewMode.value = mode;
+  };
+
+  const triggerChartRefresh = () => {
+    chartRefreshKey.value++;
   };
 
   const fetchTransactions = async () => {
@@ -74,6 +79,7 @@ export const useTransactionStore = defineStore("transactions", () => {
     try {
       await deleteTransactionAPI(id);
       transactions.value = transactions.value.filter((tx) => tx.id !== id);
+      triggerChartRefresh();
     } catch (err) {
       console.error("삭제 실패", err);
     }
@@ -112,6 +118,7 @@ export const useTransactionStore = defineStore("transactions", () => {
       if (inRange) {
         transactions.value.push(addedTx);
       }
+      triggerChartRefresh();
     } catch (err) {
       console.error("추가 실패", err);
     }
@@ -135,6 +142,7 @@ export const useTransactionStore = defineStore("transactions", () => {
       if (index !== -1) {
         transactions.value[index] = res.data;
       }
+      triggerChartRefresh();
     } catch (err) {
       console.error("수정 실패", err);
     }
@@ -153,5 +161,7 @@ export const useTransactionStore = defineStore("transactions", () => {
     addTransaction,
     deleteTransactionById,
     updateTransactionById,
+    chartRefreshKey,
+    triggerChartRefresh,
   };
 });
