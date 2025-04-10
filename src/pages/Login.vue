@@ -70,17 +70,24 @@
             </div>
           </div>
 
-          <!-- 자동 로그인 -->
-          <div class="form-check mb-4">
+          <!-- 자동 로그인 + 눈 아이콘 -->
+          <div class="form-check d-flex align-items-center mb-4">
             <input
-              class="form-check-input"
+              class="form-check-input me-2"
               type="checkbox"
               v-model="autoLogin"
               id="autoLogin"
             />
-            <label class="form-check-label" for="autoLogin">
+            <label class="form-check-label me-auto" for="autoLogin">
               자동 로그인
             </label>
+            <span style="cursor: pointer" @click="togglePassword">
+              <!-- <i
+                :class="
+                  showPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'
+                "
+              ></i> -->
+            </span>
           </div>
 
           <!-- 오류 메시지 출력 -->

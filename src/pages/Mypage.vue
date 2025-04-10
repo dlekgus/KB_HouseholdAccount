@@ -106,7 +106,7 @@ const BASEURL = "/api";
 const showPasswordChangeModal = ref(false);
 const isEditing = ref(false);
 const editedNickname = ref("");
-const userImage = ref("");
+const userImage = ref("https://picsum.photos/50/50");
 
 const alarmLabels = {
   //   pushAlarm: "푸시 알림",

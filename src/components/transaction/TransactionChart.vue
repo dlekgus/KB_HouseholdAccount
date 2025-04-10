@@ -7,8 +7,9 @@
       최근 5{{ viewMode.value === "월간" ? "개월간" : viewMode.value }}
       거래내역이 없습니다.
     </div>
-
-    <Bar v-else :data="chartData" :options="chartOptions" />
+    <div v-else class="position-relative h-100">
+      <Bar :data="chartData" :options="chartOptions" />
+    </div>
   </div>
 </template>
 
@@ -50,11 +51,11 @@ const isEmpty = ref(false);
 const isLoading = ref(true);
 
 const transactionStore = useTransactionStore();
-const { viewDate, viewMode } = storeToRefs(transactionStore);
+const { viewDate, viewMode, chartRefreshKey } = storeToRefs(transactionStore);
 
 const chartOptions = {
   responsive: true,
-  maintainAspectRatio: true,
+  maintainAspectRatio: false,
   aspectRatio: 3,
   scales: {
     x: { grid: { display: false } },
@@ -179,11 +180,19 @@ const loadChartData = async () => {
   isLoading.value = false;
 };
 
-watch([viewDate, viewMode], loadChartData, { immediate: true });
+watch([viewDate, viewMode, chartRefreshKey], loadChartData, {
+  immediate: true,
+});
 </script>
 
 <style scoped>
 .card {
   height: 300px;
+}
+
+@media screen and (max-width: 768px) {
+  .card {
+    height: 300px !important;
+  }
 }
 </style>
