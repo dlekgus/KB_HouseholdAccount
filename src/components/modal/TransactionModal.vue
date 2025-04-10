@@ -106,6 +106,11 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useTransactionStore } from '@/stores/transactionStore';
+import { useUserStore } from '@/stores/userStore';
+
+const transactionStore = useTransactionStore();
+const userStore = useUserStore();
 
 const emit = defineEmits(['close']);
 
@@ -156,20 +161,28 @@ const setType = (newType) => {
   category.value = '카테고리';
 };
 
-const save = () => {
+const save = async () => {
   if (category.value === '카테고리') {
     alert('카테고리를 선택해주세요.');
     return;
   }
 
-  console.log({
-    type: type.value,
+  console.log('🧪 저장 전 amount:', amount.value, typeof amount.value);
+
+  const transactionData = {
+    type: type.value === '수입' ? 'income' : 'expense',
     date: date.value,
-    amount: amount.value,
+    amount: Number(amount.value),
     category: category.value,
     memo: memo.value,
-  });
-  emit('close');
+    userId: userStore.user?.id,
+  };
+
+  // 거래내역 추가 + 다시 불러오기
+  await transactionStore.addTransaction(transactionData);
+  await transactionStore.fetchByUser(userStore.user?.id);
+
+  emit('close'); // 모달 닫기
 };
 
 // 초기값 설정

@@ -22,11 +22,9 @@
   </div>
 </template>
 
-
 <script setup>
 import { onMounted, computed } from 'vue';
 import { useFixedExpenseStore } from '@/stores/FixedExpenseStore.js';
-
 
 import FixedExpenseSum from '@/components/fixedExpenses/FixedExpenseSum.vue';
 import FixedUpcoming from '@/components/fixedExpenses/FixedUpcoming.vue';
@@ -44,15 +42,14 @@ onMounted(() => {
 const subscriptions = computed(() =>
   Array.isArray(store.fixedExpenses)
     ? store.fixedExpenses.map((item) => {
-      const randomColor =
-        store.colorPairs[Math.floor(Math.random() * store.colorPairs.length)];
-      return {
-        ...item,
-        day: item.dueDate,
-        ...randomColor,
-      };
-    })
+        const randomColor =
+          store.colorPairs[Math.floor(Math.random() * store.colorPairs.length)];
+        return {
+          ...item,
+          day: item.dueDate,
+          ...randomColor,
+        };
+      })
     : []
 );
-
 </script>
