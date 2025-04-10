@@ -8,7 +8,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">
-            {{ isEditMode ? "거래내역 수정" : "거래내역 추가" }}
+            {{ isEditMode ? '거래내역 수정' : '거래내역 추가' }}
           </h5>
           <button
             type="button"
@@ -148,29 +148,29 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick } from "vue";
-import { useRoute } from "vue-router";
-import dayjs from "dayjs";
-import { useTransactionStore as useAllStore } from "@/stores/transactionStore";
-import { useTransactionStore as useFilteredStore } from "@/stores/transaction";
-import { useUserStore } from "@/stores/userStore";
+import { ref, computed, watch, nextTick } from 'vue';
+import { useRoute } from 'vue-router';
+import dayjs from 'dayjs';
+import { useTransactionStore as useAllStore } from '@/stores/transactionStore';
+import { useTransactionStore as useFilteredStore } from '@/stores/transaction';
+import { useUserStore } from '@/stores/userStore';
 
 const route = useRoute();
 const transactionStore = useAllStore();
 const filteredStore = useFilteredStore();
 const userStore = useUserStore();
 
-const emit = defineEmits(["close", "updated"]);
+const emit = defineEmits(['close', 'updated']);
 const props = defineProps({ transaction: Object });
 
 const isEditMode = ref(false);
 const id = ref(null);
-const type = ref("지출");
-const date = ref("");
-const amount = ref("");
-const category = ref("카테고리");
-const title = ref("");
-const memo = ref("");
+const type = ref('지출');
+const date = ref('');
+const amount = ref('');
+const category = ref('카테고리');
+const title = ref('');
+const memo = ref('');
 
 const invalidFields = ref([]);
 const tooltips = ref({});
@@ -191,12 +191,12 @@ const markInvalid = (field, message) => {
 
 const formattedAmount = computed({
   get() {
-    if (!amount.value) return "";
-    return Number(amount.value).toLocaleString() + "원";
+    if (!amount.value) return '';
+    return Number(amount.value).toLocaleString() + '원';
   },
   set(val) {
-    const raw = val.replace(/[^\d]/g, "");
-    amount.value = raw ? Number(raw) : "";
+    const raw = val.replace(/[^\d]/g, '');
+    amount.value = raw ? Number(raw) : '';
   },
 });
 
@@ -206,31 +206,31 @@ const addAmount = (unit) => {
 };
 
 const expenseCategories = [
-  "식비",
-  "교통비",
-  "주거비",
-  "문화생활",
-  "의료비",
-  "기타",
+  '식비',
+  '교통비',
+  '주거비',
+  '문화생활',
+  '의료비',
+  '기타',
 ];
-const incomeCategories = ["급여", "용돈", "판매수익", "이자소득", "기타"];
+const incomeCategories = ['급여', '용돈', '판매수익', '이자소득', '기타'];
 const currentCategoryList = computed(() =>
-  type.value === "지출" ? expenseCategories : incomeCategories
+  type.value === '지출' ? expenseCategories : incomeCategories
 );
 
 const setType = (newType) => {
   type.value = newType;
-  category.value = "카테고리";
+  category.value = '카테고리';
 };
 
 const resetForm = () => {
   id.value = null;
-  type.value = "지출";
-  date.value = "";
-  amount.value = "";
-  category.value = "카테고리";
-  title.value = "";
-  memo.value = "";
+  type.value = '지출';
+  date.value = '';
+  amount.value = '';
+  category.value = '카테고리';
+  title.value = '';
+  memo.value = '';
 };
 
 watch(
@@ -239,7 +239,7 @@ watch(
     if (tx) {
       isEditMode.value = true;
       id.value = tx.id;
-      type.value = tx.type === "income" ? "수입" : "지출";
+      type.value = tx.type === 'income' ? '수입' : '지출';
       date.value = tx.date;
       amount.value = tx.amount;
       category.value = tx.category;
@@ -257,27 +257,27 @@ const save = async () => {
   let hasError = false;
 
   if (!date.value) {
-    markInvalid("date", "날짜를 입력하세요");
+    markInvalid('date', '날짜를 입력하세요');
     hasError = true;
   }
   if (!amount.value) {
-    markInvalid("amount", "금액을 입력하세요");
+    markInvalid('amount', '금액을 입력하세요');
     hasError = true;
   }
-  if (category.value === "카테고리") {
-    markInvalid("category", "카테고리를 선택하세요");
+  if (category.value === '카테고리') {
+    markInvalid('category', '카테고리를 선택하세요');
     hasError = true;
   }
   if (!title.value) {
-    markInvalid("title", "제목을 입력하세요");
+    markInvalid('title', '제목을 입력하세요');
     hasError = true;
   }
 
   if (hasError) return;
 
-  const userId = localStorage.getItem("userId") || userStore.userId;
+  const userId = localStorage.getItem('userId') || userStore.userId;
   const transactionData = {
-    type: type.value === "수입" ? "income" : "expense",
+    type: type.value === '수입' ? 'income' : 'expense',
     date: date.value,
     amount: Number(amount.value),
     category: category.value,
@@ -287,17 +287,20 @@ const save = async () => {
   };
 
   if (isEditMode.value) {
-    if (route.path === "/home") {
-      await transactionStore.updateTransactionById(id.value, transactionData);
-    } else {
-      await filteredStore.updateTransactionById(id.value, transactionData);
-    }
+    await filteredStore.updateTransactionById(id.value, transactionData);
   } else {
-    await filteredStore.addTransaction(transactionData);
+    if (route.path === '/home') {
+      console.log('home');
+      await transactionStore.addTransaction(transactionData);
+    } else {
+      console.log('detail');
+
+      await filteredStore.addTransaction(transactionData);
+    }
   }
 
-  emit("updated");
-  emit("close");
+  emit('updated');
+  emit('close');
 };
 </script>
 
