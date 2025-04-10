@@ -127,9 +127,19 @@
                   >
                     <button class="page-link" @click="prevPage">‹</button>
                   </li>
-                  <li class="page-item active">
-                    <span class="page-link">{{ currentPage }}</span>
+
+                  <!-- 페이지 번호 목록 -->
+                  <li
+                    v-for="page in totalPages"
+                    :key="page"
+                    class="page-item"
+                    :class="{ active: currentPage === page }"
+                  >
+                    <button class="page-link" @click="goToPage(page)">
+                      {{ page }}
+                    </button>
                   </li>
+
                   <li
                     class="page-item"
                     :class="{ disabled: currentPage === totalPages }"
