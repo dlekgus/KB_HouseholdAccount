@@ -31,8 +31,6 @@
       v-for="s in filtered"
       :key="s.id"
       :item="s"
-      @edit="handleEdit"
-      @delete="handleDelete"
     />
   </div>
 </template>
@@ -46,18 +44,15 @@ const store = useFixedExpenseStore();
 const activeCategory = ref('구독');
 
 const filtered = computed(() =>
-  store.fixedExpenses.filter((item) => item.category === activeCategory.value)
+  store.fixedExpenses.filter((item) => {
+    let randomPair = store.colorPairs[Math.floor(Math.random() * store.colorPairs.length)];
+    item.boxColor = randomPair.boxColor;
+    item.dotColor = randomPair.dotColor;
+    return item.category === activeCategory.value; // 필터 조건
+  })
 );
 
-const handleEdit = (item) => {
-  store.openAddModal();
-};
 
-const handleDelete = (item) => {
-  if (confirm(`'${item.name}' 삭제하시겠습니까?`)) {
-    store.deleteExpense(item.id);
-  }
-};
 </script>
 
 <style scoped>
@@ -94,9 +89,5 @@ const handleDelete = (item) => {
   transition: left 0.3s ease;
   border-radius: 2px;
 }
-.custom-scroll-select {
-  height: auto;
-  max-height: 150px; /* 눈에 보이지는 않지만 강제 제한 */
-  overflow-y: auto;  /* 스크롤 처리 */
-}
+
 </style>
