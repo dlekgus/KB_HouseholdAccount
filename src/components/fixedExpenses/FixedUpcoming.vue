@@ -32,7 +32,7 @@ const getDDayNumber = (dueDay) => {
 
 const getDDay = (dueDay) => {
   const d = getDDayNumber(dueDay);
-  return d === 0 ? 'D-DAY' : `D-${d}`;
+  return d === 0 ? 'D-day' : `D-${d}`;
 };
 
 const getBadgeClass = (dueDay) => {

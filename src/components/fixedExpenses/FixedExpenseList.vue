@@ -31,8 +31,6 @@
       v-for="s in filtered"
       :key="s.id"
       :item="s"
-      @edit="handleEdit"
-      @delete="handleDelete"
     />
   </div>
 </template>
@@ -49,15 +47,6 @@ const filtered = computed(() =>
   store.fixedExpenses.filter((item) => item.category === activeCategory.value)
 );
 
-const handleEdit = (item) => {
-  store.openAddModal();
-};
-
-const handleDelete = (item) => {
-  if (confirm(`'${item.name}' 삭제하시겠습니까?`)) {
-    store.deleteExpense(item.id);
-  }
-};
 </script>
 
 <style scoped>

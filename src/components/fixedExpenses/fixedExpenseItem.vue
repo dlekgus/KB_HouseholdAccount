@@ -2,11 +2,8 @@
   <div class="d-flex justify-content-between align-items-center py-3 border-bottom position-relative">
     <!-- 좌측 아이콘/텍스트 -->
     <div class="d-flex align-items-center gap-3">
-      <div
-        :style="getBoxStyle(item.boxColor)"
-        class="rounded-4 d-flex align-items-center justify-content-center me-3"
-        style="width: 40px; height: 40px"
-      >
+      <div :style="getBoxStyle(item.boxColor)" class="rounded-4 d-flex align-items-center justify-content-center me-3"
+        style="width: 40px; height: 40px">
         <template v-if="item.icon && item.icon.class">
           <i :class="item.icon.class" :style="item.icon.style" class="fa-lg"></i>
         </template>
@@ -41,6 +38,9 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { useFixedExpenseStore } from '@/stores/FixedExpenseStore';
+
+const store = useFixedExpenseStore();
 
 const props = defineProps({
   item: {
@@ -77,7 +77,9 @@ const editItem = () => {
 };
 
 const deleteItem = () => {
-  alert(`🗑️ 삭제: ${props.item.name}`);
+  if (confirm(`'${props.item.name}' 를(을) 삭제할까요?`)) {
+    store.deleteExpense(props.item.id);
+  }
   setTimeout(() => {
     showMenu.value = false;
   }, 0); // 다음 tick에서 닫히게 함
