@@ -50,12 +50,7 @@
     <TransactionList v-else />
 
     <!-- 플로팅 추가 버튼 -->
-    <button
-      class="fab btn btn-primary rounded-circle position-fixed"
-      @click="showTransactionModal = true"
-    >
-      +
-    </button>
+    <button class="add-btn btn btn-outline" @click="showModal = true">+</button>
 
     <!-- 거래 추가 모달 -->
     <TransactionModal
@@ -139,8 +134,10 @@ const nextDate = () => {
 </script>
 
 <style scoped>
-.fab {
-  bottom: 20px;
-  right: 20px;
+.add-button {
+  background-color: #4318d1;
+  color: white;
+  font-weight: bolder;
+  font-size: large;
 }
 </style>
