@@ -76,10 +76,22 @@ const calendarOptions = ref({
     return { html };
   },
 
-  // ✅ 일요일/토요일 색상 처리
+  headerToolbar: {
+    start: 'title',
+    center: '',
+    end: 'today prev,next',
+  },
+  dateClick: (info) => {
+    console.log('날짜 클릭:', info.dateStr);
+  },
+  titleFormat: { year: 'numeric', month: 'long' },
+
+  events: [],
+
   dayCellDidMount: (arg) => {
-    const day = arg.date.getDay(); // 0:일, 6:토
+    const day = arg.date.getDay(); // 0:일, 1:월, ..., 6:토
     const dayNumberElement = arg.el.querySelector('.fc-daygrid-day-number');
+    dayNumberElement.innerHTML = dayNumberElement.innerHTML.replace('일', '');
     if (dayNumberElement) {
       if (day === 0) {
         dayNumberElement.style.color = 'red';
