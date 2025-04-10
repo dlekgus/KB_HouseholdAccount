@@ -51,9 +51,6 @@
               ></i>
             </span>
           </div>
-          <div class="text-end mt-1">
-            <a href="#" class="small text-primary">비밀번호 찾기</a>
-          </div>
         </div>
 
         <!-- 자동 로그인 -->
@@ -64,8 +61,9 @@
             v-model="autoLogin"
             id="autoLogin"
           />
-          <label class="form-check-label" for="autoLogin"> 자동 로그인 </label>
+          <label class="form-check-label" for="autoLogin">자동 로그인</label>
         </div>
+
         <!-- 오류 메시지 출력 -->
         <div v-if="errorMessage" class="text-danger small text-center mb-3">
           {{ errorMessage }}
@@ -88,12 +86,11 @@
 
 <script setup>
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
 
 const userStore = useUserStore();
-
 const router = useRouter();
 
 const email = ref('');
@@ -116,15 +113,22 @@ const login = async () => {
     });
 
     if (res.data.length > 0) {
-      // 로그인 성공
       const loggedInUser = res.data[0];
       userStore.setUser(loggedInUser);
       localStorage.setItem('userId', loggedInUser.id);
 
+      // ✅ 자동 로그인 정보 저장
+      if (autoLogin.value) {
+        localStorage.setItem('autoLoginEmail', email.value);
+        localStorage.setItem('autoLoginPassword', password.value);
+      } else {
+        localStorage.removeItem('autoLoginEmail');
+        localStorage.removeItem('autoLoginPassword');
+      }
+
       errorMessage.value = '';
       router.push('/home');
     } else {
-      // 로그인 실패
       errorMessage.value = '이메일 또는 비밀번호가 일치하지 않습니다.';
     }
   } catch (err) {
@@ -132,4 +136,16 @@ const login = async () => {
     errorMessage.value = '로그인 중 오류가 발생했습니다.';
   }
 };
+
+// ✅ 자동 로그인 실행
+onMounted(async () => {
+  const savedEmail = localStorage.getItem('autoLoginEmail');
+  const savedPassword = localStorage.getItem('autoLoginPassword');
+
+  if (savedEmail && savedPassword) {
+    email.value = savedEmail;
+    password.value = savedPassword;
+    autoLogin.value = true;
+  }
+});
 </script>
