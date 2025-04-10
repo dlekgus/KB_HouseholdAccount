@@ -3,7 +3,7 @@ import { ref, watch } from "vue";
 import dayjs from "dayjs";
 import { fetchTransactionsByDateRange } from "@/services/transactionAPI";
 
-export const useTransactionStore = defineStore("transaction", () => {
+export const useTransactionStore = defineStore("transactions", () => {
   const viewDate = ref(dayjs());
   const viewMode = ref("월간");
 
