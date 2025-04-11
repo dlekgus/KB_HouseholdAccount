@@ -16,8 +16,8 @@
           
   <tr>
     <td align="center">
-      <img src="https://avatars.githubusercontent.com/dlekgus1q?v=4" width="100" /><br/>
-      <a href="https://github.com/dlekgus1q"><b>이다현</b></a>
+      <img src="https://avatars.githubusercontent.com/dlekgus?v=4" width="100" /><br/>
+      <a href="https://github.com/dlekgus"><b>이다현</b></a>
     </td>
     <td align="center">
       <img src="https://avatars.githubusercontent.com/0woy?v=4" width="100" /><br/>
