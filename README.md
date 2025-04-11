@@ -1,7 +1,13 @@
 <div align="center">
- <h1>💸 MOA -모아서 관리하는 개인 맞춤형 가계부 서비스</h1>      
+ <h1>💸 MOA -모아서 관리하는 개인 맞춤형 가계부 서비스</h1>   
+ <p align="center">
   <img src="https://github.com/user-attachments/assets/36551bc2-8ca4-4be0-9a88-05f355ccd5ac" width="30%"/>
+  <img src="https://github.com/user-attachments/assets/1922416c-a0d4-43ee-969b-9823cf7e8993"width="30%"/>
+ </p>
+  <span>큐알 코드 스캔 시 서비스 이용 가능</span>
 </div>
+  
+
 <br/>
 
 <div align="center">
