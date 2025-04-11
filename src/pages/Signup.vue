@@ -26,10 +26,10 @@
             class="form-control"
             v-model="nickname"
             placeholder="닉네임을 입력하세요"
-            :class="{ 'is-invalid shake': nicknameError }"
+            :class="{ 'is-invalid': nicknameError, shake: shakeNickname }"
           />
           <div v-if="nicknameError" class="tooltip-message">
-            닉네임을 입력하세요
+            {{ nicknameError }}
           </div>
         </div>
 
@@ -42,15 +42,13 @@
               class="form-control"
               v-model="email"
               placeholder="이메일을 입력하세요"
-              :class="{ 'is-invalid shake': emailError }"
+              :class="{ 'is-invalid': emailError, shake: shakeEmail }"
             />
-            <span class="input-group-text">
-              <i class="fa-solid fa-envelope"></i>
-            </span>
+            <span class="input-group-text"
+              ><i class="fa-solid fa-envelope"></i
+            ></span>
           </div>
-          <div v-if="emailError" class="tooltip-message">
-            이메일 형식이 올바르지 않습니다.
-          </div>
+          <div v-if="emailError" class="tooltip-message">{{ emailError }}</div>
         </div>
 
         <!-- 비밀번호 -->
@@ -62,7 +60,7 @@
               class="form-control"
               v-model="password"
               placeholder="비밀번호를 입력하세요"
-              :class="{ 'is-invalid shake': passwordError }"
+              :class="{ 'is-invalid': passwordError, shake: shakePassword }"
             />
             <span
               class="input-group-text"
@@ -76,8 +74,11 @@
               ></i>
             </span>
           </div>
+          <div class="form-text">
+            영문, 숫자, 특수문자 포함 8자 이상. 한글, 이모지 금지
+          </div>
           <div v-if="passwordError" class="tooltip-message">
-            비밀번호는 8자 이상이어야 합니다.
+            {{ passwordError }}
           </div>
         </div>
 
@@ -90,7 +91,10 @@
               class="form-control"
               v-model="confirmPassword"
               placeholder="비밀번호를 다시 입력하세요"
-              :class="{ 'is-invalid shake': confirmPasswordError }"
+              :class="{
+                'is-invalid': confirmPasswordError,
+                shake: shakeConfirmPassword,
+              }"
             />
             <span
               class="input-group-text"
@@ -107,7 +111,7 @@
             </span>
           </div>
           <div v-if="confirmPasswordError" class="tooltip-message">
-            비밀번호가 일치하지 않습니다.
+            {{ confirmPasswordError }}
           </div>
         </div>
 
@@ -136,7 +140,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import bcrypt from "bcryptjs";
 import api from "@/services/api";
@@ -145,64 +149,107 @@ import { useUserStore } from "@/stores/userStore";
 const router = useRouter();
 const userStore = useUserStore();
 
-// 사용자 입력값
 const nickname = ref("");
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 
-// 상태값
+// 상태
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 
-// 유효성 관련
-const nicknameError = ref(false);
-const emailError = ref(false);
-const passwordError = ref(false);
-const confirmPasswordError = ref(false);
-
+const nicknameError = ref("");
+const emailError = ref("");
+const passwordError = ref("");
+const confirmPasswordError = ref("");
 const errorMessage = ref("");
 
+// 흔들림 트리거
+const shakeNickname = ref(false);
+const shakeEmail = ref(false);
+const shakePassword = ref(false);
+const shakeConfirmPassword = ref(false);
+
 // 토글
-const togglePassword = () => {
-  showPassword.value = !showPassword.value;
-};
-const toggleConfirmPassword = () => {
-  showConfirmPassword.value = !showConfirmPassword.value;
+const togglePassword = () => (showPassword.value = !showPassword.value);
+const toggleConfirmPassword = () =>
+  (showConfirmPassword.value = !showConfirmPassword.value);
+
+// 정규식 검사 함수
+const validateEmail = (email) => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
+
+const validateStrongPassword = (password) => {
+  const hasLetter = /[A-Za-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSymbol = /[!@#$%^&*(),.?":{}|<>_\-\\[\]=+`~;'\/]/.test(password);
+  const isOnlyAllowedChars =
+    /^[A-Za-z0-9!@#$%^&*(),.?":{}|<>_\-\\[\]=+`~;'\/]+$/.test(password);
+
+  if (password.length < 8) return "8자 이상 입력해주세요.";
+  if (!hasLetter || !hasNumber || !hasSymbol)
+    return "영문, 숫자, 특수문자를 모두 포함해야 합니다.";
+  if (!isOnlyAllowedChars) return "한글, 이모지 등은 사용할 수 없습니다.";
+  return "";
 };
 
-const validateEmail = (email) => {
-  const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-  return regex.test(email);
+// 툴팁 + 흔들림 동시에 적용
+const showTooltipWithShake = async (errorRef, shakeRef, message) => {
+  errorRef.value = "";
+  shakeRef.value = false;
+  await nextTick();
+  errorRef.value = message;
+  shakeRef.value = true;
 };
 
 const signup = async () => {
-  nicknameError.value = !nickname.value.trim();
-  emailError.value = !validateEmail(email.value);
-  passwordError.value = !password.value || password.value.length < 8;
-  confirmPasswordError.value = password.value !== confirmPassword.value;
+  // 초기화
+  nicknameError.value = "";
+  emailError.value = "";
+  passwordError.value = "";
+  confirmPasswordError.value = "";
+  errorMessage.value = "";
 
-  if (
-    nicknameError.value ||
-    emailError.value ||
-    passwordError.value ||
-    confirmPasswordError.value
-  ) {
+  if (!nickname.value.trim()) {
+    await showTooltipWithShake(
+      nicknameError,
+      shakeNickname,
+      "닉네임을 입력하세요."
+    );
+    return;
+  }
+
+  if (!validateEmail(email.value)) {
+    await showTooltipWithShake(
+      emailError,
+      shakeEmail,
+      "이메일 형식이 올바르지 않습니다."
+    );
+    return;
+  }
+
+  const pwMessage = validateStrongPassword(password.value);
+  if (pwMessage) {
+    await showTooltipWithShake(passwordError, shakePassword, pwMessage);
+    return;
+  }
+
+  if (password.value !== confirmPassword.value) {
+    await showTooltipWithShake(
+      confirmPasswordError,
+      shakeConfirmPassword,
+      "비밀번호가 일치하지 않습니다."
+    );
     return;
   }
 
   try {
-    const check = await api.get("/users", {
-      params: { email: email.value },
-    });
-
+    const check = await api.get("/users", { params: { email: email.value } });
     if (check.data.length > 0) {
       errorMessage.value = "이미 사용 중인 이메일입니다.";
       return;
     }
 
     const hashedPassword = await bcrypt.hash(password.value, 10);
-
     const response = await api.post("/users", {
       nickname: nickname.value,
       email: email.value,
@@ -260,7 +307,7 @@ const signup = async () => {
   border-radius: 4px;
   z-index: 1;
   white-space: nowrap;
-  animation: fadeout 1.5s forwards;
+  animation: fadeout 1.8s forwards;
 }
 
 @keyframes fadeout {
