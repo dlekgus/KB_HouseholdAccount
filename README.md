@@ -24,8 +24,8 @@
       <a href="https://github.com/0woy"><b>박윤아</b></a>
     </td>
     <td align="center">
-      <img src="https://avatars.githubusercontent.com/MeonW?v=4" width="100" /><br/>
-      <a href="https://github.com/MeonW"><b>정성엽</b></a>
+      <img src="https://avatars.githubusercontent.com/MeongW?v=4" width="100" /><br/>
+      <a href="https://github.com/MeongW"><b>정성엽</b></a>
     </td>
     <td align="center">
       <img src="https://avatars.githubusercontent.com/ParkPark8?v=4" width="100" /><br/>
