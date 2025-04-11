@@ -19,18 +19,22 @@
         </div>
 
         <!-- 닉네임 -->
-        <div class="mb-3">
+        <div class="mb-3 position-relative">
           <label class="form-label">닉네임</label>
           <input
             type="text"
             class="form-control"
             v-model="nickname"
             placeholder="닉네임을 입력하세요"
+            :class="{ 'is-invalid shake': nicknameError }"
           />
+          <div v-if="nicknameError" class="tooltip-message">
+            닉네임을 입력하세요
+          </div>
         </div>
 
         <!-- 이메일 -->
-        <div class="mb-3">
+        <div class="mb-3 position-relative">
           <label class="form-label">이메일</label>
           <div class="input-group">
             <input
@@ -38,15 +42,19 @@
               class="form-control"
               v-model="email"
               placeholder="이메일을 입력하세요"
+              :class="{ 'is-invalid shake': emailError }"
             />
             <span class="input-group-text">
               <i class="fa-solid fa-envelope"></i>
             </span>
           </div>
+          <div v-if="emailError" class="tooltip-message">
+            이메일 형식이 올바르지 않습니다.
+          </div>
         </div>
 
         <!-- 비밀번호 -->
-        <div class="mb-3">
+        <div class="mb-3 position-relative">
           <label class="form-label">비밀번호</label>
           <div class="input-group">
             <input
@@ -54,6 +62,7 @@
               class="form-control"
               v-model="password"
               placeholder="비밀번호를 입력하세요"
+              :class="{ 'is-invalid shake': passwordError }"
             />
             <span
               class="input-group-text"
@@ -67,10 +76,13 @@
               ></i>
             </span>
           </div>
+          <div v-if="passwordError" class="tooltip-message">
+            비밀번호는 8자 이상이어야 합니다.
+          </div>
         </div>
 
         <!-- 비밀번호 확인 -->
-        <div class="mb-2">
+        <div class="mb-2 position-relative">
           <label class="form-label">비밀번호 확인</label>
           <div class="input-group">
             <input
@@ -78,6 +90,7 @@
               class="form-control"
               v-model="confirmPassword"
               placeholder="비밀번호를 다시 입력하세요"
+              :class="{ 'is-invalid shake': confirmPasswordError }"
             />
             <span
               class="input-group-text"
@@ -93,9 +106,12 @@
               ></i>
             </span>
           </div>
+          <div v-if="confirmPasswordError" class="tooltip-message">
+            비밀번호가 일치하지 않습니다.
+          </div>
         </div>
 
-        <!-- 여기 에러 메시지 표시 -->
+        <!-- 에러 메시지 -->
         <div v-if="errorMessage" class="text-danger small text-center mb-3">
           {{ errorMessage }}
         </div>
@@ -122,46 +138,60 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import bcrypt from "bcryptjs";
 import api from "@/services/api";
 import { useUserStore } from "@/stores/userStore";
-const userStore = useUserStore();
 
 const router = useRouter();
+const userStore = useUserStore();
 
-// 사용자 입력 값들
+// 사용자 입력값
 const nickname = ref("");
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 
-// 상태값: 비밀번호 보기 토글
+// 상태값
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 
-// 에러 메시지
+// 유효성 관련
+const nicknameError = ref(false);
+const emailError = ref(false);
+const passwordError = ref(false);
+const confirmPasswordError = ref(false);
+
 const errorMessage = ref("");
 
-// 비밀번호 입력 토글
+// 토글
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
 };
-
-// 비밀번호 확인 입력 토글
 const toggleConfirmPassword = () => {
   showConfirmPassword.value = !showConfirmPassword.value;
 };
 
-// 회원가입 처리
+const validateEmail = (email) => {
+  const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  return regex.test(email);
+};
+
 const signup = async () => {
-  if (password.value !== confirmPassword.value) {
-    errorMessage.value = "비밀번호가 일치하지 않습니다";
+  nicknameError.value = !nickname.value.trim();
+  emailError.value = !validateEmail(email.value);
+  passwordError.value = !password.value || password.value.length < 8;
+  confirmPasswordError.value = password.value !== confirmPassword.value;
+
+  if (
+    nicknameError.value ||
+    emailError.value ||
+    passwordError.value ||
+    confirmPasswordError.value
+  ) {
     return;
   }
 
-  errorMessage.value = "";
-
   try {
-    // 이메일 중복 체크
     const check = await api.get("/users", {
       params: { email: email.value },
     });
@@ -171,33 +201,82 @@ const signup = async () => {
       return;
     }
 
-    // 회원 정보 db.json에 저장
+    const hashedPassword = await bcrypt.hash(password.value, 10);
+
     const response = await api.post("/users", {
       nickname: nickname.value,
       email: email.value,
-      password: password.value,
+      password: hashedPassword,
     });
 
-    console.log("✅ 회원가입 성공:", response.data);
+    userStore.setUser(response.data);
+    localStorage.setItem("userId", response.data.id);
 
-    // 회원가입 성공 후에 이 코드 추가!
-    userStore.setUser(response.data); // Pinia에 유저 저장
-    localStorage.setItem("userId", response.data.id); // ✅ 로컬에도 저장
-
-    // 입력값 초기화
     nickname.value = "";
     email.value = "";
     password.value = "";
     confirmPassword.value = "";
 
-    // 완료 후 로그인 페이지로 이동 (옵션)
     alert("회원가입이 완료되었습니다!");
-
-    // 로그인 페이지로 이동
     router.push("/");
   } catch (err) {
-    console.error("❌ 회원가입 오류:", err);
+    console.error("회원가입 오류:", err);
     errorMessage.value = "회원가입 중 오류가 발생했습니다.";
   }
 };
 </script>
+
+<style scoped>
+.shake {
+  animation: shake 0.3s ease-in-out;
+}
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.tooltip-message {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 2px;
+  background-color: #c2b2f0;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  z-index: 1;
+  white-space: nowrap;
+  animation: fadeout 1.5s forwards;
+}
+
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.is-invalid {
+  border-color: #c2b2f0 !important;
+  box-shadow: 0 0 0 0.2rem rgba(194, 178, 240, 0.25);
+}
+</style>
