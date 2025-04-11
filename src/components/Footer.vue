@@ -1,7 +1,7 @@
 <template>
   <div>
     contact:
-    <p>dlekgus1q & 0woy & meentho & MeongW & ParkPark8</p>
+    <p>dlekgus & 0woy & meentho & MeongW & ParkPark8</p>
   </div>
 </template>
 
